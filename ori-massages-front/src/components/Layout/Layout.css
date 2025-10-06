@@ -1,0 +1,15 @@
+.layoutStyle{
+    margin: 1.5rem 7rem;
+    display: flex;
+}
+
+@media(max-width:576px){
+    .layoutStyle{
+        margin: 1.5rem 3rem;
+    }
+}
+
+.layoutStyle p {
+    font-size: 1.5rem;
+    text-align: justify;
+}

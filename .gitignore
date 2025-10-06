@@ -1,0 +1,20 @@
+x# Other files
+design/
+
+# Dépendances Node (front)
+node_modules/
+
+# Build Vite (front)
+dist/
+
+# Environnements
+.env
+
+# Logs
+npm-debug.log*
+
+# Fichiers éditeur/OS
+.DS_Store
+.idea/
+.vscode/
+*.swp

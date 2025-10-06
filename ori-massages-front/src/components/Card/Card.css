@@ -1,0 +1,54 @@
+.custom-style--home{
+    background-color: white;
+    max-width: 300px;
+    border-radius: 8%;
+    box-shadow: 0px 7px 3px 1px rgba(0, 0, 0, 0.4);
+}
+
+.custom-style--services{
+    background-color: white;
+    max-width: 300px;
+    border-radius: 8%;
+    box-shadow: 0px 7px 3px 1px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.custom-style--services:hover{
+    transform: scale(1.05);
+}
+
+.card-title{
+    margin-top: 0.8rem;
+    font-size: 1.5rem;
+    font-style: normal;
+    font-weight: 600;
+    color: #444;
+}
+
+.custom-img--home{
+    border-top-left-radius: 8%;
+    border-top-right-radius: 8%;
+}
+
+.custom-img--services{
+    border-top-left-radius: 0%;
+    border-top-right-radius: 0%;
+}
+
+.card .btn {
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 0.6rem 1.6rem;
+    margin-bottom: 1rem;
+    border: 2px solid #1d8c87;
+    color: #1d8c87;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.card .btn:hover {
+    color: white;
+    background: #1d8c87;
+}

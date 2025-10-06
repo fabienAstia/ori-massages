@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="600" height="250" viewBox="0 0 600 250">
+  <!-- Texte ORI -->
+  <text x="160" y="120" font-family="sans-serif" font-size="90" font-weight="700" fill="darkslategrey">ORI</text>
+  
+  <!-- Texte Massages -->
+  <text x="160" y="170" font-family="sans-serif" font-size="28" letter-spacing="2" fill="darkslategrey">Massages</text>
+
+  <!-- Courbe fluide -->
+  <path d="M0 130 C100 100, 200 160, 300 130 S500 160, 600 130"
+        stroke="teal" stroke-width="4" fill="none" stroke-linecap="round"/>
+</svg>

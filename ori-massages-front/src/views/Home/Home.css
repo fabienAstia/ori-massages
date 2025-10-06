@@ -1,0 +1,154 @@
+.HomeView .background{
+    width: 100%;
+    height: 100vh;
+    background-image: url('../../assets/photos/background-exotic.jpg');
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: static;
+    z-index: -1;
+}
+
+@media(max-width:768px){
+    .HomeView .background{
+    height: auto;
+    min-height: 100vh;
+}
+
+}
+.HomeView .logo{
+    width: 15rem;
+    margin-right: auto;
+}
+
+.HomeView .hero{
+    margin-top: 6rem;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;  
+    background-color: rgba(0, 0, 0, 0.7);
+    padding: 2rem;
+    border-radius: 15%;
+}
+
+.HomeView h1{
+    color: white;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.HomeView h2{
+    margin-top: 3rem;
+    margin-bottom: 2rem;
+    text-align: center;
+    color: black;
+    font-size: 2.5rem;
+    font-weight: 600;
+}
+
+.HomeView .navButton{
+    padding: 25px;
+    display: flex;
+    height: 6rem;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    text-decoration: none;
+    font-size: 1.5rem;
+    max-width: 250px;
+    min-width: 150px;
+    border-radius: 30px;
+}
+
+@media(max-width:768px){
+    .HomeView .navButton{
+        height: auto;
+        font-size: 1.1rem;
+        padding: 0.8rem 1.2rem;
+        border-radius: 30px;
+    }
+}
+
+.services-preview, .about-me-preview {
+    margin: 6rem 4rem;
+}
+
+.services-preview p{
+    font-size: 2rem;
+    text-align: center;
+    font-style: italic;
+    color: #1d8c87;
+}
+
+.services-preview .btn , .about-me-preview .btn{
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 0.6rem 1.6rem;
+    margin-bottom: 2rem;
+    border: 2px solid #1d8c87;
+    color: #1d8c87;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.services-preview .btn:hover, .about-me-preview .btn:hover {
+    color: white;
+    background: #1d8c87;
+}
+
+.about-text{
+    display: block;
+    flex: 1;
+}
+
+.about-me-preview p{
+    font-size: 1.5rem;
+    text-align: justify;
+    margin: 0 3rem 1rem;
+}
+
+.photo-wrapper {
+  flex: 0 0 40%;    
+  max-width: 25rem; 
+  margin: -3rem 3rem 0 3rem;
+}
+
+@media (max-width: 1085px) {
+  .photo-wrapper {
+    flex: 0 0 50%;  
+    max-width: 20rem;
+    margin: -1rem auto 2rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .photo-wrapper {
+    flex: 0 0 100%;  
+    max-width: 80%;
+    margin: -1rem auto 2rem;
+    text-align: center;
+  }
+}
+
+.ori-photo {
+  width: 100%;
+  height: auto;
+  border-radius: 15%;
+  display: block;
+}
+
+@media (max-width: 1085px) {
+  .ori-photo {
+    width: 90%;  
+    margin: 0 auto;
+  }
+}
+
+@media (max-width: 768px) {
+  .ori-photo {
+    width: 100%; 
+    max-width: 70%;
+  }
+}

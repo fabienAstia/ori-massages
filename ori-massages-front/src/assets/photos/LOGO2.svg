@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="700" height="500" viewBox="0 0 700 500">
+  <!-- Texte ORI -->
+  <text x="100" y="200" font-family="sans-serif" font-size="180" font-weight="700" fill="#224d4a">ORI</text>
+  
+  <!-- Courbe entre ORI et Massages -->
+  <path d="M0 240 
+           C200 200, 300 280, 400 240 
+           S550 280, 700 240" 
+        stroke="#1d8c87" stroke-width="8" fill="none" stroke-linecap="round"/>
+  
+  <!-- Texte Massages (remonté de 20px environ) -->
+  <text x="100" y="320" font-family="sans-serif" font-size="60" letter-spacing="3" fill="#224d4a">Massages</text>
+</svg>

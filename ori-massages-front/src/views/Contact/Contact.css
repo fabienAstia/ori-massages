@@ -1,0 +1,45 @@
+.ContactView{
+    justify-content: center;
+    width: 100vw;
+}
+
+.ContactView .contact-text {
+    font-size: 1rem;
+    text-align: center;
+    font-style: italic;
+    color: #1d8c87;
+}
+
+.ContactView .red{
+    color: red;
+}
+
+.ContactView input:focus, .ContactView textarea:focus{
+    border: solid 5px rgba(29, 140, 135, 0.3);
+    box-shadow: none;
+}
+
+#remaining-char{
+    color: #444;
+    text-align: right;
+    font-size: 0.7rem;
+}
+
+.ContactView .btn{
+    font-family: 'Quicksand', sans-serif;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    padding: 0.6rem 1.6rem;
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    border: 2px solid #1d8c87;
+    color: #1d8c87;
+    background: transparent;
+    transition: all 0.3s ease;
+}
+
+.ContactView .btn:hover {
+    color: white;
+    background: #1d8c87;
+}
