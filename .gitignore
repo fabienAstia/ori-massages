@@ -14,8 +14,8 @@ dist/
 npm-debug.log*
 
 #bdd
-.dbeaver
-.settings
+.dbeaver/
+.settings/
 .project
 # Fichiers éditeur/OS
 .DS_Store
