@@ -1,1 +1,0 @@
-{"resources":{"Scripts/ddl/1-without_bill_ddl.sql":{"default-schema":"public","default-datasource":"postgres-jdbc-199b0ae4b0b-554985b7def6775b","default-catalog":"ori_massages_db"},"Scripts/dml/dml.sql":{"default-datasource":"postgres-jdbc-199b0ae4b0b-554985b7def6775b","default-catalog":"ori_massages_db","default-schema":"public"}}}
