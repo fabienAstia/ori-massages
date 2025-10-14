@@ -1,11 +1,15 @@
 import './CustomMassage.css'
 import Card from '../Card'
+import BookModal from '../BookModal'
+import { useState } from 'react'
 import photo1 from '../../assets/photos/photo_massage1.jpg'
 import photo2 from '../../assets/photos/photo_massage2.jpeg'
 import photo3 from '../../assets/photos/photo_massage3.webp'
 
 export default function CustomMassage({showDescription = true, variant}){
-     const listMassage = massages.map(massage =>
+    const [modalShow, setModalShow] = useState(false);
+    
+    const listMassage = massages.map(massage =>
         <div className='col' key={massage.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
                 <Card
@@ -13,6 +17,8 @@ export default function CustomMassage({showDescription = true, variant}){
                 image={massage.image}
                 description={showDescription? massage.description : undefined}
                 variant={variant}
+                modalShow={modalShow}
+                setModalShow={setModalShow}
                 />
             </div>
         </div>
@@ -20,6 +26,7 @@ export default function CustomMassage({showDescription = true, variant}){
     return <section className='CustomMassageView'>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
                 {listMassage}
+                <BookModal show={modalShow} onHide={() => setModalShow(false)} />
             </div>
         </section>;
 }
