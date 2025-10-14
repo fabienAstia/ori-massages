@@ -8,6 +8,9 @@ import photo3 from '../../assets/photos/photo_massage3.webp'
 
 export default function CustomMassage({showDescription = true, variant}){
     const [modalShow, setModalShow] = useState(false);
+    const [selectedTitle, setSelectedTitle] = useState('');
+    const [selectedImage, setSelectedImage] = useState('');
+    const [selectedPrice, setSelectedPrice] = useState('');
     
     const listMassage = massages.map(massage =>
         <div className='col' key={massage.id}>
@@ -17,8 +20,10 @@ export default function CustomMassage({showDescription = true, variant}){
                 image={massage.image}
                 description={showDescription? massage.description : undefined}
                 variant={variant}
-                modalShow={modalShow}
                 setModalShow={setModalShow}
+                setSelectedTitle={setSelectedTitle}
+                setSelectedImage={setSelectedImage}
+                setSelectedPrice={setSelectedPrice}
                 />
             </div>
         </div>
@@ -26,7 +31,9 @@ export default function CustomMassage({showDescription = true, variant}){
     return <section className='CustomMassageView'>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
                 {listMassage}
-                <BookModal show={modalShow} onHide={() => setModalShow(false)} />
+                <BookModal show={modalShow} onHide={() => setModalShow(false)} 
+                title={selectedTitle} image={selectedImage}
+                price={selectedPrice}/>
             </div>
         </section>;
 }

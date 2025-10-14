@@ -1,8 +1,7 @@
-import { useState } from 'react';
 import './Card.css'
 import Button from 'react-bootstrap/Button';
 
-export default function Card({title, image, description, variant='home', modalShow, setModalShow}){
+export default function Card({title, image, description, variant='home', setModalShow, setSelectedTitle, setSelectedImage, setSelectedPrice}){
     return (
     <>
     <div className={`card h-100 custom-style--${variant}`}>
@@ -15,10 +14,13 @@ export default function Card({title, image, description, variant='home', modalSh
             {description && 
             <>
             <p className="card-text">{description}</p>
-            <Button variant="primary" onClick={() => setModalShow(true)}>
+            <Button variant="primary" onClick={() => {
+                setModalShow(true); 
+                setSelectedTitle(title); setSelectedImage(image);
+                setSelectedPrice(description);
+                }}>
                 Réserver
             </Button>       
-            {/* <a href="#" className="btn btn-primary">Réserver</a> */}
             </>
             }
         </div>
