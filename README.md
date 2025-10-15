@@ -7,7 +7,7 @@
 ## ✅ To-Do
 
 - [ ] Interface UI (React)
-- [ ] Modélisation Merise (MCD, MLD)
+- [X] Modélisation Merise (MCD, MLD)
 - [ ] API Java (Spring Boot)
 - [ ] Authentification & gestion des rôles (client / praticienne)
 - [ ] Système de réservation (créneaux, calendrier)
