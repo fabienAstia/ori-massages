@@ -15,6 +15,7 @@ export default function Services(){
                     <h2>Massages sur mesure</h2>
                     <p>Offrez-vous un moment de détente grâce à nos massages adaptés à vos besoins.</p>
                     <CustomMassage variant='services'/>
+                    <hr />
                 </div>
 
                 <div id='facialCares' className='spacing'>

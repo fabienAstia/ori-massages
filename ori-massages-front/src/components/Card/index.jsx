@@ -1,23 +1,36 @@
 import './Card.css'
 import Button from 'react-bootstrap/Button';
 
-export default function Card({title, image, description, variant='home', setModalShow, setSelectedTitle, setSelectedImage, setSelectedPrice}){
+export default function Card({title, image, duration, price, description, variant='home', setModalShow, setSelectedTitle, setSelectedImage, setSelectedDuration, setSelectedPrice, setSelectedDescription}){
     return (
     <>
     <div className={`card h-100 custom-style--${variant}`}>
         {variant==='services' &&
-        <h5 className="card-title text-center mb-3">{title}</h5>}
+        <h5 className="card-title text-center">{title}</h5>}
         <img src={image} className={`card-img-top custom-img--${variant}`} alt={title}/>
         <div className='card-body d-flex flex-column gap-1'>
             {variant==='home' &&
-            <h5 className="card-title text-center">{title}</h5>}
+            <p className="card-title text-center">{description}</p>}
             {description && 
             <>
-            <p className="card-text">{description}</p>
+            <div className='row cols-row-2 text-center fs-3 fw-bold my-1'>
+                <div className='col text-center'>
+                     {duration}
+                </div>
+                <div className='col'>
+                    {price}
+                </div>
+            </div>
+            <div className='row d-flex align-items-center justify-content-center'>
+                <p className="card-text">{description}</p>
+            </div>
             <Button variant="primary" onClick={() => {
                 setModalShow(true); 
-                setSelectedTitle(title); setSelectedImage(image);
-                setSelectedPrice(description);
+                setSelectedTitle(title); 
+                setSelectedImage(image);
+                setSelectedDuration(duration);
+                setSelectedPrice(price);
+                setSelectedDescription(description);
                 }}>
                 Réserver
             </Button>       

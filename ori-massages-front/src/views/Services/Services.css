@@ -9,6 +9,14 @@
 
 .ServicesView p{
     text-align: center;
+    margin-bottom: 2rem;
+}
+
+.ServicesView hr {
+    max-width: 400px;
+    background-color: #1d8c87;
+    height: 3px;
+    margin: 4rem auto;
 }
 
 .ServicesView .services-text {
