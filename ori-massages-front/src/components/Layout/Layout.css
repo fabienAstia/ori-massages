@@ -1,6 +1,14 @@
+.layout-container{
+    min-height: 100vh;
+    flex-direction: column;
+    display: flex;
+}
+
 .layoutStyle{
     margin: 1.5rem 7rem;
     display: flex;
+    justify-content: center;
+    flex: 1;
 }
 
 @media(max-width:576px){

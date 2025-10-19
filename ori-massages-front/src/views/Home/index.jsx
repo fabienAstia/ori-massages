@@ -4,6 +4,7 @@ import oriana_photo from '../../assets/photos/oriana-black-and-white-removebg.pn
 import {Link, NavLink} from 'react-router-dom';
 import CustomMassage from '../../components/CustomMassage';
 import FacialCare from '../../components/FacialCare'
+import Footer from '../../components/Footer'
 
 export default function Home(){
     return (
@@ -48,7 +49,7 @@ export default function Home(){
                 <h2>Soins visage</h2>
                 <FacialCare showDescription={false}/>
                 <div className='d-flex justify-content-center mt-5'>
-                        <NavLink to="/services" className="navButton btn btn-outline-primary ">Voir plus</NavLink>
+                    <NavLink to="/services" className="navButton btn btn-outline-primary ">Voir plus</NavLink>
                 </div>              
             </section>
             <section className='about-me-preview'>
@@ -82,7 +83,7 @@ export default function Home(){
                         <NavLink to="/services" className="navButton btn btn-outline-primary ">Me contacter</NavLink>
                 </div> 
             </section>
-
+            <Footer></Footer>
         </section>
 
         </>

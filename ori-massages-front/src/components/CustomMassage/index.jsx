@@ -1,5 +1,6 @@
 import './CustomMassage.css'
-import Card from '../Card'
+import HomeCard from '../HomeCard'
+import ServiceCard from '../ServiceCard'
 import BookModal from '../BookModal'
 import { useState } from 'react'
 import photo1 from '../../assets/photos/photo_massage1.jpg'
@@ -15,9 +16,10 @@ export default function CustomMassage({showDescription = true, variant}){
     const [selectedDescription, setSelectedDescription] = useState('');
     
     const listMassage = massages.map(massage =>
+        showDescription ?
         <div className='col' key={massage.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
-                <Card
+                <ServiceCard
                 title={massage.title}
                 image={massage.image}
                 duration={massage.duration}
@@ -33,9 +35,18 @@ export default function CustomMassage({showDescription = true, variant}){
                 />
             </div>
         </div>
+        :
+        <div className='col' key={massage.id}>
+            <div className="card-body d-flex flex-column mb-4 align-items-center"> 
+                <HomeCard
+                title={massage.title}
+                image={massage.image}
+                />
+            </div>
+        </div>
         );
     return <section className='CustomMassageView'>
-            <div className="row row-cols-1 row-cols-lg-2 row-cols-xl-3 justify-content-center">
+            <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
                 {listMassage}
                 <BookModal show={modalShow} onHide={() => setModalShow(false)} 
                 title={selectedTitle} 

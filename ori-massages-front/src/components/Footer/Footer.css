@@ -1,0 +1,38 @@
+.footerWrapper{
+    height: auto;
+    background-color: #1d8c87;
+}
+
+.footerWrapper .pointer{
+    cursor: pointer;
+}
+
+.footerWrapper .nav-link{
+    padding: 0.5rem 0.5rem;
+    text-decoration: none;
+}
+
+.footerWrapper .nav-link:hover{
+    padding: 0.5rem 0.5rem;
+    text-decoration: none;
+    background-color: #34ddd5ff;
+}
+
+.footerWrapper .nav-link:hover,
+.footerWrapper .nav-link:focus{
+    text-decoration: underline 2px #f9f6dc;
+    text-underline-offset: 3px;
+    color:#f9f6dc;
+}
+
+.footerWrapper .footerElement{
+    color:#f9f6dc;
+    font-family: 'Quicksand' sans-serif;
+    font-size: 1.2rem;
+}
+
+.footerWrapper .footerElement:hover{
+    color:#f9f6dc;
+    font-family: 'Quicksand' sans-serif;
+    font-size: 1.2rem;
+}

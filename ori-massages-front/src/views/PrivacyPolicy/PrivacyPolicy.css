@@ -1,0 +1,17 @@
+.privacyPolicyView h1{
+    margin-bottom: 0;
+}
+
+.privacyPolicyView h2{
+    margin-top: 2rem;
+}
+
+.privacyPolicyView .text-start{
+    max-width: 500px;
+}
+
+.privacyPolicyView p{
+    text-align: justify;
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+}

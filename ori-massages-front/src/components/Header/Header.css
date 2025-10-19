@@ -32,7 +32,10 @@
     color: white!important;
     background-color: #34ddd5ff !important;
 }
-
+.nav-link-custom:focus {
+   text-decoration: underline;
+   text-underline-offset: 3px;
+}
 #collapseNavBar{
     background-color: rgba(29, 140, 135, 0.95);
 }

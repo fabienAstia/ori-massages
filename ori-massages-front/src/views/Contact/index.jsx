@@ -1,17 +1,27 @@
 import { useState } from 'react';
 import './Contact.css'
 
-export default function Contact(){
+export default function Contact({variant='contact'}){
     const [charCount, setCharCount] = useState(0);
     const MAX_CHARS = 300;
     return(
         <section className="ContactView">
             <div className='text-center'>
-                <h2 class="mb-3">Contact</h2>
-                <p class="contact-text">
-                    Une question, une demande de rendez-vous ou simplement l’envie d’échanger ?  
-                    Je vous répondrai avec plaisir.
-                </p>
+                {variant==='contact' &&
+                <>
+                    <h2 class="mb-3">Contact</h2>
+                    <p class="contact-text">
+                        Une question, une demande de rendez-vous ou simplement l’envie d’échanger ?  
+                        Je vous répondrai avec plaisir.
+                    </p>
+                </>
+                }  
+                { variant === 'services' &&
+                    <p class="contact-text">
+                        Merci de renseigner vos informations pour confirmer votre réservation.
+                    </p>
+                }
+               
             </div>
           
             <div className='d-flex mt-1 justify-content-center'>
@@ -37,7 +47,7 @@ export default function Contact(){
                     </div>
                     
                     <div className="mb-3">
-                        <label htmlFor="exampleInputPassword1" className="form-label">Téléphone : </label>
+                        <label htmlFor="exampleInputPassword1" className="form-label">Téléphone : <span className="red"> *</span></label>
                         <input type="tel" className="form-control" id="exampleInputPassword1"/>
                     </div>
                     <div className="mb-3">

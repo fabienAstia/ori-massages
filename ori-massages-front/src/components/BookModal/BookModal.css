@@ -17,18 +17,26 @@
   transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+
 .d-none{
     height: 0;
     opacity: 0;
     transform: translateY(-10px);
 }
-.d-hours{
+ .d-hours{
     height: auto;
     background-color: #f1fbfb  ;
     opacity: 1;
     margin: 1rem auto;
     transform: translateY(0);
     border-radius: 12px;
+}
+
+ .section-locations .d-locations{
+    height: auto;
+    background-color: #fff  ;
+    width: 100% !important;
+    margin: 1.5rem 0;
 }
 
 .modal-open .btn {
@@ -48,6 +56,13 @@
     background: #1d8c87;
 }
 
+.modal-body .btn.w-100 {
+  display: block;
+  width: 100% !important;
+  max-width: none;
+}
+
+
 .bg-custom{
     background-color: #009688 !important; 
     color: white !important;
@@ -55,9 +70,21 @@
     box-shadow: 0 2px 6px rgba(0, 150, 136, 0.3);
 }
 
-/* .btn-toggle.active{
+.btn-toggle.active{
     background-color: #009688 !important; 
     color: white !important;
     border: 2px solid #00796b;
-    box-shadow: 0 2px 6px rgba(0, 150, 136, 0.3);
-} */
+    box-shadow: 0 2px 6px rgba(0, 150, 136, 0.3); 
+}
+
+.card.selected {
+  transform: scale(1.02);
+  box-shadow: 0 0 0 4px #009688, 0 0 12px 12px rgba(0, 121, 107, 0.35);
+  background-color: #f1fbfb;
+  transition: all 0.3s ease;
+}
+.card:not(.selected):hover{
+ transform: scale(1.02);
+ transition: 0.5s ease all;
+    cursor: pointer;
+}
