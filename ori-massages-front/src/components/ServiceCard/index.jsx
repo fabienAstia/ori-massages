@@ -4,7 +4,14 @@ import Button from 'react-bootstrap/Button';
 export default function ServiceCard({title, image, duration, price, description, variant='home', setModalShow, setSelectedTitle, setSelectedImage, setSelectedDuration, setSelectedPrice, setSelectedDescription}){
     return (
     <>
-    <div className={`card h-100 custom-style--${variant}`}>
+    <div className={`card h-100 custom-style--${variant}`} onClick={() => {
+                setModalShow(true); 
+                setSelectedTitle(title); 
+                setSelectedImage(image);
+                setSelectedDuration(duration);
+                setSelectedPrice(price);
+                setSelectedDescription(description);
+                }}>
 
         {variant==='services' &&
         <h5 className="card-title text-center">{title}</h5>}
