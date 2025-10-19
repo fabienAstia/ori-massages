@@ -1,5 +1,5 @@
 DELETE FROM t_services; DELETE FROM t_service_types;
-DELETE FROM t_durations; DELETE FROM t_appointment_statuses;
+DELETE FROM t_durations; DELETE FROM t_statuses;
 
 INSERT INTO t_durations(duration_value, duration_label) VALUES
 (45, '45 min'),
@@ -47,7 +47,7 @@ INSERT INTO t_services (service_name, service_description, service_price, is_act
 (SELECT id FROM t_durations td WHERE td.duration_label = '1h30'),
 (SELECT id FROM t_service_types tst WHERE tst.type_name = 'Soins visage')); 
 
-INSERT INTO t_appointment_statuses (status_name) VALUES
+INSERT INTO t_statuses (status_name) VALUES
 ('enregistré'),
 ('complété'),
 ('annulé');

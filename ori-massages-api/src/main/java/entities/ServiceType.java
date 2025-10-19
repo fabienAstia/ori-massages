@@ -2,6 +2,8 @@ package entities;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "t_service_types")
 public class ServiceType {
@@ -12,28 +14,50 @@ public class ServiceType {
     private Long id;
 
     @Column(name = "type_name")
-    private String value;
+    private String name;
 
     @Column(name = "type_description")
-    private String label;
+    private String description;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ServiceType that = (ServiceType) o;
+        return Objects.equals(name, that.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
+    }
+
+    @Override
+    public String toString() {
+        return "ServiceType{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                '}';
+    }
 
     public Long getId() {
         return id;
     }
 
-    public String getValue() {
-        return value;
+    public String getName() {
+        return name;
     }
 
-    public void setValue(String value) {
-        this.value = value;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getLabel() {
-        return label;
+    public String getDescription() {
+        return description;
     }
 
-    public void setLabel(String label) {
-        this.label = label;
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

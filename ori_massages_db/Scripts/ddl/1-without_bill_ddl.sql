@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS t_appointments, t_services, t_durations, t_appointment_statuses;
+DROP TABLE IF EXISTS t_appointments, t_services, t_durations, t_appointment_statuses, t_statuses;
 DROP TABLE IF EXISTS t_locations, t_service_types, t_messages, t_customers;
 
 CREATE TABLE t_customers(
@@ -40,11 +40,11 @@ CREATE TABLE t_locations(
 	CONSTRAINT t_locations_location_name_uk UNIQUE (location_name)
 );
 
-CREATE TABLE t_appointment_statuses(
+CREATE TABLE t_statuses(
 	id int GENERATED ALWAYS AS IDENTITY,
 	status_name varchar(20) NOT NULL,
-	CONSTRAINT t_appointment_statuses_pk PRIMARY KEY (id),
-	CONSTRAINT t_appointment_statuses_status_name_uk UNIQUE (status_name)
+	CONSTRAINT t_statuses_pk PRIMARY KEY (id),
+	CONSTRAINT t_statuses_status_name_uk UNIQUE (status_name)
 );
 
 CREATE TABLE t_durations(
@@ -88,7 +88,7 @@ CREATE TABLE t_appointments(
 	CONSTRAINT t_appointments_pk PRIMARY KEY (id),
 	CONSTRAINT t_appointments_begin_at_uk UNIQUE (begin_at),
 	CONSTRAINT t_appointments_status_id_fk FOREIGN KEY (status_id)
-		REFERENCES t_appointment_statuses(id),
+		REFERENCES t_statuses(id),
 	CONSTRAINT t_appointments_location_id_fk FOREIGN KEY (location_id)
 		REFERENCES t_locations(id),
 	CONSTRAINT t_appointments_customer_id_fk FOREIGN KEY (customer_id)

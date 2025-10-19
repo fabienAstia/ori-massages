@@ -2,6 +2,8 @@ package entities;
 
 import jakarta.persistence.*;
 
+import java.util.Objects;
+
 @Entity
 @Table(name = "t_services", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"duration_id", "type_id"})
@@ -30,6 +32,30 @@ public class Service {
     @JoinColumn(name = "type_id")
     private ServiceType serviceType;
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Service service = (Service) o;
+        return Objects.equals(name, service.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(name);
+    }
+
+    @Override
+    public String toString() {
+        return "Service{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", active=" + active +
+                ", duration=" + duration +
+                ", serviceType=" + serviceType +
+                '}';
+    }
 
     public Long getId() {
         return id;
