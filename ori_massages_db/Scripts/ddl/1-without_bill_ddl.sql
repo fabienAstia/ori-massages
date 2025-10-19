@@ -69,7 +69,8 @@ CREATE TABLE t_services(
 		REFERENCES t_durations(id),
 	CONSTRAINT t_services_type_id_fk FOREIGN key(type_id)
 		REFERENCES t_service_types(id),
-	CONSTRAINT t_services_service_name_duration_id_type_id_uk UNIQUE (service_name, duration_id, type_id),
+	CONSTRAINT t_services_duration_id_type_id_uk UNIQUE (duration_id, type_id),
+	CONSTRAINT t_services_service_name_uk UNIQUE (service_name),
 	CONSTRAINT t_services_service_description_uk UNIQUE (service_description)
 );
 
