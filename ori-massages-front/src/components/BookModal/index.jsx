@@ -7,16 +7,27 @@ import Row from 'react-bootstrap/Row';
 import HomeCard from '../HomeCard';
 import Contact from '../../views/Contact';
 import BookingCalendar from '../BookingCalendar';
-import { useState } from 'react';
-import lieu1 from '../../assets/photos/lieu1.jpg'
-import lieu2 from '../../assets/photos/lieu2.jpg'
+import { useEffect, useState } from 'react';
+import lieu1 from '../../assets/photos/lieu1.jpg';
+import lieu2 from '../../assets/photos/lieu2.jpg';
+import axios from 'axios';
 
 export default function BookModal(props) {
+  const [date, setDate] = useState(null);
   const [showHours, setShowHours] = useState(false);
   const [hours, setHours] = useState(null);
   const [showLocations, setShowLocations] = useState(false);
   const [activeSlot, setActiveSlot] = useState(null);
   const [location, setLocation] = useState(null);
+  const [contactData, setContactData] = useState({
+    username:"",
+    firstname:"",
+    lastname:"",
+    phoneNumber:"",
+    message:""
+  })
+
+  const [customerAddress, setCustomerAddress] = useState(null);
 
   function setHoursAndUnlockLocations(slot){
     if(activeSlot == slot){
@@ -30,6 +41,10 @@ export default function BookModal(props) {
       setShowLocations(true);
     }
   }
+  useEffect (() => {
+    console.log('date-BookModal', date)
+  })
+
   const slots= ['10h - 10h45', '11h - 11h45', '11h45 - 12h30', '14h . 14h45', '14h45 . 15h30'];
   const slotList = slots.map((slot, id) => {
       return <Button 
@@ -68,13 +83,45 @@ export default function BookModal(props) {
             />
   })
 
+  function handleContactChange(data){
+    setContactData(data);
+    submit();
+  }
+
+  async function submit(){
+      try {
+        console.log('date', date)
+          const res = await axios.post('http://localhost:8080/appointment', {
+              service:{
+                name: props.title, 
+                description: props.description, 
+                price: props.price, 
+                duration: props.duration
+              },
+              date,
+              hours,
+              location,
+              customer:contactData,
+              customerAddress,
+          });
+
+      }catch(err){
+          if(err.response){
+              console.error('POST FAILED with status= ' + err.response.status)
+          } else {
+              console.error(err)
+              alert(err)
+          }
+      }
+  }
+
   return (
     <Modal {...props} 
     aria-labelledby="contained-modal-title-vcenter"
     size='lg'
     onExit={()=>{setShowHours(false); 
-      setShowLocations(false); 
       setActiveSlot(null); 
+      setShowLocations(false); 
       setLocation(null)}}
     >
       <Modal.Header closeButton>
@@ -96,7 +143,9 @@ export default function BookModal(props) {
                </div>
             </Col>
             <Col xs={12} lg={6} className='d-flex justify-content-center align-items-center'>
-                <BookingCalendar />
+                <BookingCalendar 
+                  onChangeDate={setDate}
+                />
             </Col>
           </Row>
 
@@ -129,7 +178,7 @@ export default function BookModal(props) {
               </Row>
               <Row>
                 <Contact
-                variant='services'
+                  onSubmit={(data) => handleContactChange(data)}
                 />
               </Row>
             </div>

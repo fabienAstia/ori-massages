@@ -1,4 +1,4 @@
-package entities;
+package com.fabien_astiasaran.ori_massages_api.entities;
 
 import jakarta.persistence.*;
 
@@ -15,11 +15,14 @@ public class Service {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "service_name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "service_description")
+    @Column(name = "description")
     private String description;
+
+    @Column(name = "price")
+    private Double price;
 
     @Column(name = "is_active")
     private boolean active;
@@ -37,12 +40,13 @@ public class Service {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Service service = (Service) o;
-        return Objects.equals(name, service.name);
+        return Objects.equals(duration, service.duration)
+                && Objects.equals(serviceType, service.serviceType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return Objects.hash(duration, serviceType);
     }
 
     @Override

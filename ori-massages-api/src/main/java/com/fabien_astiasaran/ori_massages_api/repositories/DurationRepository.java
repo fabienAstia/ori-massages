@@ -1,6 +1,6 @@
-package repositories;
+package com.fabien_astiasaran.ori_massages_api.repositories;
 
-import entities.Duration;
+import com.fabien_astiasaran.ori_massages_api.entities.Duration;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

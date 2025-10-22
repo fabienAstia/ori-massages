@@ -14,7 +14,7 @@
     color: red;
 }
 
-.ContactView input:focus, .ContactView textarea:focus{
+.ContactView input:focus, .ContactView message:focus{
     border: solid 5px rgba(29, 140, 135, 0.3);
     box-shadow: none;
 }

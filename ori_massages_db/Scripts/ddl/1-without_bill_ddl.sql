@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS t_appointments, t_services, t_durations, t_appointment_statuses, t_statuses;
+DROP TABLE IF EXISTS t_appointments, t_services, t_durations, t_statuses;
 DROP TABLE IF EXISTS t_locations, t_service_types, t_messages, t_customers;
 
 CREATE TABLE t_customers(
@@ -8,15 +8,14 @@ CREATE TABLE t_customers(
 	firstname varchar(20),
 	phone_number varchar(15)NOT NULL,
 	CONSTRAINT t_customers_pk PRIMARY KEY (id),
-	CONSTRAINT t_customers_username_uk UNIQUE (username),
-	CONSTRAINT t_customers_phone_number_uk UNIQUE (phone_number)
+	CONSTRAINT t_customers_username_uk UNIQUE (username)
 );
 
 CREATE TABLE t_messages(
 	id int GENERATED ALWAYS AS IDENTITY,
 	customer_id int NOT NULL,
-	message_date timestamp NOT NULL,
-	message_content varchar(300) NOT NULL,
+	date timestamp NOT NULL,
+	content varchar(300) NOT NULL,
 	CONSTRAINT t_messages_pk PRIMARY KEY (id),
 	CONSTRAINT t_messages_customer_id_fk FOREIGN KEY (customer_id)
 		REFERENCES t_customers(id)

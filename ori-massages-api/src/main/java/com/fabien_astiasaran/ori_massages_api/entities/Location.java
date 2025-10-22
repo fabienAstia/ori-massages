@@ -1,43 +1,44 @@
-package entities;
+package com.fabien_astiasaran.ori_massages_api.entities;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_service_types")
-public class ServiceType {
-
+@Table(name = "t_locations")
+public class Location {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "type_name")
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "type_description")
-    private String description;
+    @Column(name = "address")
+    private String address;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ServiceType that = (ServiceType) o;
-        return Objects.equals(name, that.name);
+        Location location = (Location) o;
+        return Objects.equals(address, location.address)
+                && Objects.equals(name, location.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(name);
+        return Objects.hash(address, name);
     }
 
     @Override
     public String toString() {
-        return "ServiceType{" +
+        return "Location{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", description='" + description + '\'' +
+                ", address='[PROTECTED]" +
                 '}';
     }
 
@@ -53,11 +54,11 @@ public class ServiceType {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
+    public String getAddress() {
+        return address;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

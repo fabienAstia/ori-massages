@@ -1,20 +1,23 @@
-package entities;
+package com.fabien_astiasaran.ori_massages_api.entities;
 
 import jakarta.persistence.*;
 
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_customers")
-public class Customer {
+@Table(name = "t_users")
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "username")
-    private String username;
+    @Column(name = "email")
+    private String email;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
 
     @Column(name = "lastname")
     private String lastname;
@@ -22,19 +25,16 @@ public class Customer {
     @Column(name = "firstname")
     private String firstname;
 
-    @Column(name = "phone_number")
-    private String phoneNumber;
-
     public Long getId() {
         return id;
     }
 
-    public String getUsername() {
-        return username;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public String getLastname() {
@@ -63,7 +63,7 @@ public class Customer {
 
     @Override
     public String toString() {
-        return "Customer{" +
+        return "User{" +
                 "id=" + id +
                 ", username=' [PROTECTED]" + '\'' +
                 '}';
@@ -72,12 +72,13 @@ public class Customer {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Customer customer)) return false;
-        return Objects.equals(username, customer.username);
+        if (!(o instanceof User user)) return false;
+        return Objects.equals(email, user.email)
+                && Objects.equals(phoneNumber, user.phoneNumber);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(username);
+        return Objects.hash(email, phoneNumber);
     }
 }

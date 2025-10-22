@@ -20,18 +20,18 @@ export default function CustomMassage({showDescription = true, variant}){
         <div className='col' key={massage.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
                 <ServiceCard
-                title={massage.title}
-                image={massage.image}
-                duration={massage.duration}
-                price={massage.price}
-                description={showDescription? massage.description : undefined}
-                variant={variant}
-                setModalShow={setModalShow}
-                setSelectedTitle={setSelectedTitle}
-                setSelectedImage={setSelectedImage}
-                setSelectedPrice={setSelectedPrice}
-                setSelectedDuration={setSelectedDuration}
-                setSelectedDescription={setSelectedDescription}
+                    title={massage.title}
+                    image={massage.image}
+                    duration={massage.duration}
+                    price={massage.price}
+                    description={showDescription? massage.description : undefined}
+                    variant={variant}
+                    setModalShow={setModalShow}
+                    setSelectedTitle={setSelectedTitle}
+                    setSelectedImage={setSelectedImage}
+                    setSelectedPrice={setSelectedPrice}
+                    setSelectedDuration={setSelectedDuration}
+                    setSelectedDescription={setSelectedDescription}
                 />
             </div>
         </div>
@@ -39,8 +39,8 @@ export default function CustomMassage({showDescription = true, variant}){
         <div className='col' key={massage.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
                 <HomeCard
-                title={massage.title}
-                image={massage.image}
+                    title={massage.title}
+                    image={massage.image}
                 />
             </div>
         </div>
@@ -48,12 +48,15 @@ export default function CustomMassage({showDescription = true, variant}){
     return <section className='CustomMassageView'>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
                 {listMassage}
-                <BookModal show={modalShow} onHide={() => setModalShow(false)} 
-                title={selectedTitle} 
-                image={selectedImage}
-                duration={selectedDuration}
-                price={selectedPrice}
-                description={selectedDescription}/>
+                <BookModal 
+                    show={modalShow} 
+                    onHide={() => setModalShow(false)} 
+                    title={selectedTitle} 
+                    image={selectedImage}
+                    duration={selectedDuration}
+                    price={selectedPrice}
+                    description={selectedDescription}
+                />
             </div>
         </section>;
 }

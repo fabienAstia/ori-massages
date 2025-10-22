@@ -1,4 +1,4 @@
-package entities;
+package com.fabien_astiasaran.ori_massages_api.entities;
 
 import jakarta.persistence.*;
 
@@ -15,11 +15,11 @@ public class Message {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "customer_id")
-    private Customer customer;
+    @JoinColumn(name = "user_id")
+    private User user;
 
     @Column(name = "date")
-    private LocalDateTime date;
+    private LocalDateTime dateTime;
 
     @Column(name = "content")
     private String content;
@@ -29,20 +29,20 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(customer, message.customer) && Objects.equals(date, message.date);
+        return Objects.equals(user, message.user) && Objects.equals(dateTime, message.dateTime);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(customer, date);
+        return Objects.hash(user, dateTime);
     }
 
     @Override
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", customer=" + customer +
-                ", date=" + date +
+                ", user=" + user +
+                ", date=" + dateTime +
                 ", content='[PROTECTED]" +
                 '}';
     }
@@ -51,20 +51,20 @@ public class Message {
         return id;
     }
 
-    public Customer getCustomer() {
-        return customer;
+    public User getUser() {
+        return user;
     }
 
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
+    public void setUser(User user) {
+        this.user = user;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public LocalDateTime getDateTime() {
+        return dateTime;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setDateTime(LocalDateTime dateTime) {
+        this.dateTime = dateTime;
     }
 
     public String getContent() {
