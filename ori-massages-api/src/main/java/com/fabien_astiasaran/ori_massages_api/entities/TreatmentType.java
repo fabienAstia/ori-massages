@@ -5,8 +5,8 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_service_types")
-public class ServiceType {
+@Table(name = "t_treatment_types")
+public class TreatmentType {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,7 +23,7 @@ public class ServiceType {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        ServiceType that = (ServiceType) o;
+        TreatmentType that = (TreatmentType) o;
         return Objects.equals(name, that.name);
     }
 
@@ -34,7 +34,7 @@ public class ServiceType {
 
     @Override
     public String toString() {
-        return "ServiceType{" +
+        return "TreatmentType{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +

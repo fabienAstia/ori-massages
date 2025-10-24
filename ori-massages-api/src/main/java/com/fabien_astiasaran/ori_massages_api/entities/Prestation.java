@@ -5,10 +5,10 @@ import jakarta.persistence.*;
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_services", uniqueConstraints = {
+@Table(name = "t_prestations", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"duration_id", "type_id"})
 })
-public class Service {
+public class Prestation {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,37 +27,41 @@ public class Service {
     @Column(name = "is_active")
     private boolean active;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     @ManyToOne
     @JoinColumn(name = "duration_id")
     private Duration duration;
 
     @ManyToOne
     @JoinColumn(name = "type_id")
-    private ServiceType serviceType;
+    private TreatmentType treatmentType;
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Service service = (Service) o;
-        return Objects.equals(duration, service.duration)
-                && Objects.equals(serviceType, service.serviceType);
+        Prestation prestation = (Prestation) o;
+        return Objects.equals(duration, prestation.duration)
+                && Objects.equals(treatmentType, prestation.treatmentType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(duration, serviceType);
+        return Objects.hash(duration, treatmentType);
     }
 
     @Override
     public String toString() {
-        return "Service{" +
+        return "Prestation{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
                 ", active=" + active +
+                ", imagePath=" + imagePath +
                 ", duration=" + duration +
-                ", serviceType=" + serviceType +
+                ", treatmentType=" + treatmentType +
                 '}';
     }
 
@@ -89,6 +93,14 @@ public class Service {
         this.active = active;
     }
 
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
+    }
+
     public Duration getDuration() {
         return duration;
     }
@@ -97,11 +109,19 @@ public class Service {
         this.duration = duration;
     }
 
-    public ServiceType getServiceType() {
-        return serviceType;
+    public TreatmentType getTreatmentType() {
+        return treatmentType;
     }
 
-    public void setServiceType(ServiceType serviceType) {
-        this.serviceType = serviceType;
+    public void setTreatmentType(TreatmentType treatmentType) {
+        this.treatmentType = treatmentType;
+    }
+
+    public Double getPrice() {
+        return price;
+    }
+
+    public void setPrice(Double price) {
+        this.price = price;
     }
 }

@@ -30,7 +30,7 @@ public class Slot {
 
     @ManyToOne
     @JoinColumn(name = "service_id")
-    private Service service;
+    private Prestation prestation;
 
     @Override
     public boolean equals(Object o) {
@@ -40,12 +40,12 @@ public class Slot {
         return Objects.equals(beginHour, slot.beginHour)
                 && Objects.equals(date, slot.date)
                 && Objects.equals(workingHours, slot.workingHours)
-                && Objects.equals(service, slot.service);
+                && Objects.equals(prestation, slot.prestation);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(beginHour, date, workingHours, service);
+        return Objects.hash(beginHour, date, workingHours, prestation);
     }
 
     @Override
@@ -56,7 +56,7 @@ public class Slot {
                 ", status='" + status + '\'' +
                 ", date=" + date +
                 ", workingHours=" + workingHours +
-                ", service=" + service +
+                ", prestation=" + prestation +
                 '}';
     }
 
@@ -96,11 +96,11 @@ public class Slot {
         this.workingHours = workingHours;
     }
 
-    public Service getService() {
-        return service;
+    public Prestation getService() {
+        return prestation;
     }
 
-    public void setService(Service service) {
-        this.service = service;
+    public void setService(Prestation prestation) {
+        this.prestation = prestation;
     }
 }

@@ -19,6 +19,9 @@ public class Location {
     @Column(name = "address")
     private String address;
 
+    @Column(name = "image_path")
+    private String imagePath;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -39,6 +42,7 @@ public class Location {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", address='[PROTECTED]" +
+                ", imagePath='" + imagePath + '\'' +
                 '}';
     }
 
@@ -60,5 +64,13 @@ public class Location {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 }

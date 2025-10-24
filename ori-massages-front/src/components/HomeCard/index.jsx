@@ -1,6 +1,6 @@
 import './HomeCard.css'
 
-export default function HomeCard({title, image, onClick, className=''}){
+export default function HomeCard({title, image, address, onClick, className=''}){
     return (
     <>
     <section className={`homeCard `} onClick={onClick}>
@@ -8,6 +8,7 @@ export default function HomeCard({title, image, onClick, className=''}){
 
             <img src={image} className={`card-img-top custom-img`} alt={title}/>
             <h5 className={`card-title text-center `}>{title}</h5>
+            <p className='text-center'>{address}</p>
 
         </div>
     </section>

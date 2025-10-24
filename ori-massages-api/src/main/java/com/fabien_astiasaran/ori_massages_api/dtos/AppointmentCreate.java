@@ -1,24 +1,20 @@
 package com.fabien_astiasaran.ori_massages_api.dtos;
 
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 
 import java.time.LocalDate;
 
 public record AppointmentCreate(
 
-     @Valid
-     ServiceCreate service,
+     @Valid PrestationCreate prestation,
 
      LocalDate date,
 
      String hours,
 
-     @NotBlank
-     String location,
+     @Valid LocationCreate location,
 
-     @Valid
-     UserCreate customer,
+     @Valid UserCreate user,
 
      String customerAddress
 ) {

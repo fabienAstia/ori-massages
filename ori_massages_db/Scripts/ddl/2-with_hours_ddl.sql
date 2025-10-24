@@ -1,5 +1,5 @@
-DROP TABLE IF EXISTS t_appointments,  t_slots, t_services, t_messages;            
-DROP TABLE IF EXISTS t_users, t_locations, t_working_hours, t_dates, t_durations, t_service_types;
+DROP TABLE IF EXISTS t_appointments,  t_slots, t_prestations, t_messages;            
+DROP TABLE IF EXISTS t_users, t_locations, t_working_hours, t_dates, t_durations, t_treatment_types;
 
 CREATE TABLE t_users(
 	id int GENERATED ALWAYS AS IDENTITY,
@@ -24,13 +24,13 @@ CREATE TABLE t_messages(
 );
 CREATE INDEX idx_messages_user_id ON t_messages(user_id);
 
-CREATE TABLE t_service_types(
+CREATE TABLE t_treatment_types(
 	id int GENERATED ALWAYS AS IDENTITY,
 	name varchar(50) NOT NULL,
 	description varchar(300) NOT NULL,
-	CONSTRAINT t_service_types_pk PRIMARY KEY (id),
-	CONSTRAINT t_service_types_name_uk UNIQUE (name),
-	CONSTRAINT t_service_types_description_uk UNIQUE (description)
+	CONSTRAINT t_treatment_types_pk PRIMARY KEY (id),
+	CONSTRAINT t_treatment_types_name_uk UNIQUE (name),
+	CONSTRAINT t_treatment_types_description_uk UNIQUE (description)
 );
 
 CREATE TABLE t_durations(
@@ -42,23 +42,24 @@ CREATE TABLE t_durations(
 	CONSTRAINT t_durations_duration_value_uk UNIQUE (duration_value)
 );
 
-CREATE TABLE t_services(
+CREATE TABLE t_prestations(
 	id int GENERATED ALWAYS AS IDENTITY,
 	name varchar(50) NOT NULL,
 	description varchar(300) NOT NULL,
 	price numeric(6,2) NOT NULL,
 	is_active boolean DEFAULT TRUE,
+	image_path varchar(20) not null ,
 	duration_id int NOT NULL,
 	type_id int NOT NULL,
-	CONSTRAINT t_services_pk PRIMARY KEY (id),
-	CONSTRAINT t_services_duration_id_fk FOREIGN key(duration_id)
+	CONSTRAINT t_prestations_pk PRIMARY KEY (id),
+	CONSTRAINT t_prestations_duration_id_fk FOREIGN key(duration_id)
 		REFERENCES t_durations(id),
-	CONSTRAINT t_services_type_id_fk FOREIGN key(type_id)
-		REFERENCES t_service_types(id),
-	CONSTRAINT t_services_duration_id_type_id_uk UNIQUE (duration_id, type_id),
-	CONSTRAINT t_services_description_uk UNIQUE (description)
+	CONSTRAINT t_prestations_type_id_fk FOREIGN key(type_id)
+		REFERENCES t_treatment_types(id),
+	CONSTRAINT t_prestations_duration_id_type_id_uk UNIQUE (duration_id, type_id),
+	CONSTRAINT t_prestations_description_uk UNIQUE (description)
 );
-CREATE INDEX idx_services_type_id ON t_services(type_id);
+CREATE INDEX idx_prestations_type_id ON t_prestations(type_id);
 
 CREATE TABLE t_working_hours(
 	id int GENERATED ALWAYS AS IDENTITY,
@@ -84,16 +85,16 @@ create table t_slots(
 	status varchar (20) not null,
 	date_id int not null,
 	working_hours_id int not null,
-	service_id int not null,
+	prestation_id int not null,
 	constraint t_slots_pk primary key (id),  
 	constraint t_slots_date_id_fk foreign key (date_id)  
 		references t_dates (id), 
 	constraint t_slots_working_hours_id_fk foreign key (working_hours_id)  
 		references t_working_hours (id), 
-	constraint t_slots_service_id_fk foreign key (service_id)  
-		references t_services (id), 
-	constraint t_slots_begin_hour_date_working_hours_service_uk  
-		unique(begin_hour, date_id, working_hours_id, service_id)                       		
+	constraint t_slots_prestation_id_fk foreign key (prestation_id)  
+		references t_prestations (id), 
+	constraint t_slots_begin_hour_date_working_hours_prestation_uk  
+		unique(begin_hour, date_id, working_hours_id, prestation_id)                       		
 );
 CREATE INDEX idx_slots_date_id ON t_slots(date_id);
 CREATE INDEX idx_slots_status ON t_slots(status);
@@ -103,6 +104,7 @@ CREATE TABLE t_locations(
 	id int GENERATED ALWAYS AS IDENTITY, 
 	name varchar(50) NOT NULL,
 	address varchar(255),
+	image_path varchar(20) not null, 
 	CONSTRAINT t_locations_pk PRIMARY KEY (id), 
 	CONSTRAINT t_locations_location_name_uk UNIQUE (name, address)
 );

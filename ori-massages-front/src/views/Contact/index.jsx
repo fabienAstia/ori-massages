@@ -5,7 +5,7 @@ import { fi } from 'react-day-picker/locale';
 
 export default function Contact({onSubmit}){
     const [data, setData] = useState(null)
-    const [username, setUsername] = useState('')
+    const [email, setEmail] = useState('')
     const [firstname, setFirstName] = useState('')
     const [lastname, setLastName] = useState('')
     const [phoneNumber, setPhoneNumber] = useState('')
@@ -17,14 +17,13 @@ export default function Contact({onSubmit}){
         e.preventDefault();
         try {
             const res = await axios.post('http://localhost:8080/contact', {
-                username,
+                email,
                 firstname,
                 lastname,
                 phoneNumber,
                 message
             });
             setData(res.data)
-            console.log('res.data', res.data)
         }catch(err){
             if(err.response){
                 console.error('POST FAILED with status= ' + err.response.status)
@@ -59,7 +58,7 @@ export default function Contact({onSubmit}){
                 <form onSubmit={(e) => {
                     e.preventDefault();
                     if(onSubmit) {
-                        onSubmit({username, firstname, lastname, phoneNumber, message})
+                        onSubmit({email, firstname, lastname, phoneNumber, message})
                     } else {
                         submit(e)
                     }
@@ -72,7 +71,7 @@ export default function Contact({onSubmit}){
                             type="email" 
                             className="form-control" 
                             id="email" 
-                            onChange={(e) => setUsername(e.target.value)}
+                            onChange={(e) => setEmail(e.target.value)}
                             aria-describedby="email"
                         />
                         <div id="emailHelp" className="form-text">Nous ne partageons jamais aucun email avec qui que ce soit.</div>

@@ -3,11 +3,10 @@ package com.fabien_astiasaran.ori_massages_api.dtos;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
-public record LocationCreate(
+public record DurationCreate(
         @NotNull Long id,
-
-        @NotBlank String name,
-
-        String address
+        @NotNull Integer value,
+        @NotBlank String label,
+        @NotNull Integer breakTime
 ) {
 }

@@ -8,26 +8,24 @@ import HomeCard from '../HomeCard';
 import Contact from '../../views/Contact';
 import BookingCalendar from '../BookingCalendar';
 import { useEffect, useState } from 'react';
-import lieu1 from '../../assets/photos/lieu1.jpg';
-import lieu2 from '../../assets/photos/lieu2.jpg';
 import axios from 'axios';
 
 export default function BookModal(props) {
+  if(!props.prestation)return null;
   const [date, setDate] = useState(null);
   const [showHours, setShowHours] = useState(false);
   const [hours, setHours] = useState(null);
   const [showLocations, setShowLocations] = useState(false);
   const [activeSlot, setActiveSlot] = useState(null);
+  const [locations, setLocations] = useState(null)
   const [location, setLocation] = useState(null);
   const [contactData, setContactData] = useState({
-    username:"",
+    email:"",
     firstname:"",
     lastname:"",
     phoneNumber:"",
     message:""
   })
-
-  const [customerAddress, setCustomerAddress] = useState(null);
 
   function setHoursAndUnlockLocations(slot){
     if(activeSlot == slot){
@@ -41,45 +39,52 @@ export default function BookModal(props) {
       setShowLocations(true);
     }
   }
-  useEffect (() => {
-    console.log('date-BookModal', date)
-  })
 
   const slots= ['10h - 10h45', '11h - 11h45', '11h45 - 12h30', '14h . 14h45', '14h45 . 15h30'];
   const slotList = slots.map((slot, id) => {
       return <Button 
-              key={id}
-              onClick={() => setHoursAndUnlockLocations(slot)} 
-              className={`btn-toggle ${activeSlot == slot ? 'active' : ''}`}
+                key={id}
+                onClick={() => {
+                  setHoursAndUnlockLocations(slot)
+                  console.log('slot', slot)
+                }} 
+                className={`btn-toggle ${activeSlot == slot ? 'active' : ''}`}
               >
                 {slot}
               </Button>
    })
-  const places = [
-    {
-      id:1,
-      image: lieu1,
-      title:'210 rue de Belleville'
-    }, 
-    {
-      id:2,
-      image: lieu2,
-      title: 'à domicile'
+
+  useEffect(() => {
+    async function getLocations(){
+      try {
+        const response = await axios.get('http://localhost:8080/locations')
+        setLocations(response.data);
+      } catch(err){
+        if(err.response){
+          alert(err.response.data)
+        }else if(err.resquest){
+          alert(err.request)
+        }
+      }
     }
-  ];
-  const placeList = places.map(place => {
-   return  <HomeCard
-            key={place.id}
-            image={place.image}
-            title={place.title}
-            onClick={() => {
-              if(location == place.title) {
-                setLocation(null)
-              } else {
-                setLocation(place.title)
-              }
-            }}
-            className={location == place.title ? 'selected' : '' }
+    getLocations();
+  }, [])
+
+  const placeList = locations?.map(place => {
+    return <HomeCard
+              key={place.id}
+              image={`/photos/${place.imagePath}`}
+              title={place.name}
+              address={place.address}
+              onClick={() => {
+                if(location == place) {
+                  setLocation(null)
+                } else {
+                  setLocation(place)
+                }
+                console.log('location_name= ', place.name)
+              }}
+              className={location == place ? 'selected' : '' }
             />
   })
 
@@ -90,19 +95,14 @@ export default function BookModal(props) {
 
   async function submit(){
       try {
-        console.log('date', date)
+
           const res = await axios.post('http://localhost:8080/appointment', {
-              service:{
-                name: props.title, 
-                description: props.description, 
-                price: props.price, 
-                duration: props.duration
-              },
-              date,
-              hours,
-              location,
-              customer:contactData,
-              customerAddress,
+              prestation: props.prestation,
+              date: date,
+              hours: hours,
+              location:location,
+              user:contactData,
+              customerAddress:''
           });
 
       }catch(err){
@@ -117,16 +117,16 @@ export default function BookModal(props) {
 
   return (
     <Modal {...props} 
-    aria-labelledby="contained-modal-title-vcenter"
-    size='lg'
-    onExit={()=>{setShowHours(false); 
-      setActiveSlot(null); 
-      setShowLocations(false); 
-      setLocation(null)}}
+      aria-labelledby="contained-modal-title-vcenter"
+      size='lg'
+      onExit={()=>{setShowHours(false); 
+        setActiveSlot(null); 
+        setShowLocations(false); 
+        setLocation(null)}}
     >
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
-          {props.title}
+          {props.prestation.name}
         </Modal.Title>
       </Modal.Header>
       <Modal.Body className="grid-example">
@@ -135,11 +135,11 @@ export default function BookModal(props) {
           <Row className='d-flex justify-content-center '>
             <Col xs={12} lg={6} className='text-center'>
               <div className='d-flex justify-content-center '>
-                <img src={props.image} id='imageModal'/>
+                <img src={`/photos/${props.prestation.imagePath}`} id='imageModal'/>
               </div>
-               <p className='my-2'>{props.description}</p>
+               <p className='my-2'>{props.prestation.description}</p>
                <div className='d-flex justify-content-evenly fs-5 fw-bold'>
-                      {props.duration} - {props.price}
+                      {props.prestation.duration.label} - {props.prestation.price + '€'}
                </div>
             </Col>
             <Col xs={12} lg={6} className='d-flex justify-content-center align-items-center'>
@@ -188,7 +188,6 @@ export default function BookModal(props) {
       </Modal.Body>
 
       <Modal.Footer>
-        {/* <Button>Réserver</Button> */}
         <Button onClick={props.onHide} className='btn '>Fermer</Button>
       </Modal.Footer>
     </Modal>

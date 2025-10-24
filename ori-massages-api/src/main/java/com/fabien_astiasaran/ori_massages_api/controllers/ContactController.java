@@ -19,8 +19,8 @@ public class ContactController {
     }
 
     @PostMapping
-    public void createContact(@Valid @RequestBody UserCreate customer){
-        System.out.println("create contact= " + customer.toString());
-        contactService.createContact(customer);
+    public void createContact(@Valid @RequestBody UserCreate user){
+        System.out.println("create contact= " + user.toString());
+        contactService.createContact(user);
     }
 }

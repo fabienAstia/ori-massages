@@ -28,18 +28,23 @@ public class Appointment {
     @JoinColumn(name = "user_id")
     private User user;
 
+    @ManyToOne
+    @JoinColumn(name = "location_id")
+    private Location location;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
         return Objects.equals(slot, that.slot)
-                && Objects.equals(user, that.user);
+                && Objects.equals(user, that.user)
+                && Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(slot, user);
+        return Objects.hash(slot, user, location);
     }
 
     @Override
@@ -50,6 +55,7 @@ public class Appointment {
                 ", comment='[PROTECTED]" +
                 ", slot=" + slot +
                 ", user=" + user +
+                ", location=" + location +
                 '}';
     }
 
@@ -87,5 +93,13 @@ public class Appointment {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Location getLocation() {
+        return location;
+    }
+
+    public void setLocation(Location location) {
+        this.location = location;
     }
 }
