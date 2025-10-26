@@ -15,7 +15,10 @@ public class Slot {
     private Long id;
 
     @Column(name = "begin_at")
-    private LocalTime beginHour;
+    private LocalTime beginAt;
+
+    @Column(name = "end_at")
+    private LocalTime endAt;
 
     @Column(name = "status")
     private String status;
@@ -29,7 +32,7 @@ public class Slot {
     private WorkingHours workingHours;
 
     @ManyToOne
-    @JoinColumn(name = "service_id")
+    @JoinColumn(name = "prestation_id")
     private Prestation prestation;
 
     @Override
@@ -37,22 +40,22 @@ public class Slot {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Slot slot = (Slot) o;
-        return Objects.equals(beginHour, slot.beginHour)
+        return Objects.equals(beginAt, slot.beginAt)
                 && Objects.equals(date, slot.date)
-                && Objects.equals(workingHours, slot.workingHours)
-                && Objects.equals(prestation, slot.prestation);
+                && Objects.equals(workingHours, slot.workingHours);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(beginHour, date, workingHours, prestation);
+        return Objects.hash(beginAt, date, workingHours);
     }
 
     @Override
     public String toString() {
         return "Slot{" +
                 "id=" + id +
-                ", beginHour=" + beginHour +
+                ", beginAt=" + beginAt +
+                ", endAt=" + endAt +
                 ", status='" + status + '\'' +
                 ", date=" + date +
                 ", workingHours=" + workingHours +
@@ -64,12 +67,24 @@ public class Slot {
         return id;
     }
 
-    public LocalTime getBeginHour() {
-        return beginHour;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setBeginHour(LocalTime beginHour) {
-        this.beginHour = beginHour;
+    public LocalTime getBeginAt() {
+        return beginAt;
+    }
+
+    public void setBeginAt(LocalTime beginAt) {
+        this.beginAt = beginAt;
+    }
+
+    public LocalTime getEndAt() {
+        return endAt;
+    }
+
+    public void setEndAt(LocalTime endAt) {
+        this.endAt = endAt;
     }
 
     public String getStatus() {
@@ -96,11 +111,11 @@ public class Slot {
         this.workingHours = workingHours;
     }
 
-    public Prestation getService() {
+    public Prestation getPrestation() {
         return prestation;
     }
 
-    public void setService(Prestation prestation) {
+    public void setPrestation(Prestation prestation) {
         this.prestation = prestation;
     }
 }

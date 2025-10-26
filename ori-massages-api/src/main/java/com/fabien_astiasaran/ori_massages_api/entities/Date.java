@@ -6,7 +6,7 @@ import java.time.LocalDate;
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_statuses")
+@Table(name = "t_dates")
 public class Date {
 
     @Id

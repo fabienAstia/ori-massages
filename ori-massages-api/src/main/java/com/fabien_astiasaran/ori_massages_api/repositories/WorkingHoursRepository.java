@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface WorkingHoursRepository extends JpaRepository<WorkingHours, Long> {
+    WorkingHours findByName(String name);
 }

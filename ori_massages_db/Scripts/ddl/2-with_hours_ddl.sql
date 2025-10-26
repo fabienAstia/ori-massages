@@ -81,7 +81,8 @@ create table t_dates(
 
 create table t_slots(
 	id int GENERATED ALWAYS AS identity,
-	begin_hour time not null,
+	begin_at time not null,
+	end_at time not null,
 	status varchar (20) not null,
 	date_id int not null,
 	working_hours_id int not null,
@@ -93,8 +94,8 @@ create table t_slots(
 		references t_working_hours (id), 
 	constraint t_slots_prestation_id_fk foreign key (prestation_id)  
 		references t_prestations (id), 
-	constraint t_slots_begin_hour_date_working_hours_prestation_uk  
-		unique(begin_hour, date_id, working_hours_id, prestation_id)                       		
+	constraint t_slots_begin_hour_date_working_hours_uk  
+		unique(begin_at, date_id, working_hours_id)                       		
 );
 CREATE INDEX idx_slots_date_id ON t_slots(date_id);
 CREATE INDEX idx_slots_status ON t_slots(status);

@@ -14,7 +14,7 @@ export default function CustomMassage({showDescription = true, variant}){
         async function getPrestations(){
             try {
                 const result = await axios.get('http://localhost:8080/prestations/massages')
-                console.log('response=', result.data)
+                console.log('getPrestations=', result.data)
                 return setPrestations(result.data);
             } catch(err) {
                 if(err.response){

@@ -9,11 +9,13 @@ import Contact from '../../views/Contact';
 import BookingCalendar from '../BookingCalendar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { da } from 'react-day-picker/locale';
 
 export default function BookModal(props) {
   if(!props.prestation)return null;
   const [date, setDate] = useState(null);
   const [showHours, setShowHours] = useState(false);
+  const [slots, setSlots] = useState(null)
   const [hours, setHours] = useState(null);
   const [showLocations, setShowLocations] = useState(false);
   const [activeSlot, setActiveSlot] = useState(null);
@@ -27,30 +29,54 @@ export default function BookModal(props) {
     message:""
   })
 
-  function setHoursAndUnlockLocations(slot){
+  function setSlotsAndUnlockLocations(slot){
     if(activeSlot == slot){
-      setHours(null)
       setActiveSlot(null)
       setShowLocations(false)
       setLocation(null)
     } else {
-      setHours(slot);
+      slot.date = date;
       setActiveSlot(slot);
       setShowLocations(true);
     }
   }
 
-  const slots= ['10h - 10h45', '11h - 11h45', '11h45 - 12h30', '14h . 14h45', '14h45 . 15h30'];
-  const slotList = slots.map((slot, id) => {
+  async function getSlots(date) {
+    try {
+      console.log('DATE= ', date)
+      if(date){
+          const response = await axios.post('http://localhost:8080/slots/availables',{
+          date: date,
+          prestation: props.prestation
+        })
+        setSlots(response.data)
+        console.log('getSlots=', response.data)
+        return response.data;
+      }   
+    } catch(error){
+      if(error.response){
+        alert('Failed to getSlots', error.response.data)
+      }else if(error.request){
+        alert('Failed to execute getSlots(), error.request=', error.request)
+      }
+    }
+  }
+
+  function handleDateChange(data){
+    setDate(data);
+    getSlots(data);
+  }
+
+  const slotList = slots?.map((slot, id) => {
       return <Button 
                 key={id}
                 onClick={() => {
-                  setHoursAndUnlockLocations(slot)
-                  console.log('slot', slot)
+                  setSlotsAndUnlockLocations(slot)
+                  console.log('slot=', slot)
                 }} 
                 className={`btn-toggle ${activeSlot == slot ? 'active' : ''}`}
               >
-                {slot}
+                {slot.beginAt} - {slot.endVisible}
               </Button>
    })
 
@@ -88,23 +114,21 @@ export default function BookModal(props) {
             />
   })
 
+ 
   function handleContactChange(data){
     setContactData(data);
-    submit();
+    submit(data);
   }
 
-  async function submit(){
+  async function submit(data){
       try {
-
           const res = await axios.post('http://localhost:8080/appointment', {
-              prestation: props.prestation,
-              date: date,
-              hours: hours,
+              comment: '',
+              slot:activeSlot,              
               location:location,
-              user:contactData,
-              customerAddress:''
+              user:data,
           });
-
+          alert('You\'ve created an appointment')
       }catch(err){
           if(err.response){
               console.error('POST FAILED with status= ' + err.response.status)
@@ -119,7 +143,9 @@ export default function BookModal(props) {
     <Modal {...props} 
       aria-labelledby="contained-modal-title-vcenter"
       size='lg'
-      onExit={()=>{setShowHours(false); 
+      onExit={()=>{
+        setDate(null);
+        setShowHours(false); 
         setActiveSlot(null); 
         setShowLocations(false); 
         setLocation(null)}}
@@ -144,45 +170,50 @@ export default function BookModal(props) {
             </Col>
             <Col xs={12} lg={6} className='d-flex justify-content-center align-items-center'>
                 <BookingCalendar 
-                  onChangeDate={setDate}
+                  onChangeDate={handleDateChange}
                 />
             </Col>
           </Row>
 
-          <Row className='my-2 d-flex'>
-            <Col xl={12} className='d-flex justify-content-center w-100'>
-              <Button onClick={() => {setShowHours(!showHours)}} className={`w-100 ${showHours ? 'bg-custom' : 'bg-none'}`}>{showHours ? 'Masquer les horaires' : 'Afficher les horaires'}</Button>
-            </Col>
-          </Row>
-          <Row className={`section-hours ${showHours ? 'd-hours' : 'd-none'}`} >
-            <Col className='d-flex justify-content-center flex-wrap my-3'>
-             {slotList}
-            </Col>
-          </Row>
+          {date &&
+            <>
+              <Row className='my-2 d-flex'>
+              <Col xl={12} className='d-flex justify-content-center w-100'>
+                <Button onClick={() => {setShowHours(!showHours)}} className={`w-100 ${showHours ? 'bg-custom' : 'bg-none'}`}>{showHours ? 'Masquer les horaires' : 'Afficher les horaires'}</Button>
+              </Col>
+            </Row>
+            <Row className={`section-hours ${showHours ? 'd-hours' : 'd-none'}`} >
+              <Col className='d-flex justify-content-center flex-wrap my-3'>
+              {slotList}
+              </Col>
+            </Row>
 
-          <Row className={`section-locations ${showLocations ? 'd-locations' : 'd-none'}`} >
-            <Col xl={12} >
-              <Button onClick={() => {setShowLocations(hours != null)}} className={`w-100 ${showLocations ? 'bg-custom' : 'bg-none'}`}>Choisissez un lieu</Button>
-            </Col>
-          </Row>
-          <Row className={`row row-cols-2 justify-content-center my-3 ${showLocations ? 'd-locations' : 'd-none'}`}>
-            {placeList}
-          </Row>
-                 
-            {location &&
-            <div>
-              <Row>
-                <Col xl={12} className='d-flex justify-content-center w-100'>
-                  <Button className='w-100 bg-custom'>Rentrez vos coordonnées</Button>
-                </Col>
-              </Row>
-              <Row>
-                <Contact
-                  onSubmit={(data) => handleContactChange(data)}
-                />
-              </Row>
-            </div>
-            }
+            <Row className={`section-locations ${showLocations ? 'd-locations' : 'd-none'}`} >
+              <Col xl={12} >
+                <Button onClick={() => {setShowLocations(activeSlot != null)}} className={`w-100 ${showLocations ? 'bg-custom' : 'bg-none'}`}>Choisissez un lieu</Button>
+              </Col>
+            </Row>
+            <Row className={`row row-cols-2 justify-content-center my-3 ${showLocations ? 'd-locations' : 'd-none'}`}>
+              {placeList}
+            </Row>
+                  
+              {location &&
+              <div>
+                <Row>
+                  <Col xl={12} className='d-flex justify-content-center w-100'>
+                    <Button className='w-100 bg-custom'>Rentrez vos coordonnées</Button>
+                  </Col>
+                </Row>
+                <Row>
+                  <Contact
+                    onSubmit={(data) => handleContactChange(data)}
+                  />
+                </Row>
+              </div>
+              }
+          </>
+          }
+          
             
         </Container>
       </Modal.Body>
