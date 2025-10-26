@@ -14,15 +14,15 @@ public class SlotMapper {
         return entity;
     }
 
-    public SlotResponse toResponse(Slot slot){
-        return new SlotResponse(
-                slot.getId(),
-                slot.getBeginAt(),
-                slot.getEndAt(),
-                slot.getEndAt(),
-                slot.getDate().getDate(),
-                WorkingHoursMapper.toResponse(slot.getWorkingHours()),
-                PrestationMapper.toResponse(slot.getPrestation())
-        );
-    }
+//    public SlotResponse toResponse(Slot slot){
+//        return new SlotResponse(
+//                slot.getId(),
+//                slot.getBeginAt(),
+//                slot.getEndAt(),
+//                slot.getEndAt(),
+//                slot.getDate().getDate(),
+//                WorkingHoursMapper.toResponse(slot.getWorkingHours()),
+//                PrestationMapper.toResponse(slot.getPrestation())
+//        );
+//    }
 }

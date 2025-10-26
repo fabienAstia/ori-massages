@@ -19,3 +19,27 @@
     font-weight: 700;
 }
 
+.rdp-day.rdp-selected {
+    background-color: #009688;
+}
+
+.rdp-day.rdp-selected > .rdp-day_button{
+    border:none;
+    color: #fff;
+}
+
+.rdp-day.rdp-today{
+   color: #013b35;
+    font-weight: 900;
+    background-color: rgba(146, 253, 185, 0.8);
+}
+
+.rdp-chevron{
+    --rdp-accent-color: #009688;
+}
+
+.rdp-footer{
+    background-color: rgba(146, 253, 185, 0.8);
+    padding: 2px;
+    border-radius: 50%;
+}

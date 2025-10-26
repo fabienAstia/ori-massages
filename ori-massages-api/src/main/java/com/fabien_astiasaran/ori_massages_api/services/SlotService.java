@@ -17,6 +17,7 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -55,13 +56,15 @@ public class SlotService {
             Integer timeRange = endWorkingHour_min - startWorkingHour_min;
             Integer numberOfSLots = timeRange / realDuration;
 
+            String formatSlotPattern = "HH:mm";
+            DateTimeFormatter formatSlotFormatter = DateTimeFormatter.ofPattern(formatSlotPattern);
             for(int i = 0; i < numberOfSLots; i++){
                 Integer startSlotTime = startWorkingHour_min + (i * realDuration);
                 SlotResponse slot =  new SlotResponse(
                         null,
-                        LocalTime.of(startSlotTime/60, startSlotTime%60),
-                        LocalTime.of((startSlotTime + visibleDuration)/60, (startSlotTime+visibleDuration)%60),
-                        LocalTime.of((startSlotTime + realDuration)/60, (startSlotTime+realDuration)%60),
+                        formatSlotFormatter.format(LocalTime.of(startSlotTime/60, startSlotTime%60)),
+                        formatSlotFormatter.format(LocalTime.of((startSlotTime + visibleDuration)/60, (startSlotTime+visibleDuration)%60)),
+                        formatSlotFormatter.format(LocalTime.of((startSlotTime + realDuration)/60, (startSlotTime+realDuration)%60)),
                         slotAvailableCreate.date(),
                         WorkingHoursMapper.toResponse(w),
                         PrestationMapper.toResponse(prestation)

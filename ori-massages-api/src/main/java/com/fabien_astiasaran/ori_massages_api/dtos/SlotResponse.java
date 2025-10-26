@@ -5,9 +5,12 @@ import java.time.LocalTime;
 
 public record SlotResponse(
         Long id,
-        LocalTime beginAt,
-        LocalTime endVisible,
-        LocalTime endReal,
+//        LocalTime beginAt,
+//        LocalTime endVisible,
+//        LocalTime endReal,
+        String beginAt,
+        String endVisible,
+        String endReal,
         LocalDate date,
         WorkingHoursResponse workingHours,
         PrestationResponse prestation
