@@ -31,7 +31,7 @@
 .rdp-day.rdp-today{
    color: #013b35;
     font-weight: 900;
-    background-color: rgba(146, 253, 185, 0.8);
+    /* background-color: rgba(146, 253, 185, 0.8); */
 }
 
 .rdp-chevron{

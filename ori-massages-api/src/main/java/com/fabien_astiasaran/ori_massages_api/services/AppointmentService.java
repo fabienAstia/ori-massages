@@ -58,10 +58,11 @@ public class AppointmentService {
     }
 
     private void createMessageIfPresent(AppointmentCreate appointmentCreate, User user) {
-        Message message = new Message();
         if(!appointmentCreate.user().message().isBlank()){
-            message.setContent(appointmentCreate.user().message());
+            Message message = new Message();
             message.setUser(user);
+            message.setDateTime(LocalDateTime.now());
+            message.setContent(appointmentCreate.user().message());
             messageRepository.save(message);
         }
     }

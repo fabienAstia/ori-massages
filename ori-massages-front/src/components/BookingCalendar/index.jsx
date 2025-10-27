@@ -16,7 +16,6 @@ export default function BookingCalendar({onChangeDate}){
             onSelect={(selectedDate) => {
                 setSelectedDate(selectedDate);
                 onChangeDate(selectedDate)
-                // formatDay('DD/MM/YYYY')
                 console.log(selectedDate, 'date on Day Picker')
             }}
             footer={

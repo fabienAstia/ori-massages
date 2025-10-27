@@ -16,7 +16,7 @@ export default function BookModal(props) {
   const [date, setDate] = useState(null);
   const [showHours, setShowHours] = useState(false);
   const [slots, setSlots] = useState(null)
-  const [hours, setHours] = useState(null);
+  // const [hours, setHours] = useState(null);
   const [showLocations, setShowLocations] = useState(false);
   const [activeSlot, setActiveSlot] = useState(null);
   const [locations, setLocations] = useState(null)
@@ -132,6 +132,11 @@ export default function BookModal(props) {
       }catch(err){
           if(err.response){
               console.error('POST FAILED with status= ' + err.response.status)
+              console.error('POST FAILED with message= ' + err.response.message)
+              console.error('POST FAILED with data= ' + err.response.data)
+
+              console.error('POST FAILED with field= ' + err.response.data.fieldsErrors)
+              console.error('POST FAILED with global= ' + err.response.data.globalErrors)
           } else {
               console.error(err)
               alert(err)
