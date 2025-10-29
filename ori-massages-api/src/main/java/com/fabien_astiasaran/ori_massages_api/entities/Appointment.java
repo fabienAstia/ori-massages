@@ -40,14 +40,12 @@ public class Appointment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
-        return Objects.equals(slot, that.slot)
-                && Objects.equals(user, that.user)
-                && Objects.equals(location, that.location);
+        return Objects.equals(slot.getId(), that.slot.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(slot, user, location);
+        return Objects.hash(slot.getId());
     }
 
     @Override

@@ -34,7 +34,6 @@ public class SlotService {
     }
 
     public List<SlotResponse> getAvailableSlots(SlotAvailableCreate slotAvailableCreate){
-        System.out.println("slotAvailableCreate"+ slotAvailableCreate.toString());
         Prestation prestation = prestationRepository.findById(slotAvailableCreate.prestation().id())
                 .orElseThrow(() -> new EntityNotFoundException("Prestation Not Found"));
         List<WorkingHours> workingHours = workingHoursRepository.findAll();
@@ -69,24 +68,51 @@ public class SlotService {
                 slots.add(slotResp);
             }
         });
-        return filterBookedSlots(slots);
+        return slots;
     }
 
     public List<SlotResponse> filterBookedSlots(List<SlotResponse> slots){
         List<Slot> existingSlots = slotRepository.findAll();
         List<SlotResponse> filteredSlots = new ArrayList<>();
         slots.forEach(slot -> {
-            Boolean same = false;
+            Boolean cannotBook = false;
             for(Slot existingSlot : existingSlots){
-                if(slot.beginAt().equals(localTimeToString(existingSlot.getBeginAt())) && slot.date().equals(existingSlot.getDate().getDate())){
-                    same = true;
+                if(beginsInsideExistingSlot(slot, existingSlot)
+                        || endsInsideExistingSlot(slot, existingSlot)
+                        || fullyOverlapsExistingSlot(slot, existingSlot))
+                {
+                    cannotBook = true;
                 }
             }
-            if(!same){
+            if(!cannotBook){
                 filteredSlots.add(slot);
             }
         });
         return filteredSlots;
+    }
+
+    private static boolean beginsInsideExistingSlot(SlotResponse slot, Slot existingSlot) {
+        LocalTime beginAt = existingSlot.getBeginAt();
+        LocalTime endAt = existingSlot.getEndAt();
+        return (LocalTime.parse(slot.beginAt()).isAfter(beginAt) || LocalTime.parse(slot.beginAt()).equals(beginAt))
+                && LocalTime.parse(slot.beginAt()).isBefore(endAt)
+                && slot.date().equals(existingSlot.getDate().getDate());
+    }
+
+    private static boolean endsInsideExistingSlot(SlotResponse slot, Slot existingSlot) {
+        LocalTime beginAt = existingSlot.getBeginAt();
+        LocalTime endAt = existingSlot.getEndAt();
+        return (LocalTime.parse(slot.endReal()).isAfter(beginAt)
+                && LocalTime.parse(slot.endReal()).isBefore(endAt)
+                && slot.date().equals(existingSlot.getDate().getDate()));
+    }
+
+    private static boolean fullyOverlapsExistingSlot(SlotResponse slot, Slot existingSlot) {
+        LocalTime beginAt = existingSlot.getBeginAt();
+        LocalTime endAt = existingSlot.getEndAt();
+        return (LocalTime.parse(slot.beginAt()).isBefore(beginAt)
+                && LocalTime.parse(slot.endReal()).isAfter(endAt)
+                && slot.date().equals(existingSlot.getDate().getDate()));
     }
 
     public static String localTimeToString(int hour, int min){

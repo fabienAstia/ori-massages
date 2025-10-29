@@ -31,7 +31,7 @@ public class AppointmentService {
         this.messageRepository = messageRepository;
     }
 
-    public void createAppointment(AppointmentCreate appointmentCreate){
+    public Appointment createAppointment(AppointmentCreate appointmentCreate){
         Prestation prestation = prestationRepository.findById(appointmentCreate.slot().prestation().id())
                 .orElseThrow(()-> new EntityNotFoundException("Prestation not found"));
         Date date = dateService.findOrCreateDate(appointmentCreate.slot());
@@ -43,11 +43,10 @@ public class AppointmentService {
         Location location = locationRepository.findById(appointmentCreate.location().id())
                 .orElseThrow(()-> new EntityNotFoundException("Location not found"));
 
-        buildAndSaveAppointment(slot, user, location, message);
-        System.out.println("appointmentCreate= " + appointmentCreate);
+        return buildAndSaveAppointment(slot, user, location, message);
     }
 
-    private void buildAndSaveAppointment(Slot slot, User user, Location location, Message message) {
+    private Appointment buildAndSaveAppointment(Slot slot, User user, Location location, Message message) {
         Appointment appointment = new Appointment();
         appointment.setCreatedAt(LocalDateTime.now());
         appointment.setComment(message != null ? message.getContent() : null);
@@ -55,7 +54,7 @@ public class AppointmentService {
         appointment.setSlot(slot);
         appointment.setUser(user);
         appointment.setLocation(location);
-        appointmentRepository.save(appointment);
+        return appointmentRepository.save(appointment);
     }
 
     private static String setAddress(User user, Location location) {

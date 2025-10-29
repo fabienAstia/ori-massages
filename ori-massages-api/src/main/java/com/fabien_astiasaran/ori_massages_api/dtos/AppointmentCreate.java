@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+
 public record AppointmentCreate(
      String comment,
      @Valid SlotCreate slot,

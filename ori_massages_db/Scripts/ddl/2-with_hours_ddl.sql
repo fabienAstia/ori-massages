@@ -126,8 +126,8 @@ CREATE TABLE t_appointments(
 		REFERENCES t_users(id),
 	CONSTRAINT t_appointments_location_id_fk FOREIGN KEY (location_id)
 		REFERENCES t_locations(id),
-	CONSTRAINT t_appointments_slot_user_location_created_uk 
-		unique (slot_id, user_id, location_id, created_at)
+	CONSTRAINT t_appointments_slot_id_uk 
+		unique (slot_id)
 );
 CREATE INDEX idx_appointments_user_id ON t_appointments(user_id);
 CREATE INDEX idx_appointments_slot_id ON t_appointments(slot_id);
