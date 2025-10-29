@@ -39,31 +39,39 @@ public class AppointmentService {
                 .orElseThrow(()-> new EntityNotFoundException("WorkingHours not found"));
         Slot slot = slotService.createSlot(appointmentCreate, date, workingHours, prestation);
         User user = userService.findOrCreateUser(appointmentCreate);
-        createMessageIfPresent(appointmentCreate, user);
+        Message message = createMessageIfPresent(appointmentCreate, user);
         Location location = locationRepository.findById(appointmentCreate.location().id())
                 .orElseThrow(()-> new EntityNotFoundException("Location not found"));
 
-        buildAndSaveAppointment(slot, user, location);
+        buildAndSaveAppointment(slot, user, location, message);
         System.out.println("appointmentCreate= " + appointmentCreate);
     }
 
-    private void buildAndSaveAppointment(Slot slot, User user, Location location) {
+    private void buildAndSaveAppointment(Slot slot, User user, Location location, Message message) {
         Appointment appointment = new Appointment();
         appointment.setCreatedAt(LocalDateTime.now());
-        appointment.setComment("");
+        appointment.setComment(message != null ? message.getContent() : null);
+        appointment.setAddress(setAddress(user, location));
         appointment.setSlot(slot);
         appointment.setUser(user);
         appointment.setLocation(location);
         appointmentRepository.save(appointment);
     }
 
-    private void createMessageIfPresent(AppointmentCreate appointmentCreate, User user) {
+    private static String setAddress(User user, Location location) {
+        return location.getName().equals("A domicile")
+                ? user.getUserAddress()
+                : location.getAddress();
+    }
+
+    private Message createMessageIfPresent(AppointmentCreate appointmentCreate, User user) {
         if(!appointmentCreate.user().message().isBlank()){
             Message message = new Message();
             message.setUser(user);
             message.setDateTime(LocalDateTime.now());
             message.setContent(appointmentCreate.user().message());
-            messageRepository.save(message);
+            return messageRepository.save(message);
         }
+        return null;
     }
 }

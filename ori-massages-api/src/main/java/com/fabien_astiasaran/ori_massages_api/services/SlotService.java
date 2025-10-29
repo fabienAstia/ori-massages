@@ -9,7 +9,6 @@ import com.fabien_astiasaran.ori_massages_api.entities.Slot;
 import com.fabien_astiasaran.ori_massages_api.entities.WorkingHours;
 import com.fabien_astiasaran.ori_massages_api.mappers.PrestationMapper;
 import com.fabien_astiasaran.ori_massages_api.mappers.WorkingHoursMapper;
-import com.fabien_astiasaran.ori_massages_api.repositories.DateRepository;
 import com.fabien_astiasaran.ori_massages_api.repositories.PrestationRepository;
 import com.fabien_astiasaran.ori_massages_api.repositories.SlotRepository;
 import com.fabien_astiasaran.ori_massages_api.repositories.WorkingHoursRepository;
@@ -24,56 +23,82 @@ import java.util.List;
 @Service
 public class SlotService {
 
-    private DateService dateService;
     private WorkingHoursRepository workingHoursRepository;
     private PrestationRepository prestationRepository;
     private SlotRepository slotRepository;
 
-    public SlotService(DateService dateService, WorkingHoursRepository workingHoursRepository, PrestationRepository prestationRepository, SlotRepository slotRepository) {
-        this.dateService = dateService;
+    public SlotService(WorkingHoursRepository workingHoursRepository, PrestationRepository prestationRepository, SlotRepository slotRepository) {
         this.workingHoursRepository = workingHoursRepository;
         this.prestationRepository = prestationRepository;
         this.slotRepository = slotRepository;
     }
 
     public List<SlotResponse> getAvailableSlots(SlotAvailableCreate slotAvailableCreate){
+        System.out.println("slotAvailableCreate"+ slotAvailableCreate.toString());
         Prestation prestation = prestationRepository.findById(slotAvailableCreate.prestation().id())
                 .orElseThrow(() -> new EntityNotFoundException("Prestation Not Found"));
         List<WorkingHours> workingHours = workingHoursRepository.findAll();
-        return createAvailableSlots(slotAvailableCreate, workingHours, prestation);
+        List<SlotResponse> createdSlots = createAvailableSlots(slotAvailableCreate, workingHours, prestation);
+        return filterBookedSlots(createdSlots);
     }
 
-    private static List<SlotResponse> createAvailableSlots(SlotAvailableCreate slotAvailableCreate, List<WorkingHours> workingHours, Prestation prestation) {
+    private List<SlotResponse> createAvailableSlots(SlotAvailableCreate slotAvailableCreate, List<WorkingHours> workingHours, Prestation prestation) {
         List<SlotResponse> slots = new ArrayList<>();
         workingHours.forEach(w -> {
             LocalTime startWorkingHour = w.getStartTime();
             LocalTime endWorkingHour = w.getEndTime();
 
-            Integer startWorkingHour_min = startWorkingHour.getHour() * 60 + startWorkingHour.getMinute();
-            Integer endWorkingHour_min = endWorkingHour.getHour() * 60 + endWorkingHour.getMinute();
+            Integer startWorkingHourInMin = startWorkingHour.getHour() * 60 + startWorkingHour.getMinute();
+            Integer endWorkingHourInMin = endWorkingHour.getHour() * 60 + endWorkingHour.getMinute();
             Integer visibleDuration = slotAvailableCreate.prestation().duration().value();
             Integer realDuration = visibleDuration + slotAvailableCreate.prestation().duration().breakTime();
-            Integer timeRange = endWorkingHour_min - startWorkingHour_min;
+            Integer timeRange = endWorkingHourInMin - startWorkingHourInMin;
             Integer numberOfSLots = timeRange / realDuration;
 
-            String formatSlotPattern = "HH:mm";
-            DateTimeFormatter formatSlotFormatter = DateTimeFormatter.ofPattern(formatSlotPattern);
-            for(int i = 0; i < numberOfSLots; i++){
-                Integer startSlotTime = startWorkingHour_min + (i * realDuration);
-                SlotResponse slot =  new SlotResponse(
+            for(int i = 0; i < numberOfSLots; i++) {
+                Integer startSlotTime = startWorkingHourInMin + (i * realDuration);
+                SlotResponse slotResp =  new SlotResponse(
                         null,
-                        formatSlotFormatter.format(LocalTime.of(startSlotTime/60, startSlotTime%60)),
-                        formatSlotFormatter.format(LocalTime.of((startSlotTime + visibleDuration)/60, (startSlotTime+visibleDuration)%60)),
-                        formatSlotFormatter.format(LocalTime.of((startSlotTime + realDuration)/60, (startSlotTime+realDuration)%60)),
+                        localTimeToString(startSlotTime / 60, startSlotTime % 60),
+                        localTimeToString((startSlotTime + visibleDuration) /60, (startSlotTime + visibleDuration) % 60),
+                        localTimeToString((startSlotTime + realDuration) / 60, (startSlotTime + realDuration) % 60),
                         slotAvailableCreate.date(),
                         WorkingHoursMapper.toResponse(w),
                         PrestationMapper.toResponse(prestation)
                 );
-                slots.add(slot);
+                slots.add(slotResp);
             }
         });
-        System.out.println("slots= " + slots);
-        return slots;
+        return filterBookedSlots(slots);
+    }
+
+    public List<SlotResponse> filterBookedSlots(List<SlotResponse> slots){
+        List<Slot> existingSlots = slotRepository.findAll();
+        List<SlotResponse> filteredSlots = new ArrayList<>();
+        slots.forEach(slot -> {
+            Boolean same = false;
+            for(Slot existingSlot : existingSlots){
+                if(slot.beginAt().equals(localTimeToString(existingSlot.getBeginAt())) && slot.date().equals(existingSlot.getDate().getDate())){
+                    same = true;
+                }
+            }
+            if(!same){
+                filteredSlots.add(slot);
+            }
+        });
+        return filteredSlots;
+    }
+
+    public static String localTimeToString(int hour, int min){
+        String formatSlotPattern = "HH:mm";
+        DateTimeFormatter formatSlotFormatter = DateTimeFormatter.ofPattern(formatSlotPattern);
+        return formatSlotFormatter.format(LocalTime.of(hour, min));
+    }
+
+    public static String localTimeToString(LocalTime localTime){
+        String formatSlotPattern = "HH:mm";
+        DateTimeFormatter formatSlotFormatter = DateTimeFormatter.ofPattern(formatSlotPattern);
+        return formatSlotFormatter.format(LocalTime.of(localTime.getHour(), localTime.getMinute()));
     }
 
     public Slot createSlot(AppointmentCreate appointmentCreate, Date date, WorkingHours workingHours, Prestation prestation) {

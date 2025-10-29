@@ -17,6 +17,8 @@ public record UserCreate(
         @Size(min = 10, max = 14)
         String phoneNumber,
         @Size(max=300)
-        String message
+        String message,
+        @Size(max=255)
+        String address
         ) {
 }

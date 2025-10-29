@@ -20,6 +20,9 @@ public class Appointment {
     @Column(name = "comment")
     private String comment;
 
+    @Column(name = "address")
+    private String address;
+
     @ManyToOne
     @JoinColumn(name = "slot_id")
     private Slot slot;
@@ -53,6 +56,7 @@ public class Appointment {
                 "id=" + id +
                 ", createdAt=" + createdAt +
                 ", comment='[PROTECTED]" +
+                ", address=" + address +
                 ", slot=" + slot +
                 ", user=" + user +
                 ", location=" + location +
@@ -101,5 +105,13 @@ public class Appointment {
 
     public void setLocation(Location location) {
         this.location = location;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
     }
 }

@@ -41,13 +41,12 @@ public class Slot {
         if (o == null || getClass() != o.getClass()) return false;
         Slot slot = (Slot) o;
         return Objects.equals(beginAt, slot.beginAt)
-                && Objects.equals(date, slot.date)
-                && Objects.equals(workingHours, slot.workingHours);
+                && Objects.equals(date, slot.date);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(beginAt, date, workingHours);
+        return Objects.hash(beginAt, date);
     }
 
     @Override

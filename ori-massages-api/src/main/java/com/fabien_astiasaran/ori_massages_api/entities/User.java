@@ -25,6 +25,9 @@ public class User {
     @Column(name = "firstname")
     private String firstname;
 
+    @Column(name = "user_address")
+    private String userAddress;
+
     public Long getId() {
         return id;
     }
@@ -59,6 +62,14 @@ public class User {
 
     public void setPhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public String getUserAddress() {
+        return userAddress;
+    }
+
+    public void setUserAddress(String userAddress) {
+        this.userAddress = userAddress;
     }
 
     @Override

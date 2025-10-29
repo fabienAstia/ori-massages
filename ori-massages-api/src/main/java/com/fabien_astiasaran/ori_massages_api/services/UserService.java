@@ -20,6 +20,9 @@ public class UserService {
             user.setPhoneNumber(appointmentCreate.user().phoneNumber());
             user.setFirstname(appointmentCreate.user().firstname());
             user.setLastname(appointmentCreate.user().lastname());
+            if(appointmentCreate.location().name().equals("A domicile")){
+                user.setUserAddress(appointmentCreate.user().address());
+            }
             userRepository.save(user);
         }
         return user;

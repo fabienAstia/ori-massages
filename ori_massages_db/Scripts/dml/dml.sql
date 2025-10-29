@@ -1,9 +1,9 @@
-DELETE FROM t_services; DELETE FROM t_service_types;
+DELETE FROM t_prestations; DELETE FROM t_treatment_types;
 DELETE FROM t_durations; DELETE FROM t_statuses;
 
-INSERT INTO t_durations(duration_value, duration_label) VALUES
-(45, '45 min'),
-(60, '1h'),
+INSERT INTO t_durations(duration_value, label, breakTime) VALUES
+(45, '45 min', 5),
+(60, '1h', ),
 (90, '1h30');
 
 INSERT INTO t_service_types (type_name, type_description) VALUES 

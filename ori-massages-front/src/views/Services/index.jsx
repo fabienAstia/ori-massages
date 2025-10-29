@@ -1,8 +1,6 @@
 import CustomMassage from '../../components/CustomMassage';
 import FacialCare from '../../components/FacialCare';
 import './Services.css'
-import photo_visage from '../../assets/photos/photo_massage4.webp'
-import photo_massage from '../../assets/photos/photo_massage3.webp'
 
 export default function Services(){
     return (
@@ -36,17 +34,3 @@ export default function Services(){
     
 }
 
-    const services = [
-        {
-            title: 'Massages',
-            image:photo_massage,
-            description:'Massage relax pour le bien-être du corps...',
-            id:1
-        },
-        {
-            title:'Soins visage',
-            image:photo_visage,
-            description:'Soins visage rajeunissant...',
-            id:2
-        }
-    ]

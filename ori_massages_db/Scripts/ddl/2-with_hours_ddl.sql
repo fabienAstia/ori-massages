@@ -7,6 +7,7 @@ CREATE TABLE t_users(
 	phone_number varchar(15) NOT NULL,
 	lastname varchar(50),
 	firstname varchar(20),
+	user_address varchar(255),
 	CONSTRAINT t_users_pk PRIMARY KEY (id),
 	CONSTRAINT t_users_email_phone_number_uk UNIQUE (email, phone_number)
 );
@@ -94,8 +95,8 @@ create table t_slots(
 		references t_working_hours (id), 
 	constraint t_slots_prestation_id_fk foreign key (prestation_id)  
 		references t_prestations (id), 
-	constraint t_slots_begin_hour_date_working_hours_uk  
-		unique(begin_at, date_id, working_hours_id)                       		
+	constraint t_slots_begin_at_date_id_uk  
+		unique(begin_at, date_id)                       		
 );
 CREATE INDEX idx_slots_date_id ON t_slots(date_id);
 CREATE INDEX idx_slots_status ON t_slots(status);
@@ -114,6 +115,7 @@ CREATE TABLE t_appointments(
 	id int GENERATED ALWAYS AS IDENTITY,
 	created_at timestamp NOT NULL DEFAULT now(),
 	comment varchar(300), 
+	address varchar(255) not null,
 	slot_id int not null,
 	user_id int not null,
 	location_id int not null,

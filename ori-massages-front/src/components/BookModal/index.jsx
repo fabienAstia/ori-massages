@@ -9,25 +9,18 @@ import Contact from '../../views/Contact';
 import BookingCalendar from '../BookingCalendar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-import { da } from 'react-day-picker/locale';
 
 export default function BookModal(props) {
   if(!props.prestation)return null;
+  const apiUrl = import.meta.env.VITE_API_URL
   const [date, setDate] = useState(null);
   const [showHours, setShowHours] = useState(false);
-  const [slots, setSlots] = useState(null)
-  // const [hours, setHours] = useState(null);
+  const [slots, setSlots] = useState(null);
   const [showLocations, setShowLocations] = useState(false);
   const [activeSlot, setActiveSlot] = useState(null);
-  const [locations, setLocations] = useState(null)
+  const [locations, setLocations] = useState(null);
   const [location, setLocation] = useState(null);
-  const [contactData, setContactData] = useState({
-    email:"",
-    firstname:"",
-    lastname:"",
-    phoneNumber:"",
-    message:""
-  })
+  const [contactData, setContactData] = useState()
 
   function setSlotsAndUnlockLocations(slot){
     if(activeSlot == slot){
@@ -45,7 +38,7 @@ export default function BookModal(props) {
     try {
       console.log('DATE= ', date)
       if(date){
-          const response = await axios.post('http://localhost:8080/slots/availables',{
+          const response = await axios.post(`${apiUrl}/slots/availables`,{
           date: date,
           prestation: props.prestation
         })
@@ -83,7 +76,7 @@ export default function BookModal(props) {
   useEffect(() => {
     async function getLocations(){
       try {
-        const response = await axios.get('http://localhost:8080/locations')
+        const response = await axios.get(`${apiUrl}/locations`)
         setLocations(response.data);
       } catch(err){
         if(err.response){
@@ -109,26 +102,28 @@ export default function BookModal(props) {
                   setLocation(place)
                 }
                 console.log('location_name= ', place.name)
+                console.log('location_id= ', place.id)
               }}
               className={location == place ? 'selected' : '' }
             />
   })
 
  
-  function handleContactChange(data){
+  async function handleContactChange(data){
     setContactData(data);
-    submit(data);
+    await submit(data);
   }
 
   async function submit(data){
       try {
-          const res = await axios.post('http://localhost:8080/appointment', {
+          const res = await axios.post(`${apiUrl}/appointment`, {
               comment: '',
               slot:activeSlot,              
               location:location,
               user:data,
           });
           alert('You\'ve created an appointment')
+          props.onHide();
       }catch(err){
           if(err.response){
               console.error('POST FAILED with status= ' + err.response.status)
@@ -153,8 +148,8 @@ export default function BookModal(props) {
         setShowHours(false); 
         setActiveSlot(null); 
         setShowLocations(false); 
-        setLocation(null)}}
-    >
+        setLocation(null);
+      }}>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
           {props.prestation.name}
@@ -211,14 +206,14 @@ export default function BookModal(props) {
                 </Row>
                 <Row>
                   <Contact
-                    onSubmit={(data) => handleContactChange(data)}
+                    bookModalSubmit={(data) => handleContactChange(data)}
+                    isAtHome={location.id == 1}
                   />
                 </Row>
               </div>
               }
           </>
           }
-          
             
         </Container>
       </Modal.Body>

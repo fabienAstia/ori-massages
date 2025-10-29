@@ -2,7 +2,6 @@ import './BookingCalendar.css'
 import 'react-day-picker/style.css'
 import { useState } from 'react';
 import {DayPicker} from 'react-day-picker';
-import { se } from 'react-day-picker/locale';
 
 export default function BookingCalendar({onChangeDate}){
     const [selectedDate, setSelectedDate] = useState(null);

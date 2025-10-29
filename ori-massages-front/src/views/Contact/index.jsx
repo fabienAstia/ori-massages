@@ -1,35 +1,50 @@
 import { useState } from 'react';
 import './Contact.css'
 import axios from 'axios';
-import { fi } from 'react-day-picker/locale';
+import {useForm} from 'react-hook-form'
 
-export default function Contact({onSubmit}){
+export default function Contact({bookModalSubmit, isAtHome}){
+    const apiUrl = import.meta.env.VITE_API_URL
     const [data, setData] = useState(null)
-    const [email, setEmail] = useState('')
-    const [firstname, setFirstName] = useState('')
-    const [lastname, setLastName] = useState('')
-    const [phoneNumber, setPhoneNumber] = useState('')
-    const [message, setMessage] = useState('')
     const [charCount, setCharCount] = useState(0);
     const MAX_CHARS = 300;
-
-    async function submit(e){
-        e.preventDefault();
-        try {
-            const res = await axios.post('http://localhost:8080/contact', {
-                email,
-                firstname,
-                lastname,
-                phoneNumber,
-                message
-            });
-            setData(res.data)
-        }catch(err){
-            if(err.response){
-                console.error('POST FAILED with status= ' + err.response.status)
-            } else {
-                console.error(err)
-                alert(err)
+    const [phoneNumber, setPhoneNumber] = useState('')
+    const {register, handleSubmit, setValue, formState:{errors}} = useForm();
+    
+    const onChangePhoneNumber = (e) => {
+        let formatted = (e.target.value).replace(/[^\d]/g, "")
+        setPhoneNumber(formatted);
+        return phoneNumber;
+    }
+    const onBlurPhoneNumber = (value) => {
+        if(!value) return value
+        const number = value.replace(/[\s]/g, "")
+        setValue("phoneNumber", number)
+        if(number.length < 3) return number.length;
+        if(number.length >= 3){
+            let chunk = '';
+            for(let n = 0; n < (number.length/2); n++){
+                chunk += `${number.slice(2*n, (2*(n+1)))} `;
+            }
+            return chunk;
+        }
+    }
+    
+    const onSubmit = async(data) => {
+        if(bookModalSubmit){
+            bookModalSubmit(data)
+        }else{
+            try {
+                const res = await axios.post(`${apiUrl}/contact`, data);
+                setData(res.data)
+                console.log('data=', res.data)
+            }catch(err){
+                if(err.response){
+                    console.error('POST FAILED with status= ' + err.response.status)
+                } else {
+                    console.error(err)
+                    alert(err)
+                }
             }
         }
     }
@@ -55,37 +70,66 @@ export default function Contact({onSubmit}){
             </div>
           
             <div className='d-flex mt-1 justify-content-center'>
-                <form onSubmit={(e) => {
-                    e.preventDefault();
-                    if(onSubmit) {
-                        onSubmit({email, firstname, lastname, phoneNumber, message})
-                    } else {
-                        submit(e)
+                <form onSubmit={handleSubmit(onSubmit)}>
+
+                    {isAtHome &&
+                    <div className="mb-3">
+                        <label htmlFor="address" className="form-label">Adresse :<span className="red"> *</span></label>
+                        <input 
+                            {...register("address", {required:true})}
+                            type="address" 
+                            className="form-control" 
+                            id="address" 
+                            aria-describedby="adresse"
+                        />
+                        {errors.address && <span className='text-danger'>This field is required</span>}
+                    </div>
                     }
-                    }}
-                >
+                
+
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">Email :<span className="red"> *</span></label>
                         <input 
-                            name="email" 
+                            {...register("email", {required:true})}
                             type="email" 
                             className="form-control" 
                             id="email" 
-                            onChange={(e) => setEmail(e.target.value)}
                             aria-describedby="email"
                         />
                         <div id="emailHelp" className="form-text">Nous ne partageons jamais aucun email avec qui que ce soit.</div>
+                        {errors.email && <span className='text-danger'>This field is required</span>}
                     </div>
+
+                    <div className="mb-3">
+                        <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
+                        <input 
+                            {...register("phoneNumber", {required:true})}
+                            type="tel" 
+                            className="form-control" 
+                            id="phoneNumber"
+                            placeholder='06 70 88 71 67'
+                            maxLength={14}
+                            onChange={(e) => {
+                                const formatted = onChangePhoneNumber(e)
+                                console.log('formatted=' , formatted)
+                            }}
+                            onBlur={(e) => {e.target.value = onBlurPhoneNumber(e.target.value)}}
+                            aria-describedby="phone_number"
+                            required
+                        />
+                        <div id="phoneHelp" className="form-text">Votre numéro servira pour recevoir un sms de rappel 48h avant.</div>
+                        {errors.phoneNumber && <span className='text-danger'>This field is required</span>}
+                    </div>
+
                     <div className='row row-cols-1 row-cols-md-2'>
                         <div className='col'>
                             <div className="mb-3">
                             <label htmlFor="firstname" className="form-label">Prénom :</label>
                             <input 
-                                name="firstname" 
+                                {...register("firstname")}
                                 type="text" 
                                 className="form-control" 
                                 id="firstname"
-                                onChange={(e)=> setFirstName(e.target.value)}
                                 aria-describedby="firstname"
                             />
                         </div>
@@ -94,11 +138,10 @@ export default function Contact({onSubmit}){
                             <div className="mb-3">
                             <label htmlFor="lastname" className="form-label">Nom :</label>
                             <input 
-                                name="lastname" 
+                                {...register("lastname")}
                                 type="text" 
                                 className="form-control" 
                                 id="lastname"
-                                onChange={(e)=> setLastName(e.target.value)}
                                 aria-describedby="lastname"
                             />
                         </div>
@@ -106,32 +149,12 @@ export default function Contact({onSubmit}){
                     </div>
                     
                     <div className="mb-3">
-                        <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
-                        <input 
-                            name="phoneNumber" 
-                            type="tel" 
-                            className="form-control" 
-                            id="phoneNumber"
-                            placeholder='06 70 88 71 67'
-                            maxLength={14}
-                            onChange={(e)=> setPhoneNumber(e.target.value)}
-                            aria-describedby="phone_number"
-                            required
-                        />
-                    </div>
-                    <div className="mb-3">
                         <label htmlFor="message" className="form-label">Message : </label>
                         <textarea 
-                            name="message" 
+                            {...register("message", {onChange:(e) => setCharCount(e.target.value.length)})}
                             id='message' 
                             className='form-control w-100' 
                             maxLength={MAX_CHARS} rows={3} placeholder='Ecrire ici...'
-                            onChange={
-                                (event) => {
-                                    setCharCount(event.target.value.length)
-                                    setMessage(event.target.value)
-                                }
-                            }
                         />
                         <div id='remaining-char'>{MAX_CHARS-charCount} caractères restants</div>
                     </div>
