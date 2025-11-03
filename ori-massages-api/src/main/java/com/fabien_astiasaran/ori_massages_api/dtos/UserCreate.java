@@ -6,19 +6,10 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 
 public record UserCreate(
+
+        @Size(min = 10, max = 14) String phoneNumber,
         @Email(message = "Please provide a valid email address.")
-        @NotBlank
-        @Size(max = 150)
-        String email,
-        @Nullable
-        String firstname,
-        @Nullable
-        String lastname,
-        @Size(min = 10, max = 14)
-        String phoneNumber,
-        @Size(max=300)
-        String message,
-        @Size(max=255)
-        String address
+        @NotBlank @Size(max = 150) String email,
+        @Nullable String fullname
         ) {
 }

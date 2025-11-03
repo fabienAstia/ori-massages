@@ -6,7 +6,9 @@ import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
-@Table(name = "t_slots")
+@Table(name = "t_slots", uniqueConstraints = {
+        @UniqueConstraint(columnNames = {"begin_at", "date_id"})
+})
 public class Slot {
 
     @Id
@@ -19,9 +21,6 @@ public class Slot {
 
     @Column(name = "end_at")
     private LocalTime endAt;
-
-    @Column(name = "status")
-    private String status;
 
     @ManyToOne
     @JoinColumn(name = "date_id")
@@ -55,7 +54,6 @@ public class Slot {
                 "id=" + id +
                 ", beginAt=" + beginAt +
                 ", endAt=" + endAt +
-                ", status='" + status + '\'' +
                 ", date=" + date +
                 ", workingHours=" + workingHours +
                 ", prestation=" + prestation +
@@ -84,14 +82,6 @@ public class Slot {
 
     public void setEndAt(LocalTime endAt) {
         this.endAt = endAt;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
     }
 
     public Date getDate() {

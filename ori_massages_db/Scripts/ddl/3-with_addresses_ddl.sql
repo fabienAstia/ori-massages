@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS t_appointments, t_addresses, t_streets, t_cities,  t_slots, t_prestations, t_messages;            
+DROP TABLE IF EXISTS t_messages, t_appointments, t_addresses, t_streets, t_cities,  t_slots, t_prestations;            
 DROP TABLE IF EXISTS t_users, t_roles, t_locations, t_working_hours, t_dates, t_durations, t_treatment_types, t_statuses;
 
 CREATE TABLE t_roles(
@@ -18,19 +18,6 @@ CREATE TABLE t_users(
 	CONSTRAINT t_users_role_id_fk FOREIGN KEY (role_id) REFERENCES t_roles (id),
 	CONSTRAINT t_users_email_phone_number_uk UNIQUE (email, phone_number)
 );
-
-CREATE TABLE t_messages(
-	id int GENERATED ALWAYS AS IDENTITY, 
-	user_id int NOT NULL,
-	msg_date timestamp NOT NULL,
-	content varchar(300) NOT NULL,
-	CONSTRAINT t_messages_pk PRIMARY KEY (id),
-	CONSTRAINT t_messages_user_id_fk FOREIGN KEY (user_id)
-		REFERENCES t_users(id)
-		ON DELETE CASCADE,
-	CONSTRAINT t_messages_user_id_date_uk UNIQUE (user_id, msg_date)
-);
-CREATE INDEX idx_messages_user_id ON t_messages(user_id);
 
 CREATE TABLE t_treatment_types(
 	id int GENERATED ALWAYS AS IDENTITY,
@@ -173,9 +160,24 @@ CREATE TABLE t_appointments(
 		REFERENCES t_addresses(id),
 	CONSTRAINT t_appointments_status_id_fk FOREIGN KEY (status_id)
 		REFERENCES t_statuses(id),
-	CONSTRAINT t_appointments_created_at_user_slot_uk unique (created_at, user_id, slot_id)
+	CONSTRAINT t_appointments_slot_uk unique (slot_id)
 );
 CREATE INDEX idx_appointments_user_id ON t_appointments(user_id);
 CREATE INDEX idx_appointments_slot_id ON t_appointments(slot_id);
 CREATE INDEX idx_appointments_address_id ON t_appointments(address_id);
 CREATE INDEX idx_appointments_user_created_at ON t_appointments(user_id, created_at);
+
+CREATE TABLE t_messages(
+	id int GENERATED ALWAYS AS IDENTITY, 
+	user_id int NOT NULL,
+	msg_date timestamp NOT NULL,
+	content varchar(300) NOT NULL,
+	appointment_id int null,
+	CONSTRAINT t_messages_pk PRIMARY KEY (id),
+	CONSTRAINT t_messages_user_id_fk FOREIGN KEY (user_id)
+		REFERENCES t_users(id)
+		ON DELETE CASCADE,
+	constraint t_messages_appointment_id_fk foreign key (appointment_id) references t_appointments(id),
+	CONSTRAINT t_messages_user_id_date_uk UNIQUE (user_id, msg_date)
+);
+CREATE INDEX idx_messages_user_id ON t_messages(user_id);

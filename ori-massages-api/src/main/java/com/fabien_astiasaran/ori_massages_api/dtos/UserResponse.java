@@ -5,9 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 public record UserResponse(
         @NotNull Long id,
+        @NotBlank String phoneNumber,
         @NotBlank String email,
-        String firstname,
-        String lastname,
-        String phoneNumber
+        String fullname
 ) {
 }

@@ -6,11 +6,12 @@ import com.fabien_astiasaran.ori_massages_api.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 public class AppointmentService {
 
+    public static final String AT_HOME = "À domicile";
+    public static final String TREATMENT_ROOM = "Espace soin";
+    public static final String REGISTERED = "ENREGISTRÉ";
     private AppointmentRepository appointmentRepository;
     private PrestationRepository prestationRepository;
     private LocationRepository locationRepository;
@@ -18,9 +19,12 @@ public class AppointmentService {
     private SlotService slotService;
     private WorkingHoursRepository workingHoursRepository;
     private UserService userService;
-    private MessageRepository messageRepository;
+    private MessageService messageService;
+    private StatusRepository statusRepository;
+    private AddressService addressService;
+    private AddressRepository addressRepository;
 
-    public AppointmentService(AppointmentRepository appointmentRepository, PrestationRepository prestationRepository, LocationRepository locationRepository, DateService dateService, SlotService slotService, WorkingHoursRepository workingHoursRepository, UserService userService, MessageRepository messageRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, PrestationRepository prestationRepository, LocationRepository locationRepository, DateService dateService, SlotService slotService, WorkingHoursRepository workingHoursRepository, UserService userService, MessageService messageService, StatusRepository statusRepository, AddressService addressService, AddressRepository addressRepository) {
         this.appointmentRepository = appointmentRepository;
         this.prestationRepository = prestationRepository;
         this.locationRepository = locationRepository;
@@ -28,7 +32,10 @@ public class AppointmentService {
         this.slotService = slotService;
         this.workingHoursRepository = workingHoursRepository;
         this.userService = userService;
-        this.messageRepository = messageRepository;
+        this.messageService = messageService;
+        this.statusRepository = statusRepository;
+        this.addressService = addressService;
+        this.addressRepository = addressRepository;
     }
 
     public Appointment createAppointment(AppointmentCreate appointmentCreate){
@@ -39,38 +46,33 @@ public class AppointmentService {
                 .orElseThrow(()-> new EntityNotFoundException("WorkingHours not found"));
         Slot slot = slotService.createSlot(appointmentCreate, date, workingHours, prestation);
         User user = userService.findOrCreateUser(appointmentCreate);
-        Message message = createMessageIfPresent(appointmentCreate, user);
-        Location location = locationRepository.findById(appointmentCreate.location().id())
-                .orElseThrow(()-> new EntityNotFoundException("Location not found"));
 
-        return buildAndSaveAppointment(slot, user, location, message);
+        Location location = locationRepository.findById(appointmentCreate.address().locationId())
+                .orElseThrow(()-> new EntityNotFoundException("Location not found"));
+        Address address = resolveAddress(appointmentCreate, location.getName(), user, location);
+        Status status = statusRepository.findByStatusLabel(REGISTERED);
+
+        Appointment appointment = buildAndSaveAppointment(slot, user, address, status);
+        messageService.createMessageIfPresent(appointmentCreate, user, appointment);
+        return appointment;
     }
 
-    private Appointment buildAndSaveAppointment(Slot slot, User user, Location location, Message message) {
+    public Address resolveAddress(AppointmentCreate appointmentCreate, String locationName, User user, Location location) {
+        Address address = addressService.findOrCreateAddress(appointmentCreate.address());
+        address.setLocation(location);
+        if(locationName.equalsIgnoreCase(AT_HOME)){
+            address.setUser(user);
+        }
+        return addressRepository.save(address);
+    }
+
+    private Appointment buildAndSaveAppointment(Slot slot, User user, Address address, Status status) {
         Appointment appointment = new Appointment();
-        appointment.setCreatedAt(LocalDateTime.now());
-        appointment.setComment(message != null ? message.getContent() : null);
-        appointment.setAddress(setAddress(user, location));
         appointment.setSlot(slot);
         appointment.setUser(user);
-        appointment.setLocation(location);
+        appointment.setAddress(address);
+        appointment.setStatus(status);
         return appointmentRepository.save(appointment);
     }
 
-    private static String setAddress(User user, Location location) {
-        return location.getName().equals("A domicile")
-                ? user.getUserAddress()
-                : location.getAddress();
-    }
-
-    private Message createMessageIfPresent(AppointmentCreate appointmentCreate, User user) {
-        if(!appointmentCreate.user().message().isBlank()){
-            Message message = new Message();
-            message.setUser(user);
-            message.setDateTime(LocalDateTime.now());
-            message.setContent(appointmentCreate.user().message());
-            return messageRepository.save(message);
-        }
-        return null;
-    }
 }

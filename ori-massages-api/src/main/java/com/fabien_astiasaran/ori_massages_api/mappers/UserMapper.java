@@ -7,11 +7,10 @@ public class UserMapper {
 
     public static UserResponse toResponse(User user){
         return new UserResponse(
-          user.getId(),
+            user.getId(),
+            user.getPhoneNumber(),
             user.getEmail(),
-            user.getFirstname(),
-            user.getLastname(),
-            user.getPhoneNumber()
+            user.getFullname()
         );
     }
 }

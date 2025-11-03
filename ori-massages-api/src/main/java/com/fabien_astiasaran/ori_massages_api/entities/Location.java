@@ -16,9 +16,6 @@ public class Location {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "address")
-    private String address;
-
     @Column(name = "image_path")
     private String imagePath;
 
@@ -27,13 +24,12 @@ public class Location {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Location location = (Location) o;
-        return Objects.equals(address, location.address)
-                && Objects.equals(name, location.name);
+        return Objects.equals(name, location.name);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(address, name);
+        return Objects.hash(name);
     }
 
     @Override
@@ -41,7 +37,6 @@ public class Location {
         return "Location{" +
                 "id=" + id +
                 ", name='" + name + '\'' +
-                ", address='[PROTECTED]" +
                 ", imagePath='" + imagePath + '\'' +
                 '}';
     }
@@ -56,14 +51,6 @@ public class Location {
 
     public void setName(String name) {
         this.name = name;
-    }
-
-    public String getAddress() {
-        return address;
-    }
-
-    public void setAddress(String address) {
-        this.address = address;
     }
 
     public String getImagePath() {

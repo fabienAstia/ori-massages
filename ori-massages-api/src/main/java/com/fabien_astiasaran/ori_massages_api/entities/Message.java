@@ -16,10 +16,14 @@ public class Message {
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    private User user;
+    private User author;
 
-    @Column(name = "date")
-    private LocalDateTime dateTime;
+    @ManyToOne
+    @JoinColumn(name = "appointment_id")
+    private Appointment appointment;
+
+    @Column(name = "msg_date")
+    private LocalDateTime msgDate = LocalDateTime.now();
 
     @Column(name = "content")
     private String content;
@@ -29,20 +33,20 @@ public class Message {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Message message = (Message) o;
-        return Objects.equals(user, message.user) && Objects.equals(dateTime, message.dateTime);
+        return Objects.equals(author, message.author) && Objects.equals(msgDate, message.msgDate);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(user, dateTime);
+        return Objects.hash(author, msgDate);
     }
 
     @Override
     public String toString() {
         return "Message{" +
                 "id=" + id +
-                ", user=" + user +
-                ", date=" + dateTime +
+                ", user=" + author +
+                ", date=" + msgDate +
                 ", content='[PROTECTED]" +
                 '}';
     }
@@ -51,20 +55,28 @@ public class Message {
         return id;
     }
 
-    public User getUser() {
-        return user;
+    public User getAuthor() {
+        return author;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setAuthor(User author) {
+        this.author = author;
     }
 
-    public LocalDateTime getDateTime() {
-        return dateTime;
+    public Appointment getAppointment() {
+        return appointment;
     }
 
-    public void setDateTime(LocalDateTime dateTime) {
-        this.dateTime = dateTime;
+    public void setAppointment(Appointment appointment) {
+        this.appointment = appointment;
+    }
+
+    public LocalDateTime getMsgDate() {
+        return msgDate;
+    }
+
+    public void setMsgDate(LocalDateTime msgDate) {
+        this.msgDate = msgDate;
     }
 
     public String getContent() {

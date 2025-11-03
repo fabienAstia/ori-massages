@@ -19,7 +19,6 @@ public class SlotController {
 
     @PostMapping("/availables")
     public List<SlotResponse> getAvailableSlots(@RequestBody SlotAvailableCreate slotAvailableCreate){
-        System.out.println("availableSLOTS = " + slotService.getAvailableSlots(slotAvailableCreate));
         return slotService.getAvailableSlots(slotAvailableCreate);
     }
 }

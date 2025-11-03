@@ -58,7 +58,7 @@ export default function CustomMassage({showDescription = true, variant}){
         );
     return <section className='CustomMassageView'>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
-                {listMassage} &&
+                {listMassage} 
                     <BookModal 
                         show={modalShow} 
                         onHide={() => setModalShow(false)} 

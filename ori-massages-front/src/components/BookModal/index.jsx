@@ -89,22 +89,22 @@ export default function BookModal(props) {
     getLocations();
   }, [])
 
-  const placeList = locations?.map(place => {
+  const placeList = locations?.map(location_DB => {
     return <HomeCard
-              key={place.id}
-              image={`/photos/${place.imagePath}`}
-              title={place.name}
-              address={place.address}
+              key={location_DB.id}
+              image={`/photos/${location_DB.imagePath}`}
+              title={location_DB.name}
+              address={location_DB.address}
               onClick={() => {
-                if(location == place) {
+                if(location == location_DB) {
                   setLocation(null)
                 } else {
-                  setLocation(place)
+                  setLocation(location_DB)
                 }
-                console.log('location_name= ', place.name)
-                console.log('location_id= ', place.id)
+                console.log('location_name= ', location_DB.name)
+                console.log('location_id= ', location_DB.id)
               }}
-              className={location == place ? 'selected' : '' }
+              className={location == location_DB ? 'selected' : '' }
             />
   })
 
@@ -118,9 +118,9 @@ export default function BookModal(props) {
       try {
           const res = await axios.post(`${apiUrl}/appointment`, {
               comment: '',
-              slot:activeSlot,              
-              location:location,
+              slot:activeSlot,  
               user:data,
+              location:location,
           });
           alert('You\'ve created an appointment')
           props.onHide();
@@ -149,6 +149,7 @@ export default function BookModal(props) {
         setActiveSlot(null); 
         setShowLocations(false); 
         setLocation(null);
+        setContactData(null);
       }}>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">

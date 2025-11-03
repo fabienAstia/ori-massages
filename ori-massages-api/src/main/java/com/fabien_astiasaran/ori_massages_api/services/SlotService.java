@@ -131,11 +131,9 @@ public class SlotService {
         Slot slot = new Slot();
         slot.setBeginAt(appointmentCreate.slot().beginAt());
         slot.setEndAt(appointmentCreate.slot().endReal());
-        slot.setStatus("booké");
         slot.setDate(date);
         slot.setWorkingHours(workingHours);
         slot.setPrestation(prestation);
-        slotRepository.save(slot);
-        return slot;
+        return slotRepository.save(slot);
     }
 }

@@ -4,6 +4,6 @@ import jakarta.validation.constraints.NotNull;
 
 public record ContactCreate(
         @NotNull UserCreate user,
-        MessageCreate message
+        String message
 ) {
 }

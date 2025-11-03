@@ -43,3 +43,15 @@
     color: white;
     background: #1d8c87;
 }
+
+.ContactView #address{
+    background-color: rgba(29, 140, 135, 0.1);
+    margin: 2rem 0;
+    border-radius: 15px;
+    padding: 8px 12px;
+}
+
+.ContactView .phoneHelp{
+    margin-top: -1rem;
+    margin-bottom: 1rem;
+}

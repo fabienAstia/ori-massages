@@ -52,16 +52,16 @@ export default function Contact({bookModalSubmit, isAtHome}){
     return(
         <section className="ContactView">
             <div className='text-center'>
-                {!onSubmit &&
-                <>
-                    <h2 className="mb-3">Contact</h2>
-                    <p className="contact-text">
-                        Une question, une demande de rendez-vous ou simplement l’envie d’échanger ?  
-                        Je vous répondrai avec plaisir.
-                    </p>
-                </>
+                {!bookModalSubmit &&
+                    <>
+                        <h2 className="mb-3">Contact</h2>
+                        <p className="contact-text">
+                            Une question, une demande de rendez-vous ou simplement l’envie d’échanger ?  
+                            Je vous répondrai avec plaisir.
+                        </p>
+                    </>
                 }  
-                {onSubmit &&
+                {bookModalSubmit &&
                     <p className="contact-text">
                         Merci de renseigner vos informations pour confirmer votre réservation.
                     </p>
@@ -72,20 +72,45 @@ export default function Contact({bookModalSubmit, isAtHome}){
             <div className='d-flex mt-1 justify-content-center'>
                 <form onSubmit={handleSubmit(onSubmit)}>
 
-                    {isAtHome &&
-                    <div className="mb-3">
-                        <label htmlFor="address" className="form-label">Adresse :<span className="red"> *</span></label>
-                        <input 
-                            {...register("address", {required:true})}
-                            type="address" 
-                            className="form-control" 
-                            id="address" 
-                            aria-describedby="adresse"
-                        />
-                        {errors.address && <span className='text-danger fw-bold'>This field is required</span>}
+                    <div className='row row-cols-2'>
+                        <div className='col-12 col-sm-4'>
+                            <div className="mb-3">
+                                <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
+                                <input 
+                                    {...register("phoneNumber", {
+                                        required:true, 
+                                        onChange: (e) => {
+                                            const formatted = onChangePhoneNumber(e)
+                                            console.log('formatted=' , formatted)
+                                        },
+                                        onBlur: (e) => {e.target.value = onBlurPhoneNumber(e.target.value)}
+                                    })}
+                                    type="tel" 
+                                    className="form-control" 
+                                    id="phoneNumber"
+                                    placeholder='06 70 88 71 67'
+                                    maxLength={14}
+                                    aria-describedby="phone_number"
+                                    required
+                                />
+                                {errors.phoneNumber && <span className='text-danger fw-bold'>This field is required</span>}
+                            </div>
+                        </div>
+
+                        <div className='col-12 col-sm-8'>
+                            <div className="mb-3">
+                                <label htmlFor="fullname" className="form-label">Nom :</label>
+                                <input 
+                                    {...register("fullname")}
+                                    type="text" 
+                                    className="form-control" 
+                                    id="fullname"
+                                    aria-describedby="fullname"
+                                />
+                            </div>
+                        </div>
                     </div>
-                    }
-                
+        
 
                     <div className="mb-3">
                         <label htmlFor="email" className="form-label">Email :<span className="red"> *</span></label>
@@ -100,56 +125,77 @@ export default function Contact({bookModalSubmit, isAtHome}){
                         {errors.email && <span className='text-danger fw-bold'>This field is required</span>}
                     </div>
 
-                    <div className="mb-3">
-                        <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
-                        <input 
-                            {...register("phoneNumber", {
-                                required:true, 
-                                onChange: (e) => {
-                                    const formatted = onChangePhoneNumber(e)
-                                    console.log('formatted=' , formatted)
-                                },
-                                onBlur: (e) => {e.target.value = onBlurPhoneNumber(e.target.value)}
-                            })}
-                            type="tel" 
-                            className="form-control" 
-                            id="phoneNumber"
-                            placeholder='06 70 88 71 67'
-                            maxLength={14}
-                            aria-describedby="phone_number"
-                            required
-                        />
-                        <div id="phoneHelp" className="form-text">Votre numéro servira pour recevoir un sms de rappel 48h avant.</div>
-                        {errors.phoneNumber && <span className='text-danger fw-bold'>This field is required</span>}
-                    </div>
 
-                    <div className='row row-cols-1 row-cols-md-2'>
-                        <div className='col'>
-                            <div className="mb-3">
-                            <label htmlFor="firstname" className="form-label">Prénom :</label>
+                    {isAtHome &&
+                    <div id='address'>
+                        <p><b>Adresse</b></p>
+                        <div className='row row-cols-2'>
+                            <div className='col-12 col-sm-3'>
+                                <div className="mb-3">
+                                    <label htmlFor="street_number" className="form-label">N° :<span className="red"> *</span></label>
+                                    <input 
+                                        {...register("street_number")}
+                                        type="text" 
+                                        className="form-control" 
+                                        id="street_number"
+                                        aria-describedby="street_number"
+                                    />
+                                </div>
+                            </div>
+                            <div className='col-12 col-sm-9'>
+                                <div className="mb-3">
+                                    <label htmlFor="street_name" className="form-label">Rue :<span className="red"> *</span></label>
+                                    <input 
+                                        {...register("street_name")}
+                                        type="text" 
+                                        className="form-control" 
+                                        id="street_name"
+                                        aria-describedby="street_name"
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="complement" className="form-label">Complément :</label>
                             <input 
-                                {...register("firstname")}
+                                {...register("complement")}
                                 type="text" 
                                 className="form-control" 
-                                id="firstname"
-                                aria-describedby="firstname"
+                                id="complement"
+                                aria-describedby="complement"
                             />
                         </div>
-                        </div>
-                        <div className='col'>
-                            <div className="mb-3">
-                            <label htmlFor="lastname" className="form-label">Nom :</label>
-                            <input 
-                                {...register("lastname")}
-                                type="text" 
-                                className="form-control" 
-                                id="lastname"
-                                aria-describedby="lastname"
-                            />
-                        </div>
+                        <div className='row row-cols-2'>
+                            <div className='col-12 col-sm-4'>
+                                <div className="mb-3">
+                                    <label htmlFor="zip_code" className="form-label">Code postal :<span className="red"> *</span></label>
+                                    <input 
+                                        {...register("zip_code")}
+                                        type="text" 
+                                        className="form-control" 
+                                        id="zip_code"
+                                        aria-describedby="zip_code"
+                                    />
+                                </div>
+                            </div>
+                            <div className='col-12 col-sm-8'>
+                                <div className="mb-3">
+                                    <label htmlFor="zip_code" className="form-label">Ville :<span className="red"> *</span></label>
+                                    <input 
+                                        {...register("city_name")}
+                                        type="text" 
+                                        className="form-control" 
+                                        id="city_name"
+                                        aria-describedby="city_name"
+                                    />
+                                </div>
+                            </div>
                         </div>
                     </div>
+                    }
                     
+
                     <div className="mb-3">
                         <label htmlFor="message" className="form-label">Message : </label>
                         <textarea 

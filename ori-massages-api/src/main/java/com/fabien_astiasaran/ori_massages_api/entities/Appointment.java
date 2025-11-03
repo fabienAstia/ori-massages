@@ -15,13 +15,7 @@ public class Appointment {
     private Long id;
 
     @Column(name = "created_at")
-    private LocalDateTime createdAt;
-
-    @Column(name = "comment")
-    private String comment;
-
-    @Column(name = "address")
-    private String address;
+    private LocalDateTime createdAt = LocalDateTime.now();
 
     @ManyToOne
     @JoinColumn(name = "slot_id")
@@ -32,8 +26,12 @@ public class Appointment {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "location_id")
-    private Location location;
+    @JoinColumn(name = "address_id")
+    private Address address;
+
+    @ManyToOne
+    @JoinColumn(name = "status_id")
+    private Status status;
 
     @Override
     public boolean equals(Object o) {
@@ -53,11 +51,10 @@ public class Appointment {
         return "Appointment{" +
                 "id=" + id +
                 ", createdAt=" + createdAt +
-                ", comment='[PROTECTED]" +
-                ", address=" + address +
                 ", slot=" + slot +
-                ", user=" + user +
-                ", location=" + location +
+                ", user=[PROTECTED]" +
+                ", address=" + address +
+                ", status=" + status +
                 '}';
     }
 
@@ -71,14 +68,6 @@ public class Appointment {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
     }
 
     public Slot getSlot() {
@@ -97,19 +86,19 @@ public class Appointment {
         this.user = user;
     }
 
-    public Location getLocation() {
-        return location;
-    }
-
-    public void setLocation(Location location) {
-        this.location = location;
-    }
-
-    public String getAddress() {
+    public Address getAddress() {
         return address;
     }
 
-    public void setAddress(String address) {
+    public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 }

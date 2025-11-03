@@ -11,9 +11,9 @@ public record LocationResponse(
         @NotBlank @Size(max = 50)
         String name,
 
-        String address,
-
         @NotBlank @Size(max=20)
-        String imagePath
+        String imagePath,
+
+        String address
 ) {
 }

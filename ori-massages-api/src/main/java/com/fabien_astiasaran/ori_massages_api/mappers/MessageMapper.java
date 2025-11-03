@@ -7,8 +7,8 @@ public class MessageMapper {
 
     public static MessageResponse toResponse(Message message){
         return new MessageResponse(
-                UserMapper.toResponse(message.getUser()),
-                message.getDateTime(),
+                UserMapper.toResponse(message.getAuthor()),
+                message.getMsgDate(),
                 message.getContent()
         );
     }

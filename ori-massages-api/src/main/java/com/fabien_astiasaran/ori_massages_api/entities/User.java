@@ -13,47 +13,45 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "email")
-    private String email;
-
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @Column(name = "lastname")
-    private String lastname;
+    @Column(name = "email")
+    private String email;
 
-    @Column(name = "firstname")
-    private String firstname;
+    @Column(name = "fullname")
+    private String fullname;
 
-    @Column(name = "user_address")
-    private String userAddress;
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        User user = (User) o;
+        return Objects.equals(phoneNumber, user.phoneNumber);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hashCode(phoneNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", phoneNumber='[PROTECTED]" +
+                ", email='[PROTECTED]" +
+                ", fullname='" + fullname + '\'' +
+                ", role=" + role +
+                '}';
+    }
 
     public Long getId() {
         return id;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getLastname() {
-        return lastname;
-    }
-
-    public void setLastname(String lastname) {
-        this.lastname = lastname;
-    }
-
-    public String getFirstname() {
-        return firstname;
-    }
-
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
     }
 
     public String getPhoneNumber() {
@@ -64,32 +62,27 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
-    public String getUserAddress() {
-        return userAddress;
+    public String getEmail() {
+        return email;
     }
 
-    public void setUserAddress(String userAddress) {
-        this.userAddress = userAddress;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", username=' [PROTECTED]" + '\'' +
-                '}';
+    public String getFullname() {
+        return fullname;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof User user)) return false;
-        return Objects.equals(email, user.email)
-                && Objects.equals(phoneNumber, user.phoneNumber);
+    public void setFullname(String fullname) {
+        this.fullname = fullname;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(email, phoneNumber);
+    public Role getRole() {
+        return role;
+    }
+
+    public void setRole(Role role) {
+        this.role = role;
     }
 }
