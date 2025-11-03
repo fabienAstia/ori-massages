@@ -7,9 +7,11 @@ export default function BookingCalendar({onChangeDate}){
     const [selectedDate, setSelectedDate] = useState(null);
  
     return(
-        <DayPicker
+        <div className='booking-date'>
+            <DayPicker
             animate
             mode="single"
+            disabled={{ before: new Date() }}
             // disabled={{ dayOfWeek: [0, 6] }}
             selected={selectedDate}
             onSelect={(selectedDate) => {
@@ -18,8 +20,9 @@ export default function BookingCalendar({onChangeDate}){
                 console.log(selectedDate, 'date on Day Picker')
             }}
             footer={
-                selectedDate ? `Selected: ${selectedDate.toLocaleDateString()}` : "Choisissez un jour."
+                selectedDate ? `${selectedDate.toLocaleDateString()}` : "Choisissez un jour."
             }
         />
+        </div>
     );
 }

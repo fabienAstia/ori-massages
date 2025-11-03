@@ -82,7 +82,7 @@ export default function Contact({bookModalSubmit, isAtHome}){
                             id="address" 
                             aria-describedby="adresse"
                         />
-                        {errors.address && <span className='text-danger'>This field is required</span>}
+                        {errors.address && <span className='text-danger fw-bold'>This field is required</span>}
                     </div>
                     }
                 
@@ -97,28 +97,30 @@ export default function Contact({bookModalSubmit, isAtHome}){
                             aria-describedby="email"
                         />
                         <div id="emailHelp" className="form-text">Nous ne partageons jamais aucun email avec qui que ce soit.</div>
-                        {errors.email && <span className='text-danger'>This field is required</span>}
+                        {errors.email && <span className='text-danger fw-bold'>This field is required</span>}
                     </div>
 
                     <div className="mb-3">
                         <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
                         <input 
-                            {...register("phoneNumber", {required:true})}
+                            {...register("phoneNumber", {
+                                required:true, 
+                                onChange: (e) => {
+                                    const formatted = onChangePhoneNumber(e)
+                                    console.log('formatted=' , formatted)
+                                },
+                                onBlur: (e) => {e.target.value = onBlurPhoneNumber(e.target.value)}
+                            })}
                             type="tel" 
                             className="form-control" 
                             id="phoneNumber"
                             placeholder='06 70 88 71 67'
                             maxLength={14}
-                            onChange={(e) => {
-                                const formatted = onChangePhoneNumber(e)
-                                console.log('formatted=' , formatted)
-                            }}
-                            onBlur={(e) => {e.target.value = onBlurPhoneNumber(e.target.value)}}
                             aria-describedby="phone_number"
                             required
                         />
                         <div id="phoneHelp" className="form-text">Votre numéro servira pour recevoir un sms de rappel 48h avant.</div>
-                        {errors.phoneNumber && <span className='text-danger'>This field is required</span>}
+                        {errors.phoneNumber && <span className='text-danger fw-bold'>This field is required</span>}
                     </div>
 
                     <div className='row row-cols-1 row-cols-md-2'>

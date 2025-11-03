@@ -1,8 +1,12 @@
 package com.fabien_astiasaran.ori_massages_api.controllers;
 
+import com.fabien_astiasaran.ori_massages_api.dtos.DateBookedResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.DateUnavailableAndBookedResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.DateSetUnavailable;
 import com.fabien_astiasaran.ori_massages_api.services.DateService;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.*;
+
 
 @RestController
 @RequestMapping("/dates")
@@ -13,7 +17,13 @@ public class DateController {
         this.dateService = dateService;
     }
 
-    public void postDate(){
+    @GetMapping("/booked")
+    public DateBookedResponse getDatesAlreadyBooked(){
+        return dateService.getDatesAlreadyBooked();
+    }
 
+    @PostMapping("/unavailable")
+    public DateUnavailableAndBookedResponse setUnavailable(@Valid @RequestBody DateSetUnavailable date){
+        return dateService.setUnavailableDates(date);
     }
 }

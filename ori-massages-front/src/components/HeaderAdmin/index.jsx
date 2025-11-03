@@ -1,7 +1,7 @@
-import './Header.css'
+import './HeaderAdmin.css'
 import {Link, NavLink} from 'react-router-dom'
 import logo from '../../assets/photos/logo-fond-blanc-espace.svg'
-import adminPicto from '../../assets/pictos/admin.svg'
+// import adminPicto from '../../assets/pictos/admin.svg'
 
 export default function Header(){
     return (
@@ -14,20 +14,20 @@ export default function Header(){
                 </button>
                 <div className="collapse navbar-collapse fs-5" id="collapseNavBar">
                     <div className="navbar-nav">
-                        <NavLink to="/services" className='nav-link nav-link-custom'>Prestations</NavLink>
-                        <NavLink to="/about-me" className='nav-link nav-link-custom'>À propos</NavLink>
+                        <NavLink to="/dates" className='nav-link nav-link-custom'>Dates</NavLink>
+                        {/* <NavLink to="/about-me" className='nav-link nav-link-custom'>À propos</NavLink>
                         <NavLink to="/solidarity-fund" className='nav-link nav-link-custom'>Cagnotte solidaire</NavLink>
-                        <NavLink to="/contact" className='nav-link nav-link-custom'>Contact</NavLink>
+                        <NavLink to="/contact" className='nav-link nav-link-custom'>Contact</NavLink> */}
                     </div>
                 
                 </div>
-                <div className="collapse navbar-collapse fs-5 justify-content-end" id="collapseNavBar">
+                {/* <div className="collapse navbar-collapse fs-5 justify-content-end" id="collapseNavBar">
                     <div className='navbar-nav d'>
                         <NavLink to="/admin" className='nav-link nav-link-custom'>
                             <img src={adminPicto}/>
                         </NavLink>
                     </div>
-                </div>
+                </div> */}
             </div>
         </nav>
     </header>

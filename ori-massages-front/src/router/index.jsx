@@ -1,6 +1,8 @@
 import {lazy, Suspense} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import Layout from '../components/Layout'
+import LayoutAdmin from '../components/LayoutAdmin';
+// import Admin from '../views/Admin';
 
 const Home = lazy(()=> import ('../views/Home'))
 const Services = lazy(()=> import ('../views/Services'))
@@ -9,6 +11,8 @@ const AboutMe = lazy(()=> import('../views/AboutMe'))
 const Contact = lazy(()=> import ('../views/Contact'))
 const LegalNotices = lazy(() => import('../views/LegalNotices'))
 const PrivacyPolicy = lazy(() => import('../views/PrivacyPolicy'))
+const Admin = lazy(() => import ('../views/Admin'))
+const ManageDates = lazy(() => import('../views/ManageDates'))
 
 
 export default function Router(){
@@ -23,6 +27,10 @@ export default function Router(){
                     <Route path='/contact' element={<Contact/>}/>
                     <Route path='/legalNotices' element={<LegalNotices/>}/>
                     <Route path='/privacyPolicy' element={<PrivacyPolicy/>}/>
+                </Route>
+                <Route element= {<LayoutAdmin/>}>
+                    <Route path='/admin' element={<Admin/>}/>
+                    <Route path='/dates' element={<ManageDates/>}/>
                 </Route>
             </Routes>
         </Suspense>

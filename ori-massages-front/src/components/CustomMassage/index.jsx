@@ -4,23 +4,27 @@ import PrestationCard from '../PrestationCard'
 import BookModal from '../BookModal'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function CustomMassage({showDescription = true, variant}){
     const [prestations, setPrestations] = useState(null);
     const [selectedPrestation, setSelectedPrestation] = useState(null)
     const [modalShow, setModalShow] = useState(false);
+    const [error, setError] = useState(null)
     
     useEffect(() => {
         async function getPrestations(){
             try {
-                const result = await axios.get('http://localhost:8080/prestations/massages')
+                const result = await axios.get(`${apiUrl}/prestations/massages`)
                 console.log('getPrestations=', result.data)
-                return setPrestations(result.data);
+                setPrestations(result.data);
             } catch(err) {
                 if(err.response){
-                    alert('err =', err.response.data)
+                    setError(`Erreur serveur : ${err.response.data}`)
                 }else if(err.request){
-                    alert('err', err.request)
+                    setError('Erreur réseau')
+                }else{
+                    setError('Erreur inconnue')
                 }
             }
         }
@@ -32,8 +36,8 @@ export default function CustomMassage({showDescription = true, variant}){
     })
 
     const listMassage = prestations?.map(massage =>
-        showDescription ?
-        <div className='col' key={massage.id}>
+        showDescription 
+        ? <div className='col' key={massage.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
                 <PrestationCard
                     prestation={massage}
@@ -43,8 +47,7 @@ export default function CustomMassage({showDescription = true, variant}){
                 />
             </div>
         </div>
-        :
-        <div className='col' key={massage.id}>
+        : <div className='col' key={massage.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
                 <HomeCard
                     title={massage.name}
@@ -55,13 +58,14 @@ export default function CustomMassage({showDescription = true, variant}){
         );
     return <section className='CustomMassageView'>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
-                {listMassage}
-                <BookModal 
-                    show={modalShow} 
-                    onHide={() => setModalShow(false)} 
-                    prestation={selectedPrestation}
-                />
-        
+                {listMassage} &&
+                    <BookModal 
+                        show={modalShow} 
+                        onHide={() => setModalShow(false)} 
+                        prestation={selectedPrestation}
+                    />
+             
+                {error && <div className='text-center text-danger fw-bold'>{error}</div>}
             </div>
         </section>;
 }
