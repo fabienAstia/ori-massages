@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react';
 import {DayPicker} from 'react-day-picker';
 import { Row, Col } from 'react-bootstrap';
 import axios from 'axios';
+import {toLocalDate, getDateWithoutOffset, formatDate} from '../../utils/dateUtils'
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function ManageDates(){
@@ -12,18 +13,10 @@ export default function ManageDates(){
     const [unavailableDays, setUnavailableDays] = useState(null)
     console.log('selectedDate', selectedDate)
 
-    function formatDate(date){
-        if(!date) return "no date"
-        const day = date.getDate();
-        const month = date.getMonth() + 1;
-        const year = date.getFullYear();
-        return `${day}/${month}/${year}`;
-    }
-
     async function persistDate(date){
         if(!date) return "there is no date"
-        const firstDateOffset = new Date(date.from.getFullYear(),  date.from.getMonth(), date.from.getDate());
-        const lastDateOffset = new Date(date.to.getFullYear(), date.to.getMonth(), date.to.getDate())
+        const firstDateOffset = toLocalDate(date.from);
+        const lastDateOffset = toLocalDate(date.to);
         const firstDate = getDateWithoutOffset(firstDateOffset)
         const lastDate = getDateWithoutOffset(lastDateOffset);
         try {
@@ -32,10 +25,15 @@ export default function ManageDates(){
                     from:firstDate,
                     to:lastDate
                 })
-            setUnavailableDays(resp.data.unavailableDays)
-            const unavailableDays = await unavailableDays
-            const newBookedDays = bookedDays - unavailableDays
-            setBookedDays(getBookedDays)
+            if(resp){
+                const bookedDateArray = resp.data.bookedDays;
+                const bookedArray = bookedDateArray.map(date => new Date(date))
+                setBookedDays(bookedArray)
+
+                const unavailableDateArray = resp.data.unavailableDays;
+                const unavailableArray = unavailableDateArray.map(date => new Date(date))
+                setUnavailableDays(unavailableArray)
+            }
             alert('PERSISTED !')
         } catch(err){
             if(err.response){
@@ -46,34 +44,30 @@ export default function ManageDates(){
         }  
     }
 
-    function getDateWithoutOffset(date){
-        const dateWithoutOffset = new Date(date.getTime() - (date.getTimezoneOffset()*60000));
-        const toLocalDate = dateWithoutOffset.toISOString().split('T')[0];
-        return toLocalDate
-    }
-
     useEffect(() => {
-        async function getBookedDays(){
+        async function getAllDates(){
             try {
-                const resp = await axios.get(`${apiUrl}/dates/booked`)
+                const resp = await axios.get(`${apiUrl}/dates`)
                 if(resp) {
-                    const localDateArray = resp.data.bookedDays;
-                    const datesArray = localDateArray.map(date => new Date(date))
-                    setBookedDays(datesArray);
-                    console.log('datesArray=', datesArray)
+                    const bookedDateArray = resp.data.bookedDays;
+                    const bookedArray = bookedDateArray.map(date => new Date(date))
+                    const unavailableDateArray = resp.data.unavailableDays;
+                    const unavailableArray = unavailableDateArray.map(date => new Date(date))
+                    setBookedDays(bookedArray);
+                    setUnavailableDays(unavailableArray);
+                    console.log('bookedArray=', bookedArray)
                 }
             } catch(err) {
                 if(err.response){
                     console.log('err', err.response.data)
                 }
             }
-        }
-        getBookedDays();
+        }getAllDates();
     }, [])
 
-    useEffect(()=> {
-        console.log(`bookedDays= ${bookedDays?bookedDays:null}`)
-    }, [bookedDays])
+    // useEffect(()=> {
+    //     console.log(`bookedDays= ${bookedDays?bookedDays:null}`)
+    // }, [bookedDays])
 
     return (
         <div className='manage-date'>
@@ -91,8 +85,14 @@ export default function ManageDates(){
                                 ? `${formatDate(selectedDate?.from)} - ${formatDate(selectedDate?.to)}` 
                                 : "Choisissez un ou plusieurs jour(s)."
                             }
-                            modifiers={{booked: bookedDays? bookedDays : null}}
-                            modifiersClassNames={{booked: "booked"}}
+                            modifiers={{
+                                booked: bookedDays? bookedDays : null,
+                                unavailable: unavailableDays ? unavailableDays : null
+                            }}
+                            modifiersClassNames={{
+                                booked: "booked",
+                                unavailable: "unavailable" 
+                            }}
                         />
                     </Col>
                     <Col sm={12} md={6}>

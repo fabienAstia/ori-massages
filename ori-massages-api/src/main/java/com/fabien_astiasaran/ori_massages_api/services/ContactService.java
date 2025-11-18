@@ -2,7 +2,6 @@ package com.fabien_astiasaran.ori_massages_api.services;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.Contact;
 import com.fabien_astiasaran.ori_massages_api.dtos.ContactCreate;
-import com.fabien_astiasaran.ori_massages_api.dtos.UserCreate;
 import com.fabien_astiasaran.ori_massages_api.entities.User;
 import com.fabien_astiasaran.ori_massages_api.entities.Message;
 import com.fabien_astiasaran.ori_massages_api.mappers.UserMapper;

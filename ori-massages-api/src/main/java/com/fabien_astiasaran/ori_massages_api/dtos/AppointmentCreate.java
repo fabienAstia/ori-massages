@@ -1,16 +1,15 @@
 package com.fabien_astiasaran.ori_massages_api.dtos;
 
+import com.fabien_astiasaran.ori_massages_api.validators.AddressRequiredForLocationAtHome;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-
-
+@AddressRequiredForLocationAtHome
 public record AppointmentCreate(
      @Valid SlotCreate slot,
      @Valid UserCreate user,
      @Valid AddressCreate address,
+     @NotNull Long locationId,
      String message
 ) {
 }

@@ -70,18 +70,17 @@
     box-shadow: 0 2px 6px rgba(0, 150, 136, 0.3);
 }
 
-.btn-toggle.active{
-    background-color: #009688 !important; 
-    color: white !important;
-    border: 2px solid #00796b;
-    /* box-shadow: 0 2px 6px rgba(0, 150, 136, 0.3);  */
-    box-shadow: 0 0 0 8px rgba(146, 253, 185, 0.8), 0 0 12px 12px rgba(146, 253, 185, 0.8);
+.btn-toggle.active {
+  background-color: #009688;
+  color: white !important;
+  border-color: #00796b;
+  box-shadow: 0 0 0 6px #b3ebe9, 0 2px 8px rgba(0, 150, 136, 0.35);
+  transform: scale(1.03);
 }
 
 .card.selected {
   transform: scale(1.02);
-  /* box-shadow: 0 0 0 4px #009688, 0 0 12px 12px rgba(0, 121, 107, 0.35); */
-box-shadow: 0 0 0 8px rgba(146, 253, 185, 0.8), 0 0 12px 12px rgba(146, 253, 185, 0.8);
+    box-shadow: 0 0 0 8px #b3ebe9, 0 0 12px 12px #b3ebe9;
   background-color: #f1fbfb;
   transition: all 0.3s ease;
 }

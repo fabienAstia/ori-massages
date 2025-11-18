@@ -1,7 +1,6 @@
 package com.fabien_astiasaran.ori_massages_api.controllers;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.PrestationResponse;
-import com.fabien_astiasaran.ori_massages_api.entities.Prestation;
 import com.fabien_astiasaran.ori_massages_api.services.PrestationService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;

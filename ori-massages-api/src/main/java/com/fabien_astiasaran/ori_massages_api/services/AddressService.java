@@ -22,13 +22,13 @@ public class AddressService {
                 addressCreate.streetNumber(),
                 addressCreate.complement(),
                 street
-        ).orElseGet(() -> addressRepository.save(new Address(
+        ).orElseGet(() -> new Address(
                 addressCreate.streetNumber(),
                 addressCreate.complement(),
                 street,
                 null,
                 null
-        )));
+        ));
     }
 
     public Address findByLocation(Location location){

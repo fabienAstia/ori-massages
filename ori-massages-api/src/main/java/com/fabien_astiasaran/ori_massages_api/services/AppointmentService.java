@@ -39,6 +39,7 @@ public class AppointmentService {
     }
 
     public Appointment createAppointment(AppointmentCreate appointmentCreate){
+        System.out.println("appointmentCreat = " + appointmentCreate);
         Prestation prestation = prestationRepository.findById(appointmentCreate.slot().prestation().id())
                 .orElseThrow(()-> new EntityNotFoundException("Prestation not found"));
         Date date = dateService.findOrCreateDate(appointmentCreate.slot());
@@ -47,9 +48,9 @@ public class AppointmentService {
         Slot slot = slotService.createSlot(appointmentCreate, date, workingHours, prestation);
         User user = userService.findOrCreateUser(appointmentCreate);
 
-        Location location = locationRepository.findById(appointmentCreate.address().locationId())
+        Location location = locationRepository.findById(appointmentCreate.locationId())
                 .orElseThrow(()-> new EntityNotFoundException("Location not found"));
-        Address address = resolveAddress(appointmentCreate, location.getName(), user, location);
+        Address address = resolveAddress(appointmentCreate, user, location);
         Status status = statusRepository.findByStatusLabel(REGISTERED);
 
         Appointment appointment = buildAndSaveAppointment(slot, user, address, status);
@@ -57,13 +58,15 @@ public class AppointmentService {
         return appointment;
     }
 
-    public Address resolveAddress(AppointmentCreate appointmentCreate, String locationName, User user, Location location) {
-        Address address = addressService.findOrCreateAddress(appointmentCreate.address());
-        address.setLocation(location);
-        if(locationName.equalsIgnoreCase(AT_HOME)){
+    public Address resolveAddress(AppointmentCreate appointmentCreate, User user, Location location) {
+        if(location.isAtHome()){
+            Address address = addressService.findOrCreateAddress(appointmentCreate.address());
+            address.setLocation(location);
             address.setUser(user);
+            return addressRepository.save(address);
+        } else {
+            return addressRepository.findByLocation(location);
         }
-        return addressRepository.save(address);
     }
 
     private Appointment buildAndSaveAppointment(Slot slot, User user, Address address, Status status) {

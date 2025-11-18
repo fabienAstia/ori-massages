@@ -1,10 +1,11 @@
 import './CustomMassage.css'
 import HomeCard from '../HomeCard'
 import PrestationCard from '../PrestationCard'
-import BookModal from '../BookModal'
-import { useEffect, useState } from 'react'
+// import BookModal from '../BookModal'
+import { useEffect, useState, lazy, Suspense } from 'react'
 import axios from 'axios'
 const apiUrl = import.meta.env.VITE_API_URL;
+const BookModal = lazy(() => import('../BookModal'))
 
 export default function CustomMassage({showDescription = true, variant}){
     const [prestations, setPrestations] = useState(null);

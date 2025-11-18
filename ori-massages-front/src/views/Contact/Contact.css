@@ -25,18 +25,15 @@
     font-size: 0.7rem;
 }
 
+
 .ContactView .btn{
-    font-family: 'Quicksand', sans-serif;
-    font-size: 1.1rem;
-    font-weight: 600;
-    border-radius: 50px;
-    padding: 0.6rem 1.6rem;
-    margin-top: 1rem;
-    margin-bottom: 2rem;
-    border: 2px solid #1d8c87;
-    color: #1d8c87;
-    background: transparent;
-    transition: all 0.3s ease;
+  background-color: transparent;
+  border: 2px solid #1d8c87;
+  color: #1d8c87;
+  font-weight: 500;
+  border-radius: 25px;
+  padding: 0.5rem 1.5rem;
+  transition: all 0.3s ease;
 }
 
 .ContactView .btn:hover {
@@ -54,4 +51,11 @@
 .ContactView .phoneHelp{
     margin-top: -1rem;
     margin-bottom: 1rem;
+}
+
+.ContactView.background{
+    background-color: #e1f7f6;
+    padding: 0.5rem 1rem;
+    border-radius: 15px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
 }

@@ -9,6 +9,7 @@ import Contact from '../../views/Contact';
 import BookingCalendar from '../BookingCalendar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+import { getDateWithoutOffset } from '../../utils/dateUtils';
 
 export default function BookModal(props) {
   if(!props.prestation)return null;
@@ -56,8 +57,9 @@ export default function BookModal(props) {
   }
 
   function handleDateChange(data){
-    setDate(data);
-    getSlots(data);
+    const withoutOffset = getDateWithoutOffset(data);
+    setDate(withoutOffset);
+    getSlots(withoutOffset);
   }
 
   const slotList = slots?.map((slot, id) => {
@@ -114,24 +116,32 @@ export default function BookModal(props) {
     await submit(data);
   }
 
+  useEffect(()=> {
+    console.log("contactData= ", contactData)
+  }, [contactData])
+
   async function submit(data){
       try {
           const res = await axios.post(`${apiUrl}/appointment`, {
-              comment: '',
               slot:activeSlot,  
               user:data,
-              location:location,
+              address: location.id == 1 ? {
+                streetNumber:data.street_number,
+                streetName:data.street_name,
+                complement:data.complement,
+                zipCode:data.zip_code,
+                cityName:data.city_name
+              } : null,
+              locationId:location.id,
+              message: data.message
           });
           alert('You\'ve created an appointment')
           props.onHide();
       }catch(err){
           if(err.response){
               console.error('POST FAILED with status= ' + err.response.status)
-              console.error('POST FAILED with message= ' + err.response.message)
               console.error('POST FAILED with data= ' + err.response.data)
-
               console.error('POST FAILED with field= ' + err.response.data.fieldsErrors)
-              console.error('POST FAILED with global= ' + err.response.data.globalErrors)
           } else {
               console.error(err)
               alert(err)
@@ -205,7 +215,7 @@ export default function BookModal(props) {
                     <Button className='w-100 bg-custom'>Rentrez vos coordonnées</Button>
                   </Col>
                 </Row>
-                <Row>
+                <Row className='my-1 mx-1'>
                   <Contact
                     bookModalSubmit={(data) => handleContactChange(data)}
                     isAtHome={location.id == 1}

@@ -19,6 +19,9 @@ public class Location {
     @Column(name = "image_path")
     private String imagePath;
 
+    @Column(name = "is_at_home")
+    private boolean atHome;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -38,6 +41,7 @@ public class Location {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", imagePath='" + imagePath + '\'' +
+                ", atHome=" + atHome +
                 '}';
     }
 
@@ -59,5 +63,13 @@ public class Location {
 
     public void setImagePath(String imagePath) {
         this.imagePath = imagePath;
+    }
+
+    public boolean isAtHome() {
+        return atHome;
+    }
+
+    public void setAtHome(boolean atHome) {
+        this.atHome = atHome;
     }
 }

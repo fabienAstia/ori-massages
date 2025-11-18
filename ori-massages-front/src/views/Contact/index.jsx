@@ -11,7 +11,7 @@ export default function Contact({bookModalSubmit, isAtHome}){
     const [phoneNumber, setPhoneNumber] = useState('')
     const {register, handleSubmit, setValue, formState:{errors}} = useForm();
     
-    const onChangePhoneNumber = (e) => {
+    const  onChangePhoneNumber = (e) => {
         let formatted = (e.target.value).replace(/[^\d]/g, "")
         setPhoneNumber(formatted);
         return phoneNumber;
@@ -50,8 +50,8 @@ export default function Contact({bookModalSubmit, isAtHome}){
     }
 
     return(
-        <section className="ContactView">
-            <div className='text-center'>
+        <section className={`ContactView ${bookModalSubmit ? 'background' : ''}`}>
+            <div className='text-center '>
                 {!bookModalSubmit &&
                     <>
                         <h2 className="mb-3">Contact</h2>
@@ -72,32 +72,30 @@ export default function Contact({bookModalSubmit, isAtHome}){
             <div className='d-flex mt-1 justify-content-center'>
                 <form onSubmit={handleSubmit(onSubmit)}>
 
-                    <div className='row row-cols-2'>
+                    <div className={'row row-cols-2'}>
                         <div className='col-12 col-sm-4'>
+                            {bookModalSubmit &&
                             <div className="mb-3">
                                 <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
                                 <input 
                                     {...register("phoneNumber", {
                                         required:true, 
-                                        onChange: (e) => {
-                                            const formatted = onChangePhoneNumber(e)
-                                            console.log('formatted=' , formatted)
-                                        },
+                                        onChange: (e) => { onChangePhoneNumber(e)},
                                         onBlur: (e) => {e.target.value = onBlurPhoneNumber(e.target.value)}
                                     })}
                                     type="tel" 
                                     className="form-control" 
                                     id="phoneNumber"
-                                    placeholder='06 70 88 71 67'
                                     maxLength={14}
                                     aria-describedby="phone_number"
                                     required
                                 />
                                 {errors.phoneNumber && <span className='text-danger fw-bold'>This field is required</span>}
                             </div>
+                            }
                         </div>
 
-                        <div className='col-12 col-sm-8'>
+                        <div className={"col-12 " + (bookModalSubmit ? 'col-sm-8' : 'col-sm-12')}>
                             <div className="mb-3">
                                 <label htmlFor="fullname" className="form-label">Nom :</label>
                                 <input 
@@ -181,7 +179,7 @@ export default function Contact({bookModalSubmit, isAtHome}){
                             </div>
                             <div className='col-12 col-sm-8'>
                                 <div className="mb-3">
-                                    <label htmlFor="zip_code" className="form-label">Ville :<span className="red"> *</span></label>
+                                    <label htmlFor="city_name" className="form-label">Ville :<span className="red"> *</span></label>
                                     <input 
                                         {...register("city_name")}
                                         type="text" 

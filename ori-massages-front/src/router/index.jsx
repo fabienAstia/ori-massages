@@ -2,7 +2,6 @@ import {lazy, Suspense} from 'react';
 import {Routes, Route} from 'react-router-dom';
 import Layout from '../components/Layout'
 import LayoutAdmin from '../components/LayoutAdmin';
-// import Admin from '../views/Admin';
 
 const Home = lazy(()=> import ('../views/Home'))
 const Services = lazy(()=> import ('../views/Services'))

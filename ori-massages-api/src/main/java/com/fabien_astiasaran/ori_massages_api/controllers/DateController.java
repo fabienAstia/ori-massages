@@ -22,6 +22,11 @@ public class DateController {
         return dateService.getDatesAlreadyBooked();
     }
 
+    @GetMapping
+    public DateUnavailableAndBookedResponse getDatesAlreadyBookedAndUnavailable(){
+        return dateService.getDatesAlreadyBookedAndUnavailable();
+    }
+
     @PostMapping("/unavailable")
     public DateUnavailableAndBookedResponse setUnavailable(@Valid @RequestBody DateSetUnavailable date){
         return dateService.setUnavailableDates(date);

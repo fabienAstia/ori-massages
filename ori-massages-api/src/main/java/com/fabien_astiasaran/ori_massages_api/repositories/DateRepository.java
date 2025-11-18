@@ -1,6 +1,7 @@
 package com.fabien_astiasaran.ori_massages_api.repositories;
 
 import com.fabien_astiasaran.ori_massages_api.entities.Date;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -17,4 +18,7 @@ public interface DateRepository extends JpaRepository<Date, Long> {
 
     @Query("SELECT d.date FROM Date d WHERE d.isAvailable")
     List<LocalDate> findAllAvailableDates();
+
+    @Query("SELECT d.date FROM Date d WHERE d.isAvailable = false")
+    List<LocalDate> findAllUnavailableDates();
 }

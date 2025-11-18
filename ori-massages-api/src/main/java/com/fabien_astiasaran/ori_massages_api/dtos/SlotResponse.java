@@ -1,7 +1,6 @@
 package com.fabien_astiasaran.ori_massages_api.dtos;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 public record SlotResponse(
         Long id,

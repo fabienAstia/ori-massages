@@ -6,11 +6,14 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public class DateMapper {
+public final class DateMapper {
+
+    private DateMapper() {
+    }
 
     public static List<LocalDate> toLocalDate(List<Date> dates){
         return dates.stream()
                 .map(Date::getDate)
-                .collect(Collectors.toUnmodifiableList());
+                .toList();
     }
 }

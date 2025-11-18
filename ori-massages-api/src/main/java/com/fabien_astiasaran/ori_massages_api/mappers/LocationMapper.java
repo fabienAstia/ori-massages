@@ -18,7 +18,7 @@ public final class LocationMapper {
     public static List<LocationResponse> toResponse(List<Location> locations){
         return locations.stream()
                 .map(location -> toResponse(location))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static LocationResponse toResponse(Location location){
@@ -26,6 +26,7 @@ public final class LocationMapper {
                 location.getId(),
                 location.getName(),
                 location.getImagePath(),
+                location.isAtHome(),
                 null
                 );
     }
@@ -35,6 +36,7 @@ public final class LocationMapper {
                 location.getId(),
                 location.getName(),
                 location.getImagePath(),
+                location.isAtHome(),
                 formatAddress(address)
         );
     }

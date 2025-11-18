@@ -5,14 +5,14 @@ import com.fabien_astiasaran.ori_massages_api.dtos.DateUnavailableAndBookedRespo
 import com.fabien_astiasaran.ori_massages_api.dtos.DateSetUnavailable;
 import com.fabien_astiasaran.ori_massages_api.dtos.SlotCreate;
 import com.fabien_astiasaran.ori_massages_api.entities.Date;
-import com.fabien_astiasaran.ori_massages_api.mappers.DateMapper;
 import com.fabien_astiasaran.ori_massages_api.repositories.DateRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
+
+import static com.fabien_astiasaran.ori_massages_api.mappers.DateMapper.toLocalDate;
 
 @Service
 public class DateService {
@@ -24,19 +24,28 @@ public class DateService {
     }
 
     public Date findOrCreateDate(SlotCreate slotCreate) {
-        Date date = dateRepository.findByDate(slotCreate.date())
+        return dateRepository.findByDate(slotCreate.date())
                 .orElseGet(() -> {
                     Date newDate = new Date();
                     newDate.setDate(slotCreate.date());
                     newDate.setAvailable(true);
                     return dateRepository.save(newDate);
                 });
-        return date;
     }
 
     public DateBookedResponse getDatesAlreadyBooked(){
         List<LocalDate> alreadyBooked = dateRepository.findAllAvailableDates();
         return new DateBookedResponse(alreadyBooked);
+    }
+
+    public DateUnavailableAndBookedResponse getDatesAlreadyBookedAndUnavailable() {
+        List<Date> dates = dateRepository.findAll();
+        List<LocalDate> bookedDates = dates.stream().filter(d -> d.isAvailable()).map(d -> d.getDate()).toList();
+        List<LocalDate> unavailablesDates = dates.stream().filter(d -> !d.isAvailable()).map(d -> d.getDate()).toList();
+        return new DateUnavailableAndBookedResponse(
+                unavailablesDates,
+                bookedDates
+        );
     }
 
     public DateUnavailableAndBookedResponse setUnavailableDates(DateSetUnavailable dateSetUnavailable) {
@@ -45,18 +54,21 @@ public class DateService {
 
         List<LocalDate> datesBetween = firstDay
                 .datesUntil(lastDay.plusDays(1L))
-                .collect(Collectors.toList());
+                .toList();
 
         List<LocalDate> alreadyBooked = dateRepository.findAllAvailableDates();
-        List<LocalDate> newUnavailableDates = datesBetween.stream()
-                        .filter(date -> !alreadyBooked.contains(date))
-                        .collect(Collectors.toUnmodifiableList());
-        dateRepository.saveAll(toUnavailableDates(newUnavailableDates));
+        List<LocalDate> alreadyUnavailable = dateRepository.findAllUnavailableDates();
+        List<LocalDate> datesToPersist = datesBetween.stream()
+                        .filter(date -> !alreadyBooked.contains(date)
+                                && !alreadyUnavailable.contains(date))
+                        .toList();
+        List<LocalDate> newUnavailableDates = toLocalDate(dateRepository.saveAll(toUnavailableDates(datesToPersist)));
 
-        alreadyBooked.removeAll(datesBetween);
+//        alreadyBooked.removeAll(datesBetween);
+        alreadyUnavailable.addAll(newUnavailableDates);
 
         return new DateUnavailableAndBookedResponse(
-               datesBetween,
+               alreadyUnavailable,
                alreadyBooked
         );
     }

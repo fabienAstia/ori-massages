@@ -3,7 +3,9 @@ package com.fabien_astiasaran.ori_massages_api.mappers;
 import com.fabien_astiasaran.ori_massages_api.dtos.WorkingHoursResponse;
 import com.fabien_astiasaran.ori_massages_api.entities.WorkingHours;
 
-public class WorkingHoursMapper {
+public final class WorkingHoursMapper {
+
+    private WorkingHoursMapper(){}
 
     public static WorkingHoursResponse toResponse(WorkingHours workingHours){
         return new WorkingHoursResponse(
@@ -21,12 +23,4 @@ public class WorkingHoursMapper {
         entity.setName(workingHours.getName());
         return entity;
     }
-
-//    public static WorkingHours toEntity(WorkingHoursResponse workingHours){
-//        WorkingHours entity = new WorkingHours();
-//        entity.setStartTime(workingHours.getStartTime());
-//        entity.setEndTime(workingHours.getEndTime());
-//        entity.setName(workingHours.getName());
-//        return entity;
-//    }
 }

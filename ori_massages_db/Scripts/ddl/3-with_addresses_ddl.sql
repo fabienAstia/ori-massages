@@ -98,6 +98,7 @@ CREATE TABLE t_locations(
 	id int GENERATED ALWAYS AS IDENTITY, 
 	name varchar(50) NOT NULL,
 	image_path varchar(20) not null, 
+	is_at_home boolean not null,
 	CONSTRAINT t_locations_pk PRIMARY KEY (id), 
 	CONSTRAINT t_locations_location_name_uk UNIQUE (name)
 );

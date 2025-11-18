@@ -73,9 +73,9 @@ insert into t_roles(role_label) values
 insert into t_statuses(status_label)values	
 ('ENREGISTRÉ'), ('CONFIRMÉ'), ('ANNULÉ'), ('TERMINÉ'), ('EXPIRÉ');
 
-insert into t_locations(name, image_path) values
-('À domicile', 'lieu1.jpg'),
-('Espace soin', 'lieu2.jpg');
+insert into t_locations(name, image_path, is_at_home) values
+('À domicile', 'lieu1.jpg', true),
+('Espace soin', 'lieu2.jpg', false);
 
 insert into t_cities(zip_code, city_name)
 values('75020', 'PARIS');
@@ -87,7 +87,7 @@ insert into t_streets(city_id, street_name) values
 insert into t_addresses(street_number, street_id, location_id) values
 ('210',
 (select id from t_streets ts where ts.street_name = 'rue de Belleville'),
-(select id from t_locations tl where tl.name = 'Espace soin'));
+(select id from t_locations tl where tl.is_at_home = false));
 --'210 rue de Belleville, 75020 Paris',
 --insert into t_dates(date_value, is_available, comment) values
 --();

@@ -2,7 +2,6 @@ package com.fabien_astiasaran.ori_massages_api.controllers;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.Contact;
 import com.fabien_astiasaran.ori_massages_api.dtos.ContactCreate;
-import com.fabien_astiasaran.ori_massages_api.dtos.UserCreate;
 import com.fabien_astiasaran.ori_massages_api.services.ContactService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;

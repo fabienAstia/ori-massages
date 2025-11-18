@@ -56,5 +56,8 @@
 .manage-date .booked{
     background-color: rgb(255, 193, 193);
 }
+.manage-date .unavailable{
+    background-color: rgb(255, 254, 193);
+}
 
 

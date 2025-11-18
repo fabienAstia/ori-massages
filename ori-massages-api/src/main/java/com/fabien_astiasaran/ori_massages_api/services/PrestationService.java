@@ -2,7 +2,6 @@ package com.fabien_astiasaran.ori_massages_api.services;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.DurationResponse;
 import com.fabien_astiasaran.ori_massages_api.dtos.PrestationResponse;
-import com.fabien_astiasaran.ori_massages_api.entities.Prestation;
 import com.fabien_astiasaran.ori_massages_api.repositories.PrestationRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +11,8 @@ import java.util.List;
 @Service
 public class PrestationService {
 
-    private final String MASSAGE_LABEL = "Massages";
-    private final String FACIAL_CARE_LABEL = "Soins visage";
+    private final static String MASSAGE_LABEL = "Massages";
+    private final static String FACIAL_CARE_LABEL = "Soins visage";
     private PrestationRepository prestationRepository;
 
     public PrestationService(PrestationRepository prestationRepository) {
@@ -22,7 +21,7 @@ public class PrestationService {
 
     public List<PrestationResponse> getMassages(){
         List<PrestationResponse> massages = new ArrayList<>();
-        prestationRepository.findByTreatmentType_Name(MASSAGE_LABEL).forEach(prestation -> {
+        prestationRepository.findByTreatmentType_Name(MASSAGE_LABEL).forEach(prestation ->
             massages.add(
                     new PrestationResponse(
                             prestation.getId(),
@@ -37,14 +36,14 @@ public class PrestationService {
                                     prestation.getDuration().getLabel(),
                                     prestation.getDuration().getBreakTime())
                     )
-            );
-        });
+            )
+        );
         return massages;
     }
 
     public List<PrestationResponse> getFacialCare() {
         List<PrestationResponse> facialCare = new ArrayList<>();
-        prestationRepository.findByTreatmentType_Name(FACIAL_CARE_LABEL).forEach(prestation -> {
+        prestationRepository.findByTreatmentType_Name(FACIAL_CARE_LABEL).forEach(prestation ->
             facialCare.add(
                     new PrestationResponse(
                             prestation.getId(),
@@ -59,8 +58,8 @@ public class PrestationService {
                                     prestation.getDuration().getLabel(),
                                     prestation.getDuration().getBreakTime())
                     )
-            );
-        });
+            )
+        );
         return facialCare;
     }
 }
