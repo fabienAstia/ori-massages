@@ -68,7 +68,7 @@ CREATE TABLE t_working_hours(
 create table t_dates(
 	id int generated always as identity,
 	date_value date not null ,
-	is_available boolean not null,
+	date_status TEXT CHECK (date_status IN ('OPEN', 'CLOSED', 'BOOKED')),
 	comment varchar(30),
 	constraint t_dates_pk primary key (id),
 	constraint t_dates_date_uk unique (date_value)

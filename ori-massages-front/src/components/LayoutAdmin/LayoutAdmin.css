@@ -1,5 +1,21 @@
 .layout-admin-style{
      margin: 1.5rem 7rem;
-    display: flex;
-    justify-content: center;
+}
+
+@media (max-width: 600px) {
+    .layout-admin-style {
+        margin: 1rem;
+    }
+}
+
+@media (max-width: 400px) {
+    .layout-admin-style {
+        margin: 0.5rem;
+    }
+}
+
+@media (max-width: 350px) {
+    .layout-admin-style {
+        margin: 0.2rem;
+    }
 }

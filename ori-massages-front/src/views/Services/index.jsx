@@ -1,6 +1,5 @@
-import CustomMassage from '../../components/CustomMassage';
-import FacialCare from '../../components/FacialCare';
 import './Services.css'
+import Prestation from '../../components/Prestation';
 
 export default function Services(){
     return (
@@ -12,14 +11,20 @@ export default function Services(){
                 <div id='massages' className='spacing'>
                     <h2>Massages sur mesure</h2>
                     <p>Offrez-vous un moment de détente grâce à nos massages adaptés à vos besoins.</p>
-                    <CustomMassage variant='services'/>
+                    <Prestation 
+                        variant='services'
+                        typeOfPrestation='massages'
+                    />
                     <hr />
                 </div>
 
                 <div id='facialCares' className='spacing'>
                     <h2>Soins visages</h2>
                     <p>Retrouvez éclat et vitalité grâce à des soins du visage personnalisés, pensés pour chaque type de peau.</p>
-                    <FacialCare variant='services'/>
+                     <Prestation 
+                        variant='services'
+                        typeOfPrestation='facial-cares'
+                    />
                     <p className='note-facial-care'>Tous les soins comportent un nettoyage de peau, un gommage, une pose de masque et un massage.</p>
                 </div>
         

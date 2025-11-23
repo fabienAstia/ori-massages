@@ -1,3 +1,8 @@
+.manage-date{
+    max-width: 830px;
+    margin: 0 auto;
+}
+
 .manage-date h1 {
     margin-bottom: 2rem;
     text-align: center;
@@ -12,52 +17,103 @@
 }
 .manage-date h2 {
     text-align: center;
+    font-size: 1.5rem;
+    font-weight: 600;
 }
 .manage-date .rdp-footer{
-    display: block;
-    width: 100%;
-    max-width: 300px;
-    margin: 1rem auto 0;
+    min-width: 300px;
+    max-width: 310px;
+    margin: 0.5rem auto 0;
     text-align: center;
     font-size: 1.1rem;
     font-weight: 700;
-    background-color: rgba(146, 253, 185, 0.8);
-    padding: 2px;
-    border-radius: 30px;
+    padding: 5px;
+    border-radius: 15px;
 }
 .manage-date .rdp-chevron{
     --rdp-accent-color: #009688;
 }
 
-.manage-date .selected-dates{
-    flex-direction: column;
+.manage-date .col-wrapper{
     display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    padding: 0 1rem;
+    box-sizing: border-box;
+}
+
+.manage-date .legend{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0.5rem auto 1rem;
+    width: 100%;
+    min-width: 310px;
+    max-width: 350px;
+    gap: 1.2rem;
+    font-size: 1.1rem;
+}
+
+.manage-date .legend-wrapper{
+    display: inline-block;
+    width: 100%;
+}
+
+.manage-date .legendColor{
+    height: 20px;
+    width: 20px;
+}
+
+.manage-date .selected-dates{
+    background-color: rgb(243, 243, 243);
+    margin: 0 auto;
+    padding: 1rem;
+    width: 100%;
+    min-width: 310px;
+    max-width: 350px;
+    border-radius: 20px;
+    box-sizing: border-box;
+    flex-direction: column;
     justify-content:flex-start;
     align-items: center;
-    margin: 0 auto;
-    font-size:medium;
+    font-size:large;
     font-weight: 600;
-    width: 300px;
 }
 
-.manage-date .row{
-    margin: 0;
-}
-
-.manage-date .col-8{
-    background-color: rgb(245, 251, 246);
-    border: #009688 1px solid;
+.manage-date .selectedDates{
+    background-color: rgb(248, 250, 248);
     align-items: center;
-    display: flex;
     font-weight: 600;
-    border-radius: 10px;
+    padding: 0.3rem 0;
 }
 
-.manage-date .booked{
-    background-color: rgb(255, 193, 193);
-}
-.manage-date .unavailable{
-    background-color: rgb(255, 254, 193);
+.manage-date .availability-row{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
 }
 
+.manage-date .radio-option{
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.manage-date .available, .manage-date .green{
+    background-color: #4CAF50;
+}
+
+.manage-date .unavailable, .manage-date .red{
+    background-color: #E53935;
+}
+
+.manage-date .booked, .manage-date .purple{
+    background-color: #4c6ef5;
+    color: white;
+}
 

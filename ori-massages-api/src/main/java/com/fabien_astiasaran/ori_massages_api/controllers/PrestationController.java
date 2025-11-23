@@ -23,7 +23,7 @@ public class PrestationController {
         return service.getMassages();
     }
 
-    @GetMapping("/soins-visage")
+    @GetMapping("/facial-cares")
     public List<PrestationResponse> getFacialCare(){
         return service.getFacialCare();
     }

@@ -3,7 +3,7 @@ import 'react-day-picker/style.css'
 import { useState } from 'react';
 import {DayPicker} from 'react-day-picker';
 
-export default function BookingCalendar({onChangeDate}){
+export default function BookingCalendar({onChangeDate, closedDates}){
     const [selectedDate, setSelectedDate] = useState(null);
  
     return(
@@ -11,8 +11,7 @@ export default function BookingCalendar({onChangeDate}){
             <DayPicker
             animate
             mode="single"
-            disabled={{ before: new Date() }}
-            // disabled={{ dayOfWeek: [0, 6] }}
+            disabled={[ ...closedDates, {before: new Date()} ]}
             selected={selectedDate}
             onSelect={(selectedDate) => {
                 setSelectedDate(selectedDate);

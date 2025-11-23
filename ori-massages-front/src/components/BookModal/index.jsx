@@ -14,6 +14,7 @@ import { getDateWithoutOffset } from '../../utils/dateUtils';
 export default function BookModal(props) {
   if(!props.prestation)return null;
   const apiUrl = import.meta.env.VITE_API_URL
+  const [closedDates, setClosedDates] = useState([]);
   const [date, setDate] = useState(null);
   const [showHours, setShowHours] = useState(false);
   const [slots, setSlots] = useState(null);
@@ -73,7 +74,7 @@ export default function BookModal(props) {
               >
                 {slot.beginAt} - {slot.endVisible}
               </Button>
-   })
+  })
 
   useEffect(() => {
     async function getLocations(){
@@ -89,6 +90,22 @@ export default function BookModal(props) {
       }
     }
     getLocations();
+    async function getClosedDates(){
+      try{
+        const resp = await axios.get(`${apiUrl}/dates/closed`)
+        const closedDates = resp.data.dates.map(date => new Date(date))
+        setClosedDates(closedDates)
+        console.log('closedDates', closedDates)
+      }catch(err){
+        if(err.response){
+          alert(err.response.data)
+        }else if(err.request){
+          alert(err.request)
+        }
+      }
+    }
+    getClosedDates()
+    console.log('closedDates=', closedDates)
   }, [])
 
   const placeList = locations?.map(location_DB => {
@@ -182,6 +199,7 @@ export default function BookModal(props) {
             <Col xs={12} lg={6} className='d-flex justify-content-center align-items-center'>
                 <BookingCalendar 
                   onChangeDate={handleDateChange}
+                  closedDates={closedDates}
                 />
             </Col>
           </Row>

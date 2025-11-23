@@ -1,13 +1,12 @@
-import './CustomMassage.css'
+import './Prestation.css'
 import HomeCard from '../HomeCard'
 import PrestationCard from '../PrestationCard'
-// import BookModal from '../BookModal'
-import { useEffect, useState, lazy, Suspense } from 'react'
+import { useEffect, useState, lazy } from 'react'
 import axios from 'axios'
 const apiUrl = import.meta.env.VITE_API_URL;
 const BookModal = lazy(() => import('../BookModal'))
 
-export default function CustomMassage({showDescription = true, variant}){
+export default function Prestation({showDescription = true, variant, typeOfPrestation}){
     const [prestations, setPrestations] = useState(null);
     const [selectedPrestation, setSelectedPrestation] = useState(null)
     const [modalShow, setModalShow] = useState(false);
@@ -16,7 +15,7 @@ export default function CustomMassage({showDescription = true, variant}){
     useEffect(() => {
         async function getPrestations(){
             try {
-                const result = await axios.get(`${apiUrl}/prestations/massages`)
+                const result = await axios.get(`${apiUrl}/prestations/${typeOfPrestation}`)
                 console.log('getPrestations=', result.data)
                 setPrestations(result.data);
             } catch(err) {
@@ -36,30 +35,31 @@ export default function CustomMassage({showDescription = true, variant}){
         if(selectedPrestation){console.log('selectedPrestation=', selectedPrestation)}
     })
 
-    const listMassage = prestations?.map(massage =>
+    const listPrestation = prestations?.map(prestation =>
         showDescription 
-        ? <div className='col' key={massage.id}>
+        ? <div className='col' key={prestation.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
                 <PrestationCard
-                    prestation={massage}
+                    prestation={prestation}
                     variant={variant}
+                    // onClick={}
                     setModalShow={setModalShow}
                     setSelectedPrestation={setSelectedPrestation}
                 />
             </div>
         </div>
-        : <div className='col' key={massage.id}>
+        : <div className='col' key={prestation.id}>
             <div className="card-body d-flex flex-column mb-4 align-items-center"> 
                 <HomeCard
-                    title={massage.name}
-                    image={`/photos/${massage.imagePath}`}
+                    title={prestation.name}
+                    image={`/photos/${prestation.imagePath}`}
                 />
             </div>
         </div>
         );
-    return <section className='CustomMassageView'>
+    return <section className='PrestationView'>
             <div className="row row-cols-1 row-cols-md-2 row-cols-lg-3 justify-content-center">
-                {listMassage} 
+                {listPrestation} 
                     <BookModal 
                         show={modalShow} 
                         onHide={() => setModalShow(false)} 

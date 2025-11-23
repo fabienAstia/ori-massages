@@ -17,8 +17,9 @@ public class Date {
     @Column(name = "date_value")
     private LocalDate date;
 
-    @Column(name = "is_available")
-    private boolean isAvailable;
+    @Column(name = "date_status")
+    @Enumerated(EnumType.STRING)
+    private DateStatus dateStatus;
 
     @Column(name = "comment")
     private String comment;
@@ -41,7 +42,7 @@ public class Date {
         return "Date{" +
                 "id=" + id +
                 ", date=" + date +
-                ", isAvailable=" + isAvailable +
+                ", dateStatus='" + dateStatus + '\'' +
                 ", comment='" + comment + '\'' +
                 '}';
     }
@@ -58,12 +59,12 @@ public class Date {
         this.date = date;
     }
 
-    public boolean isAvailable() {
-        return isAvailable;
+    public DateStatus getDateStatus() {
+        return dateStatus;
     }
 
-    public void setAvailable(boolean available) {
-        isAvailable = available;
+    public void setDateStatus(DateStatus dateStatus) {
+        this.dateStatus = dateStatus;
     }
 
     public String getComment() {

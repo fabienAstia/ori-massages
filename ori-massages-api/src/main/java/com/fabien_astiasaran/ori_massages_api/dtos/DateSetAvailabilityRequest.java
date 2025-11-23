@@ -4,9 +4,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
 
-public record DateSetUnavailable (
+public record DateSetAvailabilityRequest(
         @JsonProperty("from") LocalDate firstDay,
-        @JsonProperty("to") LocalDate lastDay
+        @JsonProperty("to") LocalDate lastDay,
+        @JsonProperty("availability") AvailabilityAction availability
 ){
 
 }

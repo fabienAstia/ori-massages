@@ -2,8 +2,7 @@ import './Home.css'
 import logo from '../../assets/photos/logo-fond-blanc-espace.svg'
 import oriana_photo from '../../assets/photos/oriana-black-and-white-removebg.png'
 import {Link, NavLink} from 'react-router-dom';
-import CustomMassage from '../../components/CustomMassage';
-import FacialCare from '../../components/FacialCare'
+import Prestation from '../../components/Prestation';
 import Footer from '../../components/Footer'
 
 export default function Home(){
@@ -41,13 +40,19 @@ export default function Home(){
                 </div>
             
                 <h2>Massages sur mesures</h2>
-                <CustomMassage showDescription={false}/>
+                <Prestation 
+                    showDescription={false}
+                    typeOfPrestation='massages'
+                />
                 <div className='d-flex justify-content-center mt-5'>
                     <NavLink to="/services" className="navButton btn btn-outline-primary ">Voir plus</NavLink>
                 </div>
 
                 <h2>Soins visage</h2>
-                <FacialCare showDescription={false}/>
+                <Prestation 
+                    showDescription={false}
+                    typeOfPrestation='facial-cares'
+                />
                 <div className='d-flex justify-content-center mt-5'>
                     <NavLink to="/services" className="navButton btn btn-outline-primary ">Voir plus</NavLink>
                 </div>              

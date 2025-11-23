@@ -1,8 +1,8 @@
 package com.fabien_astiasaran.ori_massages_api.controllers;
 
-import com.fabien_astiasaran.ori_massages_api.dtos.DateBookedResponse;
-import com.fabien_astiasaran.ori_massages_api.dtos.DateUnavailableAndBookedResponse;
-import com.fabien_astiasaran.ori_massages_api.dtos.DateSetUnavailable;
+import com.fabien_astiasaran.ori_massages_api.dtos.DateSetResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.AllDateResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.DateSetAvailabilityRequest;
 import com.fabien_astiasaran.ori_massages_api.services.DateService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -18,17 +18,22 @@ public class DateController {
     }
 
     @GetMapping("/booked")
-    public DateBookedResponse getDatesAlreadyBooked(){
-        return dateService.getDatesAlreadyBooked();
+    public DateSetResponse getBooked(){
+        return dateService.getBookedDates();
+    }
+
+    @GetMapping("/closed")
+    public DateSetResponse getUnavailable(){
+        return dateService.getClosedDates();
     }
 
     @GetMapping
-    public DateUnavailableAndBookedResponse getDatesAlreadyBookedAndUnavailable(){
-        return dateService.getDatesAlreadyBookedAndUnavailable();
+    public AllDateResponse getAllDates(){
+        return dateService.getAllDates();
     }
 
-    @PostMapping("/unavailable")
-    public DateUnavailableAndBookedResponse setUnavailable(@Valid @RequestBody DateSetUnavailable date){
-        return dateService.setUnavailableDates(date);
+    @PostMapping("/availability")
+    public AllDateResponse setAvailability(@Valid @RequestBody DateSetAvailabilityRequest date){
+        return dateService.updateAvailability(date);
     }
 }
