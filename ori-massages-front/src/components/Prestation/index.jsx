@@ -65,7 +65,6 @@ export default function Prestation({showDescription = true, variant, typeOfPrest
                         onHide={() => setModalShow(false)} 
                         prestation={selectedPrestation}
                     />
-             
                 {error && <div className='text-center text-danger fw-bold'>{error}</div>}
             </div>
         </section>;
