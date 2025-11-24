@@ -33,12 +33,12 @@ public class DateService {
     }
 
     public DateSetResponse getBookedDates(){
-        Set<LocalDate> bookedDates = dateRepository.findAllByDateStatus(DateStatus.BOOKED).stream().map(d -> d.getDate()).collect(Collectors.toSet());
+        Set<LocalDate> bookedDates = dateRepository.findAllByDateStatus(DateStatus.BOOKED).stream().map(Date::getDate).collect(Collectors.toSet());
         return new DateSetResponse(bookedDates);
     }
 
     public DateSetResponse getClosedDates(){
-        Set<LocalDate> closedDates = dateRepository.findAllByDateStatus(DateStatus.CLOSED).stream().map(d -> d.getDate()).collect(Collectors.toSet());
+        Set<LocalDate> closedDates = dateRepository.findAllByDateStatus(DateStatus.CLOSED).stream().map(Date::getDate).collect(Collectors.toSet());
         return new DateSetResponse(closedDates);
     }
 
@@ -83,7 +83,7 @@ public class DateService {
     }
 
     public static Set<LocalDate> toLocalDateSet(List<Date> entities) {
-        return entities.stream().map(d -> d.getDate()).collect(Collectors.toSet());
+        return entities.stream().map(Date::getDate).collect(Collectors.toSet());
     }
 
     private void updateRangeStatus(Set<LocalDate> dateRange, DateStatus targetStatus, List<Date> entitiesStatusToUpdate, Set<LocalDate> targetStatusDateSet, Set<LocalDate> previousStatusDate, Set<LocalDate> bookedDateSet) {
