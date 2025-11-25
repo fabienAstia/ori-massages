@@ -1,6 +1,9 @@
 package com.fabien_astiasaran.ori_massages_api.mappers;
 
 
+import com.fabien_astiasaran.ori_massages_api.dtos.SlotCreate;
+import com.fabien_astiasaran.ori_massages_api.entities.Slot;
+
 public class SlotMapper {
 
 //    public Slot toEntity(SlotCreate slot){

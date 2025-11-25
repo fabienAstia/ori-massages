@@ -4,9 +4,6 @@ import java.time.LocalDate;
 
 public record SlotResponse(
         Long id,
-//        LocalTime beginAt,
-//        LocalTime endVisible,
-//        LocalTime endReal,
         String beginAt,
         String endVisible,
         String endReal,

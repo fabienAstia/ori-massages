@@ -5,6 +5,7 @@ import com.fabien_astiasaran.ori_massages_api.dtos.AvailabilityAction;
 import com.fabien_astiasaran.ori_massages_api.dtos.DateSetAvailabilityRequest;
 import com.fabien_astiasaran.ori_massages_api.entities.Date;
 import com.fabien_astiasaran.ori_massages_api.entities.DateStatus;
+import com.fabien_astiasaran.ori_massages_api.repositories.AppointmentRepository;
 import com.fabien_astiasaran.ori_massages_api.repositories.DateRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -29,6 +30,9 @@ class DateServiceTest {
     @Mock
     private DateRepository dateRepository;
 
+    @Mock
+    private AppointmentRepository appointmentRepository;
+
     @InjectMocks
     private DateService dateService;
 
@@ -40,17 +44,16 @@ class DateServiceTest {
 
         List<Date> openDateEntities = new ArrayList<>(List.of( getOpenPreviousDate(), getOpenRangeDate(), getOpenAfterDate()));
         List<Date> closedDateEntities = new ArrayList<>(List.of(getClosedPreviousDate(), getClosedRangeDate(), getClosedAfterDate()));
-        List<Date> bookedDateEntities = new ArrayList<>(List.of(getBookedPreviousDate(), getBookedRangesDate(), getBookedAfterDate()));
+        Set<LocalDate> expectedBooked = getLockedDates();
 
         when(dateRepository.findAllByDateStatus(DateStatus.OPEN)).thenReturn(openDateEntities);
         when(dateRepository.findAllByDateStatus(DateStatus.CLOSED)).thenReturn(closedDateEntities);
-        when(dateRepository.findAllByDateStatus(DateStatus.BOOKED)).thenReturn(bookedDateEntities);
+        when(appointmentRepository.findBookedDates()).thenReturn(expectedBooked);
 
         when(dateRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Set<LocalDate> expectedOpen = toLocalDateSet(openDateEntities);
         Set<LocalDate> expectedClosed = toLocalDateSet(closedDateEntities);
-        Set<LocalDate> expectedBooked = toLocalDateSet(bookedDateEntities);
 
         Set<LocalDate> dateRange = firstDay.datesUntil(lastDay.plusDays(1L)).collect(Collectors.toSet());
         Set<LocalDate> dateToChangeStatus = dateRange.stream().filter(d -> expectedClosed.contains(d)).collect(Collectors.toSet());
@@ -76,17 +79,16 @@ class DateServiceTest {
 
         List<Date> openDateEntities = new ArrayList<>(List.of( getOpenPreviousDate(), getOpenRangeDate(), getOpenAfterDate()));
         List<Date> closedDateEntities = new ArrayList<>(List.of(getClosedPreviousDate(), getClosedRangeDate(), getClosedAfterDate()));
-        List<Date> bookedDateEntities = new ArrayList<>(List.of(getBookedPreviousDate(), getBookedRangesDate(), getBookedAfterDate()));
+        Set<LocalDate> expectedBooked = getLockedDates();
 
         when(dateRepository.findAllByDateStatus(DateStatus.OPEN)).thenReturn(openDateEntities);
         when(dateRepository.findAllByDateStatus(DateStatus.CLOSED)).thenReturn(closedDateEntities);
-        when(dateRepository.findAllByDateStatus(DateStatus.BOOKED)).thenReturn(bookedDateEntities);
+        when(appointmentRepository.findBookedDates()).thenReturn(expectedBooked);
 
         when(dateRepository.saveAll(any())).thenAnswer(invocation -> invocation.getArgument(0));
 
         Set<LocalDate> expectedOpen = toLocalDateSet(openDateEntities);
         Set<LocalDate> expectedClosed = toLocalDateSet(closedDateEntities);
-        Set<LocalDate> expectedBooked = toLocalDateSet(bookedDateEntities);
 
         Set<LocalDate> dateRange = firstDay.datesUntil(lastDay.plusDays(1L)).collect(Collectors.toSet());
         Set<LocalDate> dateToChangeStatus = dateRange.stream().filter(d -> expectedOpen.contains(d)).collect(Collectors.toSet());
@@ -146,24 +148,13 @@ class DateServiceTest {
         return closedPreviousDate;
     }
 
-    private static Date getBookedPreviousDate() {
-        Date bookedPreviousDate = new Date();
-        bookedPreviousDate.setDate(LocalDate.of(1990, 02, 01));
-        bookedPreviousDate.setDateStatus(DateStatus.BOOKED);
-        return bookedPreviousDate;
+    private static Set<LocalDate> getLockedDates() {
+        Set<LocalDate> expectedBooked = Set.of(
+                LocalDate.of(1990, 02, 01),
+                LocalDate.of(2000, 12, 4),
+                LocalDate.of(2100, 02, 01)
+        );
+        return expectedBooked;
     }
 
-    private static Date getBookedRangesDate() {
-        Date bookedRangeDate = new Date();
-        bookedRangeDate.setDate(LocalDate.of(2000, 12, 4));
-        bookedRangeDate.setDateStatus(DateStatus.BOOKED);
-        return bookedRangeDate;
-    }
-
-    private static Date getBookedAfterDate() {
-        Date bookedfterDate = new Date();
-        bookedfterDate.setDate(LocalDate.of(2100, 02, 01));
-        bookedfterDate.setDateStatus(DateStatus.BOOKED);
-        return bookedfterDate;
-    }
 }

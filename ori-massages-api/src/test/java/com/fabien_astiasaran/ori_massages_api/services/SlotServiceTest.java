@@ -1,13 +1,12 @@
 package com.fabien_astiasaran.ori_massages_api.services;
 
-import com.fabien_astiasaran.ori_massages_api.dtos.DurationResponse;
-import com.fabien_astiasaran.ori_massages_api.dtos.PrestationResponse;
-import com.fabien_astiasaran.ori_massages_api.dtos.SlotResponse;
-import com.fabien_astiasaran.ori_massages_api.dtos.WorkingHoursResponse;
-import com.fabien_astiasaran.ori_massages_api.entities.Date;
-import com.fabien_astiasaran.ori_massages_api.entities.Slot;
-import com.fabien_astiasaran.ori_massages_api.repositories.SlotRepository;
-import org.junit.jupiter.api.Assertions;
+import com.fabien_astiasaran.ori_massages_api.dtos.*;
+import com.fabien_astiasaran.ori_massages_api.entities.*;
+import com.fabien_astiasaran.ori_massages_api.exceptions.DateClosedException;
+import com.fabien_astiasaran.ori_massages_api.mappers.PrestationMapper;
+import com.fabien_astiasaran.ori_massages_api.mappers.WorkingHoursMapper;
+import com.fabien_astiasaran.ori_massages_api.repositories.*;
+import jakarta.persistence.EntityNotFoundException;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -17,190 +16,315 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
+import java.util.Set;
 
 import static com.fabien_astiasaran.ori_massages_api.services.SlotService.localTimeToString;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class SlotServiceTest {
 
     @Mock
-    private SlotRepository repository;
+    private AppointmentRepository appointmentRepository;
+
+    @Mock
+    private PrestationRepository prestationRepository;
+
+    @Mock
+    private DateRepository dateRepository;
+
+    @Mock
+    private WorkingHoursRepository workingHoursRepository;
 
     @InjectMocks
     private SlotService slotService;
 
     @Test
-    void filterBookedSlots_whenSlotBeginsInsideExisting1_shouldFilterOut(){
-        //GIVEN
-        DurationResponse duration = new DurationResponse(1L, 45, "massage court", 5);
-        SlotResponse slotA = getSlotA(duration);
-        SlotResponse slotB = getSlotB(duration);
-        List<SlotResponse> newCreatedSlots = List.of(slotA, slotB);
-
-        Date date = new Date();
-        date.setDate(LocalDate.of(2025, 10, 25));
-        Slot slotAlike = getSlotAlike(date);
-        Slot slotNotALike = getSlotNotALike(date);
-        List<Slot> existingSlots = List.of(slotAlike, slotNotALike);
-
-        //WHEN
-        when(repository.findAll()).thenReturn(existingSlots);
-
-        //THEN
-        Assertions.assertEquals(slotService.filterBookedSlots(newCreatedSlots), List.of(slotA));
+    void getAvailableSlots_throws_DateClosedException(){
+        LocalDate date = LocalDate.of(2025, 12, 1);
+        DurationCreate duration = new DurationCreate(1L, 45, "45 min", 5);
+        SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(date, duration);
+        when(dateRepository.existsByDateAndDateStatus(date, DateStatus.CLOSED)).thenReturn(true);
+        assertThrows(
+                DateClosedException.class,
+                ()-> slotService.getAvailableSlots(slotAvailableCreate)
+        );
     }
 
     @Test
-    void filterBookedSlots_whenSlotBeginsInsideExisting2_shouldFilterOut(){
-        //GIVEN
-        DurationResponse duration = new DurationResponse(1L, 45, "massage court", 5);
-        SlotResponse slotA = getSlotA(duration);
-        SlotResponse slotB = getSlotB(duration);
-        SlotResponse slotC = getSlotC(duration);
-        List<SlotResponse> newCreatedSlots = List.of(slotA, slotB, slotC);
-
-        Date date = new Date();
-        date.setDate(LocalDate.of(2025, 10, 25));
-        List<Slot> existingSlots = List.of(getSlotAllAfternoon(date));
-
-        //WHEN
-        when(repository.findAll()).thenReturn(existingSlots);
-
-        //THEN
-        Assertions.assertEquals(slotService.filterBookedSlots(newCreatedSlots), List.of(slotA, slotB));
+    void getAvailableSlots_throws_EntityNotFoundException(){
+        LocalDate date = LocalDate.of(2025, 12, 1);
+        DurationCreate duration = new DurationCreate(1L, 45, "45 min", 5);
+        SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(date, duration);
+        when(dateRepository.existsByDateAndDateStatus(date, DateStatus.CLOSED)).thenReturn(false);
+        when(prestationRepository.findById(any())).thenReturn(Optional.empty());
+        assertThrows(
+                EntityNotFoundException.class,
+                ()-> slotService.getAvailableSlots(slotAvailableCreate)
+        );
     }
 
     @Test
-    void filterBookedSlots_whenSlotEndsInsideExisting_shouldFilterOut(){
-        //GIVEN
-        DurationResponse duration = new DurationResponse(2L, 45, "massage court", 5);
-        SlotResponse slotA = getSlotA(duration);
-        SlotResponse slotB = getSlotB(duration);
-        SlotResponse slotD = getSlotD(duration);
-        List<SlotResponse> newCreatedSlots = List.of(slotA, slotB, slotD);
+    void createAvailableSlots_whenNoBookedSlots_returnsFullSlots(){
+        LocalDate date = LocalDate.of(2025, 12, 1);
+        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(date, durationCreate);
 
-        Date date = new Date();
-        date.setDate(LocalDate.of(2025, 10, 25));
-        List<Slot> existingSlots = List.of(getSlotAllAfternoon(date));
+        WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
+        Duration duration = getFiftyMinDuration();
+        Prestation prestation = getPrestation(duration);
 
-        //WHEN
-        when(repository.findAll()).thenReturn(existingSlots);
+        List<SlotResponse> slots = getCreatedSlotResponses(date, morningWorkingHours, prestation);
 
-        //THEN
-        Assertions.assertEquals(slotService.filterBookedSlots(newCreatedSlots), List.of(slotA, slotB));
+        when(appointmentRepository.findBookedSlots()).thenReturn(Set.of());
+        assertEquals(slots, slotService.createAvailableSlots(slotAvailableCreate, List.of(morningWorkingHours), prestation));
     }
 
     @Test
-    void filterBookedSlots_whenSlotFullyOverlapsExisting_shouldFilterOut(){
-        //GIVEN
-        DurationResponse duration = new DurationResponse(2L, 45, "massage court", 5);
-        SlotResponse slotA = getSlotA(duration);
-        SlotResponse slotB = getSlotB(duration);
-        SlotResponse slotE = getSlotE(duration);
-        List<SlotResponse> newCreatedSlots = List.of(slotA, slotB, slotE);
+    void createAvailableSlots_withBookedSlots_inTheMiddle(){
+        LocalDate localDate = LocalDate.of(2025, 12, 1);
+        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
 
+        WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
+        Duration duration = getFiftyMinDuration();
+        Prestation prestation = getPrestation(duration);
+
+        List<SlotResponse> slots = getFilteredSlotResponses_middle(localDate, morningWorkingHours, prestation);
+        Set<Slot> bookedSlots = Set.of(getSlot(localDate, LocalTime.of(9, 55),LocalTime.of(10, 45)));
+        when(appointmentRepository.findBookedSlots()).thenReturn(bookedSlots);
+
+        assertEquals(slots, slotService.createAvailableSlots(slotAvailableCreate, List.of(morningWorkingHours), prestation));
+    }
+
+    @Test
+    void createAvailableSlots_withBookedSlots_inTheBeginning(){
+        LocalDate localDate = LocalDate.of(2025, 12, 1);
+        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
+
+        WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
+        Duration duration = getFiftyMinDuration();
+        Prestation prestation = getPrestation(duration);
+
+        List<SlotResponse> slots = getFilteredSlotResponses_beginning(localDate, morningWorkingHours, prestation);
+        Set<Slot> bookedSlots = Set.of(getSlot(localDate, LocalTime.of(9, 00),LocalTime.of(9, 50)));
+        when(appointmentRepository.findBookedSlots()).thenReturn(bookedSlots);
+
+        assertEquals(slots, slotService.createAvailableSlots(slotAvailableCreate, List.of(morningWorkingHours), prestation));
+    }
+
+    @Test
+    void createAvailableSlots_withBookedSlots_inTheEnd(){
+        LocalDate localDate = LocalDate.of(2025, 12, 1);
+        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
+
+        WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
+        Duration duration = getFiftyMinDuration();
+        Prestation prestation = getPrestation(duration);
+
+        List<SlotResponse> slots = getFilteredSlotResponses_end(localDate, morningWorkingHours, prestation);
+        Set<Slot> bookedSlots = Set.of(getSlot(localDate, LocalTime.of(11, 00),LocalTime.of(12, 00)));
+        when(appointmentRepository.findBookedSlots()).thenReturn(bookedSlots);
+
+        assertEquals(slots, slotService.createAvailableSlots(slotAvailableCreate, List.of(morningWorkingHours), prestation));
+    }
+
+    @Test
+    void createAvailableSlots_withBookedSlots_spaceFor2Slots(){
+        LocalDate localDate = LocalDate.of(2025, 12, 1);
+        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
+
+        WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(13, 00));
+        Duration duration = getFiftyMinDuration();
+        Prestation prestation = getPrestation(duration);
+
+        List<SlotResponse> slots = getFilteredSlotResponses_2slots(localDate, morningWorkingHours, prestation);
+        Set<Slot> bookedSlots = Set.of(getSlot(localDate, LocalTime.of(9, 00),LocalTime.of(10, 00)),
+                getSlot(localDate, LocalTime.of(12, 00), LocalTime.of(12, 50)));
+        when(appointmentRepository.findBookedSlots()).thenReturn(bookedSlots);
+
+        assertEquals(slots, slotService.createAvailableSlots(slotAvailableCreate, List.of(morningWorkingHours), prestation));
+    }
+
+    private static Slot getSlot(LocalDate localDate, LocalTime startTime, LocalTime endTime) {
+        Slot bookedSlot = new Slot();
+        bookedSlot.setBeginAt(startTime);
+        bookedSlot.setEndAt(endTime);
         Date date = new Date();
-        date.setDate(LocalDate.of(2025, 10, 25));
-        List<Slot> existingSlots = List.of(getSlotSmallAfternoon(date));
-
-        //WHEN
-        when(repository.findAll()).thenReturn(existingSlots);
-
-        //THEN
-        Assertions.assertEquals(slotService.filterBookedSlots(newCreatedSlots), List.of(slotA, slotB));
+        date.setDate(localDate);
+        bookedSlot.setDate(date);
+        return bookedSlot;
     }
 
-    private static Slot getSlotNotALike(Date date) {
-        Slot slotNotALike = new Slot();
-        slotNotALike.setBeginAt(LocalTime.of(15, 35));
-        slotNotALike.setEndAt(LocalTime.of(16, 10));
-        slotNotALike.setDate(date);
-        return slotNotALike;
+    private static Duration getFiftyMinDuration() {
+        Duration duration = new Duration();
+        duration.setBreakTime(5);
+        duration.setValue(45);
+        return duration;
     }
 
-    private static Slot getSlotAlike(Date date) {
-        Slot slotAlike = new Slot();
-        slotAlike.setBeginAt(LocalTime.of(11, 20));
-        slotAlike.setEndAt(LocalTime.of(12, 10));
-        slotAlike.setDate(date);
-        return slotAlike;
+    private static WorkingHours getWorkingHours(LocalTime startTime, LocalTime endTime) {
+        WorkingHours morningWorkingHours = new WorkingHours();
+        morningWorkingHours.setStartTime(startTime);
+        morningWorkingHours.setEndTime(endTime);
+        return morningWorkingHours;
     }
 
-    private static Slot getSlotAllAfternoon(Date date) {
-        Slot slotLongTime = new Slot();
-        slotLongTime.setBeginAt(LocalTime.of(13, 20));
-        slotLongTime.setEndAt(LocalTime.of(17, 55));
-        slotLongTime.setDate(date);
-        return slotLongTime;
+    private static Prestation getPrestation(Duration duration) {
+        Prestation prestation = new Prestation();
+        prestation.setActive(true);
+        prestation.setDuration(duration);
+        return prestation;
     }
 
-    private static Slot getSlotSmallAfternoon(Date date) {
-        Slot slotLongTime = new Slot();
-        slotLongTime.setBeginAt(LocalTime.of(15, 20));
-        slotLongTime.setEndAt(LocalTime.of(15, 35));
-        slotLongTime.setDate(date);
-        return slotLongTime;
-    }
-
-    private static SlotResponse getSlotA(DurationResponse duration) {
-        return new SlotResponse(
-                1L,
-                localTimeToString(LocalTime.of(10, 30)),
-                localTimeToString(LocalTime.of(11, 15)),
-                localTimeToString(LocalTime.of(10, 40)),
-                LocalDate.of(2025, 10, 25),
-                new WorkingHoursResponse(1L, null, null, null),
-                new PrestationResponse(1L, null, null, null, true, null, duration)
+    private static List<SlotResponse> getCreatedSlotResponses(LocalDate date, WorkingHours morningWorkingHours, Prestation prestation) {
+        List<SlotResponse> slots = List.of(
+                new SlotResponse(
+                        null,
+                        "09:00",
+                        "09:45",
+                        "09:50",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                ),
+                new SlotResponse(
+                        null,
+                        "09:50",
+                        "10:35",
+                        "10:40",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                ),
+                new SlotResponse(
+                        null,
+                        "10:40",
+                        "11:25",
+                        "11:30",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                )
         );
+        return slots;
     }
 
-    private static SlotResponse getSlotB(DurationResponse duration) {
-        return new SlotResponse(
-                2L,
-                localTimeToString(LocalTime.of(11, 20)),
-                localTimeToString(LocalTime.of(12, 05)),
-                localTimeToString(LocalTime.of(12, 10)),
-                LocalDate.of(2025, 10, 25),
-                new WorkingHoursResponse(1L, null, null, null),
-                new PrestationResponse(1L, null, null, null, true, null, duration)
+    private static List<SlotResponse> getFilteredSlotResponses_middle(LocalDate date, WorkingHours morningWorkingHours, Prestation prestation) {
+        List<SlotResponse> slots = List.of(
+                new SlotResponse(
+                        null,
+                        "09:00",
+                        "09:45",
+                        "09:50",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                ),
+                new SlotResponse(
+                        null,
+                        "10:45",
+                        "11:30",
+                        "11:35",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                )
         );
+        return slots;
     }
 
-    private static SlotResponse getSlotC(DurationResponse duration) {
-        return new SlotResponse(
-                2L,
-                localTimeToString(LocalTime.of(14, 20)),
-                localTimeToString(LocalTime.of(15, 05)),
-                localTimeToString(LocalTime.of(15, 10)),
-                LocalDate.of(2025, 10, 25),
-                new WorkingHoursResponse(1L, null, null, null),
-                new PrestationResponse(1L, null, null, null, true, null, duration)
+    private static List<SlotResponse> getFilteredSlotResponses_beginning(LocalDate date, WorkingHours morningWorkingHours, Prestation prestation) {
+        List<SlotResponse> slots = List.of(
+                new SlotResponse(
+                        null,
+                        "09:50",
+                        "10:35",
+                        "10:40",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                ),
+                new SlotResponse(
+                        null,
+                        "10:40",
+                        "11:25",
+                        "11:30",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                )
         );
+        return slots;
     }
 
-    private static SlotResponse getSlotD(DurationResponse duration) {
-        return new SlotResponse(
-                2L,
-                localTimeToString(LocalTime.of(11, 00)),
-                localTimeToString(LocalTime.of(14, 05)),
-                localTimeToString(LocalTime.of(14, 10)),
-                LocalDate.of(2025, 10, 25),
-                new WorkingHoursResponse(1L, null, null, null),
-                new PrestationResponse(1L, null, null, null, true, null, duration)
+    private static List<SlotResponse> getFilteredSlotResponses_end(LocalDate date, WorkingHours morningWorkingHours, Prestation prestation) {
+        List<SlotResponse> slots = List.of(
+                new SlotResponse(
+                        null,
+                        "09:00",
+                        "09:45",
+                        "09:50",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                ),
+                new SlotResponse(
+                        null,
+                        "09:50",
+                        "10:35",
+                        "10:40",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                )
         );
+        return slots;
     }
 
-    private static SlotResponse getSlotE(DurationResponse duration) {
-        return new SlotResponse(
-                2L,
-                localTimeToString(LocalTime.of(15, 00)),
-                localTimeToString(LocalTime.of(16, 00)),
-                localTimeToString(LocalTime.of(16, 10)),
-                LocalDate.of(2025, 10, 25),
-                new WorkingHoursResponse(1L, null, null, null),
-                new PrestationResponse(1L, null, null, null, true, null, duration)
+    private static List<SlotResponse> getFilteredSlotResponses_2slots(LocalDate date, WorkingHours morningWorkingHours, Prestation prestation) {
+        List<SlotResponse> slots = List.of(
+                new SlotResponse(
+                        null,
+                        "10:00",
+                        "10:45",
+                        "10:50",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                ),
+                new SlotResponse(
+                        null,
+                        "10:50",
+                        "11:35",
+                        "11:40",
+                        date,
+                        WorkingHoursMapper.toResponse(morningWorkingHours),
+                        PrestationMapper.toResponse(prestation)
+                )
         );
+        return slots;
+    }
+
+    private static SlotAvailableCreate getSlotAvailableCreate(LocalDate date, DurationCreate durationCreate) {
+        SlotAvailableCreate slotAvailableCreate = new SlotAvailableCreate(
+                date,
+                new PrestationCreate(
+                        1L,
+                        "name",
+                        "description",
+                        "60",
+                        durationCreate
+                )
+        );
+        return slotAvailableCreate;
     }
 
 }

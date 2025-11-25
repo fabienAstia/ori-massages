@@ -16,4 +16,6 @@ public interface DateRepository extends JpaRepository<Date, Long> {
 
     @Query("SELECT d FROM Date d WHERE d.dateStatus = :status")
     List<Date> findAllByDateStatus(DateStatus status);
+
+    boolean existsByDateAndDateStatus(LocalDate date, DateStatus status);
 }

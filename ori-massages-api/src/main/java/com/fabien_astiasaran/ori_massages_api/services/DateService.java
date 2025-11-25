@@ -3,6 +3,7 @@ package com.fabien_astiasaran.ori_massages_api.services;
 import com.fabien_astiasaran.ori_massages_api.dtos.*;
 import com.fabien_astiasaran.ori_massages_api.entities.Date;
 import com.fabien_astiasaran.ori_massages_api.entities.DateStatus;
+import com.fabien_astiasaran.ori_massages_api.repositories.AppointmentRepository;
 import com.fabien_astiasaran.ori_massages_api.repositories.DateRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,9 +18,11 @@ import java.util.stream.Collectors;
 public class DateService {
 
     private final DateRepository dateRepository;
+    private final AppointmentRepository appointmentRepository;
 
-    public DateService(DateRepository dateRepository) {
+    public DateService(DateRepository dateRepository, AppointmentRepository appointmentRepository) {
         this.dateRepository = dateRepository;
+        this.appointmentRepository = appointmentRepository;
     }
 
     public Date findOrCreateDate(SlotCreate slotCreate) {
@@ -27,14 +30,17 @@ public class DateService {
                 .orElseGet(() -> {
                     Date newDate = new Date();
                     newDate.setDate(slotCreate.date());
-                    newDate.setDateStatus(DateStatus.BOOKED);
+                    newDate.setDateStatus(DateStatus.OPEN);
                     return dateRepository.save(newDate);
                 });
     }
 
-    public DateSetResponse getBookedDates(){
-        Set<LocalDate> bookedDates = dateRepository.findAllByDateStatus(DateStatus.BOOKED).stream().map(Date::getDate).collect(Collectors.toSet());
-        return new DateSetResponse(bookedDates);
+    public Set<LocalDate> lockedDates(){
+        return appointmentRepository.findBookedDates();
+    }
+
+    public DateSetResponse getLockedDates(){
+        return new DateSetResponse(lockedDates());
     }
 
     public DateSetResponse getClosedDates(){
@@ -44,13 +50,13 @@ public class DateService {
 
     public AllDateResponse getAllDates() {
         List<Date> dates = dateRepository.findAll();
-        Set<LocalDate> bookedLocalDates = filterLocalDatesByStatus(dates, DateStatus.BOOKED);
+        Set<LocalDate> lockedDates = lockedDates();
         Set<LocalDate> existingOpenLocalDates = filterLocalDatesByStatus(dates, DateStatus.OPEN);
         Set<LocalDate> existingClosedLocalDates = filterLocalDatesByStatus(dates, DateStatus.CLOSED);
         return new AllDateResponse(
                 existingOpenLocalDates,
                 existingClosedLocalDates,
-                bookedLocalDates
+                lockedDates
         );
     }
 
@@ -67,18 +73,17 @@ public class DateService {
         Set<LocalDate> openDateSet = toLocalDateSet(openDateEntities);
         List<Date> closedDateEntities = dateRepository.findAllByDateStatus(DateStatus.CLOSED);
         Set<LocalDate> closedDateSet = toLocalDateSet(closedDateEntities);
-        List<Date> bookedDateEntities = dateRepository.findAllByDateStatus(DateStatus.BOOKED);
-        Set<LocalDate> bookedDateSet = toLocalDateSet(bookedDateEntities);
+        Set<LocalDate> lockedDates = lockedDates();
 
         if(request.availability() == AvailabilityAction.MAKE_AVAILABLE){
-            updateRangeStatus(dateRange, DateStatus.OPEN, closedDateEntities, openDateSet, closedDateSet, bookedDateSet);
+            updateRangeStatus(dateRange, DateStatus.OPEN, closedDateEntities, openDateSet, closedDateSet, lockedDates);
         } else if (request.availability() == AvailabilityAction.MAKE_UNAVAILABLE) {
-            updateRangeStatus(dateRange, DateStatus.CLOSED, openDateEntities, closedDateSet, openDateSet, bookedDateSet);
+            updateRangeStatus(dateRange, DateStatus.CLOSED, openDateEntities, closedDateSet, openDateSet, lockedDates);
         }
         return new AllDateResponse(
                 openDateSet,
                 closedDateSet,
-                bookedDateSet
+                lockedDates
         );
     }
 
@@ -86,21 +91,21 @@ public class DateService {
         return entities.stream().map(Date::getDate).collect(Collectors.toSet());
     }
 
-    private void updateRangeStatus(Set<LocalDate> dateRange, DateStatus targetStatus, List<Date> entitiesStatusToUpdate, Set<LocalDate> targetStatusDateSet, Set<LocalDate> previousStatusDate, Set<LocalDate> bookedDateSet) {
+    private void updateRangeStatus(Set<LocalDate> dateRange, DateStatus targetStatus, List<Date> entitiesStatusToUpdate, Set<LocalDate> targetStatusDateSet, Set<LocalDate> previousStatusDate, Set<LocalDate> localDates) {
         List<Date> updatedEntities = updateExistingDatesStatus(entitiesStatusToUpdate, dateRange, targetStatus);
         Set<LocalDate> updatedDateSet = toLocalDateSet(updatedEntities);
         previousStatusDate.removeAll(updatedDateSet);
         targetStatusDateSet.addAll(updatedDateSet);
-        Set<LocalDate> datesToCreate = getMissingDates(dateRange, targetStatusDateSet, updatedDateSet, bookedDateSet);
+        Set<LocalDate> datesToCreate = getMissingDates(dateRange, targetStatusDateSet, updatedDateSet, localDates);
         Set<LocalDate> createdDateSet = toLocalDateSet(dateRepository.saveAll(createMissingDateEntities(datesToCreate, targetStatus)));
         targetStatusDateSet.addAll(createdDateSet);
     }
 
-    private static Set<LocalDate> getMissingDates(Set<LocalDate> dateRange, Set<LocalDate> existingTargetStatusDates, Set<LocalDate> updatedDateSet, Set<LocalDate> bookedDateSet) {
+    private static Set<LocalDate> getMissingDates(Set<LocalDate> dateRange, Set<LocalDate> existingTargetStatusDates, Set<LocalDate> updatedDateSet, Set<LocalDate> lockedDates) {
         Set<LocalDate> excludedDates = new HashSet<>();
         excludedDates.addAll(existingTargetStatusDates);
         excludedDates.addAll(updatedDateSet);
-        excludedDates.addAll(bookedDateSet);
+        excludedDates.addAll(lockedDates);
 
         return dateRange.stream()
                 .filter(date -> !excludedDates.contains(date))

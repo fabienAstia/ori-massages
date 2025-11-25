@@ -17,6 +17,10 @@ public class Appointment {
     @Column(name = "created_at")
     private LocalDateTime createdAt = LocalDateTime.now();
 
+    @Column(name = "appointment_status")
+    @Enumerated(EnumType.STRING)
+    private AppointmentStatus status;
+
     @ManyToOne
     @JoinColumn(name = "slot_id")
     private Slot slot;
@@ -28,10 +32,6 @@ public class Appointment {
     @ManyToOne
     @JoinColumn(name = "address_id")
     private Address address;
-
-    @ManyToOne
-    @JoinColumn(name = "status_id")
-    private Status status;
 
     @Override
     public boolean equals(Object o) {
@@ -51,10 +51,10 @@ public class Appointment {
         return "Appointment{" +
                 "id=" + id +
                 ", createdAt=" + createdAt +
-                ", slot=" + slot +
-                ", user=[PROTECTED]" +
-                ", address=" + address +
                 ", status=" + status +
+                ", slot=" + slot +
+                ", user= [PROTECTED]" +
+                ", address=" + address +
                 '}';
     }
 
@@ -68,6 +68,14 @@ public class Appointment {
 
     public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public AppointmentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(AppointmentStatus status) {
+        this.status = status;
     }
 
     public Slot getSlot() {
@@ -92,13 +100,5 @@ public class Appointment {
 
     public void setAddress(Address address) {
         this.address = address;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
     }
 }

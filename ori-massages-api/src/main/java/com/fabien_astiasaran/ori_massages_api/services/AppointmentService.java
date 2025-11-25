@@ -11,7 +11,6 @@ public class AppointmentService {
 
     public static final String AT_HOME = "À domicile";
     public static final String TREATMENT_ROOM = "Espace soin";
-    public static final String REGISTERED = "ENREGISTRÉ";
     private AppointmentRepository appointmentRepository;
     private PrestationRepository prestationRepository;
     private LocationRepository locationRepository;
@@ -20,11 +19,10 @@ public class AppointmentService {
     private WorkingHoursRepository workingHoursRepository;
     private UserService userService;
     private MessageService messageService;
-    private StatusRepository statusRepository;
     private AddressService addressService;
     private AddressRepository addressRepository;
 
-    public AppointmentService(AppointmentRepository appointmentRepository, PrestationRepository prestationRepository, LocationRepository locationRepository, DateService dateService, SlotService slotService, WorkingHoursRepository workingHoursRepository, UserService userService, MessageService messageService, StatusRepository statusRepository, AddressService addressService, AddressRepository addressRepository) {
+    public AppointmentService(AppointmentRepository appointmentRepository, PrestationRepository prestationRepository, LocationRepository locationRepository, DateService dateService, SlotService slotService, WorkingHoursRepository workingHoursRepository, UserService userService, MessageService messageService, AddressService addressService, AddressRepository addressRepository) {
         this.appointmentRepository = appointmentRepository;
         this.prestationRepository = prestationRepository;
         this.locationRepository = locationRepository;
@@ -33,13 +31,12 @@ public class AppointmentService {
         this.workingHoursRepository = workingHoursRepository;
         this.userService = userService;
         this.messageService = messageService;
-        this.statusRepository = statusRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
     }
 
     public Appointment createAppointment(AppointmentCreate appointmentCreate){
-        System.out.println("appointmentCreat = " + appointmentCreate);
+        System.out.println("appointmentCreate = " + appointmentCreate);
         Prestation prestation = prestationRepository.findById(appointmentCreate.slot().prestation().id())
                 .orElseThrow(()-> new EntityNotFoundException("Prestation not found"));
         Date date = dateService.findOrCreateDate(appointmentCreate.slot());
@@ -51,9 +48,8 @@ public class AppointmentService {
         Location location = locationRepository.findById(appointmentCreate.locationId())
                 .orElseThrow(()-> new EntityNotFoundException("Location not found"));
         Address address = resolveAddress(appointmentCreate, user, location);
-        Status status = statusRepository.findByStatusLabel(REGISTERED);
 
-        Appointment appointment = buildAndSaveAppointment(slot, user, address, status);
+        Appointment appointment = buildAndSaveAppointment(slot, user, address);
         messageService.createMessageIfPresent(appointmentCreate, user, appointment);
         return appointment;
     }
@@ -69,12 +65,12 @@ public class AppointmentService {
         }
     }
 
-    private Appointment buildAndSaveAppointment(Slot slot, User user, Address address, Status status) {
+    private Appointment buildAndSaveAppointment(Slot slot, User user, Address address) {
         Appointment appointment = new Appointment();
         appointment.setSlot(slot);
         appointment.setUser(user);
         appointment.setAddress(address);
-        appointment.setStatus(status);
+        appointment.setStatus(AppointmentStatus.REGISTERED);
         return appointmentRepository.save(appointment);
     }
 

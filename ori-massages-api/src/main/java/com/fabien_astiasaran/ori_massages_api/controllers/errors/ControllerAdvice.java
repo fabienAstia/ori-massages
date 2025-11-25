@@ -1,5 +1,6 @@
 package com.fabien_astiasaran.ori_massages_api.controllers.errors;
 
+import com.fabien_astiasaran.ori_massages_api.exceptions.DateClosedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -37,5 +38,10 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
         List<ObjectError> globalErrors = exception.getGlobalErrors();
         globalErrors.forEach(error -> customErrors.addGlobalError(error.getDefaultMessage()));
         return handleExceptionInternal(exception, customErrors, headers, HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(DateClosedException.class)
+    protected ResponseEntity<Object> handleDateClosedException(DateClosedException e) {
+        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
     }
 }

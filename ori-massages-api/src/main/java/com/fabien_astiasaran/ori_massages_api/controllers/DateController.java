@@ -19,7 +19,7 @@ public class DateController {
 
     @GetMapping("/booked")
     public DateSetResponse getBooked(){
-        return dateService.getBookedDates();
+        return dateService.getLockedDates();
     }
 
     @GetMapping("/closed")
