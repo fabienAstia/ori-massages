@@ -53,13 +53,39 @@ class AppointmentServiceTest {
                 1L,
                 "message content"
         );
+
+        Slot slot = new Slot();
+        slot.setId(1L);
+
+        User user = new User();
+        Address address = new Address();
+        Location location = new Location();
+        location.setAtHome(true);
+
+        Appointment saved = new Appointment();
+        saved.setSlot(slot);
+        saved.setUser(user);
+        saved.setAddress(address);
+        saved.setStatus(AppointmentStatus.REGISTERED);
+
         when(prestationRepository.findById(any())).thenReturn(Optional.of(new Prestation()));
         when(dateService.findOrCreateDate(any())).thenReturn(new Date());
         when(workingHoursRepository.findById(any())).thenReturn(Optional.of(new WorkingHours()));
-        when(slotService.createSlot(any(), any(), any(), any())).thenReturn(new Slot());
-        when(userService.findOrCreateUser(any())).thenReturn(new User());
-        when(locationRepository.findById(any())).thenReturn(Optional.of(new Location()));
+        when(slotService.createSlot(any(), any(), any(), any())).thenReturn(slot);
+        when(userService.findOrCreateUser(any())).thenReturn(user);
+        when(locationRepository.findById(any())).thenReturn(Optional.of(location));
+        when(addressService.findOrCreateAddress(any())).thenReturn(address);
+        when(appointmentRepository.save(any())).thenReturn(new Appointment());
+        when(messageService.createMessageIfPresent(any(), any(), any())).thenReturn(null);
+        when(appointmentRepository.save(any())).thenReturn(saved);
 
+
+        Appointment result = appointmentService.createAppointment(appointmentCreate);
+        assertNotNull(result);
+        assertEquals(slot, result.getSlot());
+        assertEquals(user, result.getUser());
+        assertEquals(address, result.getAddress());
+        assertEquals(AppointmentStatus.REGISTERED, result.getStatus());
     }
 
     private static SlotCreate getSlotCreate() {

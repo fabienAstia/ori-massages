@@ -12,6 +12,7 @@ const LegalNotices = lazy(() => import('../views/LegalNotices'))
 const PrivacyPolicy = lazy(() => import('../views/PrivacyPolicy'))
 const Admin = lazy(() => import ('../views/Admin'))
 const ManageDates = lazy(() => import('../views/ManageDates'))
+const ManageUsers = lazy(() => import ('../views/ManageUsers'))
 
 
 export default function Router(){
@@ -30,6 +31,7 @@ export default function Router(){
                 <Route element= {<LayoutAdmin/>}>
                     <Route path='/admin' element={<Admin/>}/>
                     <Route path='/dates' element={<ManageDates/>}/>
+                    <Route path='/users' element={<ManageUsers/>}/>
                 </Route>
             </Routes>
         </Suspense>

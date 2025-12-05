@@ -15,9 +15,7 @@ export default function Header(){
                 <div className="collapse navbar-collapse fs-5" id="collapseNavBar">
                     <div className="navbar-nav">
                         <NavLink to="/dates" className='nav-link nav-link-custom'>Dates</NavLink>
-                        {/* <NavLink to="/about-me" className='nav-link nav-link-custom'>À propos</NavLink>
-                        <NavLink to="/solidarity-fund" className='nav-link nav-link-custom'>Cagnotte solidaire</NavLink>
-                        <NavLink to="/contact" className='nav-link nav-link-custom'>Contact</NavLink> */}
+                        <NavLink to="/users" className='nav-link nav-link-custom'>Clients</NavLink>
                     </div>
                 
                 </div>

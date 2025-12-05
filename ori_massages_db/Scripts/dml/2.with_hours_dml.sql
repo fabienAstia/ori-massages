@@ -1,7 +1,6 @@
 DELETE FROM t_prestations; DELETE FROM t_treatment_types;
 DELETE FROM t_durations; delete from t_working_hours;
 delete from t_locations; delete from t_roles;
-delete from t_statuses; 
 delete from t_addresses; delete from t_streets;
 delete from t_cities;
 
@@ -70,9 +69,6 @@ insert into t_working_hours(start_time, end_time, name) values
 insert into t_roles(role_label) values
 ('ADMIN'), ('USER');
 
-insert into t_statuses(status_label)values	
-('ENREGISTRÉ'), ('CONFIRMÉ'), ('ANNULÉ'), ('TERMINÉ'), ('EXPIRÉ');
-
 insert into t_locations(name, image_path, is_at_home) values
 ('À domicile', 'lieu1.jpg', true),
 ('Espace soin', 'lieu2.jpg', false);
@@ -88,10 +84,3 @@ insert into t_addresses(street_number, street_id, location_id) values
 ('210',
 (select id from t_streets ts where ts.street_name = 'rue de Belleville'),
 (select id from t_locations tl where tl.is_at_home = false));
---'210 rue de Belleville, 75020 Paris',
---insert into t_dates(date_value, is_available, comment) values
---();
---INSERT INTO t_statuses (status_name) VALUES
---('enregistré'),
---('complété'),
---('annulé');

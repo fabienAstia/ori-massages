@@ -1,5 +1,5 @@
 DROP TABLE IF EXISTS t_messages, t_appointments, t_addresses, t_streets, t_cities,  t_slots, t_prestations;            
-DROP TABLE IF EXISTS t_users, t_roles, t_locations, t_working_hours, t_dates, t_durations, t_treatment_types, t_statuses;
+DROP TABLE IF EXISTS t_users, t_roles, t_locations, t_working_hours, t_dates, t_durations, t_treatment_types;
 
 CREATE TABLE t_roles(
 	id int GENERATED ALWAYS AS IDENTITY,
@@ -68,7 +68,7 @@ CREATE TABLE t_working_hours(
 create table t_dates(
 	id int generated always as identity,
 	date_value date not null ,
-	date_status TEXT CHECK (date_status IN ('OPEN', 'CLOSED', 'BOOKED')),
+	date_status varchar(20) CHECK (date_status IN ('OPEN', 'CLOSED', 'BOOKED')),
 	comment varchar(30),
 	constraint t_dates_pk primary key (id),
 	constraint t_dates_date_uk unique (date_value)
@@ -138,16 +138,10 @@ CREATE TABLE t_addresses(
 	CONSTRAINT t_addresses_number_street_complement_uk UNIQUE (street_number, complement, street_id)
 );
 
-CREATE TABLE t_statuses(
-	id int GENERATED ALWAYS AS IDENTITY,
-	status_label varchar (20),
-	CONSTRAINT t_statuses_id_pk PRIMARY KEY (id),
-	CONSTRAINT t_statuses_label_uk UNIQUE (status_label)
-);
-
 CREATE TABLE t_appointments(
 	id int GENERATED ALWAYS AS IDENTITY,
 	created_at timestamp NOT NULL DEFAULT now(),
+	appointment_status varchar(20) CHECK (appointment_status IN ('REGISTERED', 'CONFIRMED', 'COMPLETED', 'CANCELLED', 'EXPIRED')),
 	slot_id int not null,
 	user_id int not null,
 	address_id int not null,
@@ -159,8 +153,6 @@ CREATE TABLE t_appointments(
 		REFERENCES t_users(id),
 	CONSTRAINT t_appointments_address_id_fk FOREIGN KEY (address_id)
 		REFERENCES t_addresses(id),
-	CONSTRAINT t_appointments_status_id_fk FOREIGN KEY (status_id)
-		REFERENCES t_statuses(id),
 	CONSTRAINT t_appointments_slot_uk unique (slot_id)
 );
 CREATE INDEX idx_appointments_user_id ON t_appointments(user_id);

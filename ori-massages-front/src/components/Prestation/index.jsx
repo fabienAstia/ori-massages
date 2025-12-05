@@ -42,7 +42,6 @@ export default function Prestation({showDescription = true, variant, typeOfPrest
                 <PrestationCard
                     prestation={prestation}
                     variant={variant}
-                    // onClick={}
                     setModalShow={setModalShow}
                     setSelectedPrestation={setSelectedPrestation}
                 />

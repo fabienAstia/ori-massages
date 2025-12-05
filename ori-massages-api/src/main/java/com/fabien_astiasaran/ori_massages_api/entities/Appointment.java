@@ -38,12 +38,13 @@ public class Appointment {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Appointment that = (Appointment) o;
+        if (this.slot == null || that.slot == null) return false;
         return Objects.equals(slot.getId(), that.slot.getId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(slot.getId());
+        return Objects.hash(slot != null ? slot.getId() : null);
     }
 
     @Override
