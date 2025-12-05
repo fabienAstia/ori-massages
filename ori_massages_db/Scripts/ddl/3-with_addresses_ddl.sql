@@ -145,7 +145,6 @@ CREATE TABLE t_appointments(
 	slot_id int not null,
 	user_id int not null,
 	address_id int not null,
-	status_id int NOT NULL, 
 	CONSTRAINT t_appointments_pk PRIMARY KEY (id),
 	CONSTRAINT t_appointments_slot_id_fk FOREIGN KEY (slot_id)
 		REFERENCES t_slots(id),

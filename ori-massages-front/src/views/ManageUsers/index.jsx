@@ -1,38 +1,59 @@
+import { useEffect, useState } from 'react';
+import Row from '../../components/UserRow'
 import './ManageUsers.css'
 import Table from 'react-bootstrap/Table'
+import axios from 'axios';
+const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function ManageUsers(){
+    const [users, setSelectedUsers] = useState(null)
+    const [rows, setSelectedRows] = useState(null)
+
+    useEffect(()=>{
+        async function getAllUsers(){
+            try {
+                const resp = await axios.get(`${apiUrl}/users`)
+                setSelectedUsers(resp.data);
+            } catch(err){
+                if(err.response){
+                    console.log('error', err.response.data)
+                }else if(err.request){
+                    console.log(err.request)
+                }
+            }
+        }getAllUsers()
+    }, [])
+
+    useEffect(()=> {
+        console.log('users', users)
+         console.log('rows', rows)
+    })
+
+    useEffect(()=> {
+        const rows = users?.map((user, i) => 
+            <Row key={user.id} user={user} position={i+1}/>
+        )
+        setSelectedRows(rows)   
+    }, [users])
+  
+
   return (
     <div className='manage-users'>
         <h1>Gestion des Clients</h1>
-        <Table striped bordered hover>
-        <thead>
-            <tr>
-            <th>#</th>
-            <th>First Name</th>
-            <th>Last Name</th>
-            <th>Username</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-            <td>1</td>
-            <td>Mark</td>
-            <td>Otto</td>
-            <td>@mdo</td>
-            </tr>
-            <tr>
-            <td>2</td>
-            <td>Jacob</td>
-            <td>Thornton</td>
-            <td>@fat</td>
-            </tr>
-            <tr>
-            <td>3</td>
-            <td colSpan={2}>Larry the Bird</td>
-            <td>@twitter</td>
-            </tr>
-        </tbody>
+
+        <Table striped bordered hover className='align-middle'>
+            <thead className='text-center'>
+                <tr>
+                <th>#</th>
+                <th>Nom complet</th>
+                <th>Téléphone</th>
+                <th>Email</th>
+                <th>Rdv</th>
+                </tr>
+            </thead>
+            <tbody className='text-center'>
+                {rows}
+            </tbody>
         </Table>
     </div>
   );

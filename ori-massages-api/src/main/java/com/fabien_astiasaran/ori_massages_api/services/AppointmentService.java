@@ -2,15 +2,20 @@ package com.fabien_astiasaran.ori_massages_api.services;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.*;
 import com.fabien_astiasaran.ori_massages_api.entities.*;
+import com.fabien_astiasaran.ori_massages_api.mappers.AddressMapper;
 import com.fabien_astiasaran.ori_massages_api.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
+
+import static com.fabien_astiasaran.ori_massages_api.services.SlotService.localTimeToString;
+
 @Service
 public class AppointmentService {
 
-    public static final String AT_HOME = "À domicile";
-    public static final String TREATMENT_ROOM = "Espace soin";
     private AppointmentRepository appointmentRepository;
     private PrestationRepository prestationRepository;
     private LocationRepository locationRepository;
@@ -74,4 +79,21 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
+    public Set<AppointmentResponse> getAppointments(){
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointments.stream().map(appointment ->
+                new AppointmentResponse(
+                        appointment.getId(),
+                        appointment.getUser().getFullname(),
+                        appointment.getSlot().getPrestation().getName(),
+                        appointment.getSlot().getDate().getDate(),
+                        localTimeToString(appointment.getSlot().getBeginAt()),
+                        localTimeToString(appointment.getSlot().getEndAt()),
+                        appointment.getAddress().getLocation().isAtHome(),
+                        appointment.getAddress().getLocation().getName(),
+                        AddressMapper.getFullAddress(appointment.getAddress()),
+                        appointment.getStatus()
+                )
+        ).collect(Collectors.toSet());
+    }
 }

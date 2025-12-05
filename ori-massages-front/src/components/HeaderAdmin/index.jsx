@@ -16,6 +16,8 @@ export default function Header(){
                     <div className="navbar-nav">
                         <NavLink to="/dates" className='nav-link nav-link-custom'>Dates</NavLink>
                         <NavLink to="/users" className='nav-link nav-link-custom'>Clients</NavLink>
+                        <NavLink to="/appointments" className='nav-link nav-link-custom'>Rendez-vous</NavLink>
+                        <NavLink to="/prestations" className='nav-link nav-link-custom'>Prestations</NavLink>
                     </div>
                 
                 </div>

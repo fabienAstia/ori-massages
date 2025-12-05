@@ -23,7 +23,7 @@ export default function Header(){
                 </div>
                 <div className="collapse navbar-collapse fs-5 justify-content-end" id="collapseNavBar">
                     <div className='navbar-nav d'>
-                        <NavLink to="/admin" className='nav-link nav-link-custom'>
+                        <NavLink to="/dates" className='nav-link nav-link-custom'>
                             <img src={adminPicto}/>
                         </NavLink>
                     </div>
