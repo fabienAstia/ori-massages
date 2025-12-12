@@ -11,10 +11,14 @@ const Contact = lazy(()=> import ('../views/Contact'))
 const LegalNotices = lazy(() => import('../views/LegalNotices'))
 const PrivacyPolicy = lazy(() => import('../views/PrivacyPolicy'))
 const Admin = lazy(() => import ('../views/Admin'))
-const ManageDates = lazy(() => import('../views/ManageDates'))
-const ManageUsers = lazy(() => import ('../views/ManageUsers'))
-const ManageAppointment = lazy(()=> import('../views/ManageAppointment'))
-const ManagePrestations = lazy(()=> import('../views/ManagePrestations'))
+const ManageDates = lazy(() => import('../views/Admin/ManageDates'))
+const ManageUsers = lazy(() => import ('../views/Admin/ManageUsers'))
+const ManageAppointment = lazy(()=> import('../views/Admin/ManageAppointment'))
+const ManagePrestations = lazy(()=> import('../views/Admin/ManagePrestations'))
+const ManageTypes = lazy(()=> import('../views/Admin/ManageTypes'))
+const ManageDurations = lazy(()=> import('../views/Admin/ManageDurations'))
+const ManageWorkingHours = lazy(()=>import('../views/Admin/ManageWorkingHours'))
+const ManageLocations = lazy(()=>import('../views/Admin/ManageLocations'))
 
 export default function Router(){
     return (
@@ -35,6 +39,10 @@ export default function Router(){
                     <Route path='/users' element={<ManageUsers/>}/>
                     <Route path='/appointments' element={<ManageAppointment/>}/>
                     <Route path='/prestations' element={<ManagePrestations/>}/>
+                    <Route path='/types' element={<ManageTypes/>}/>
+                    <Route path='/durations' element={<ManageDurations/>}/>
+                    <Route path='/workingHours' element={<ManageWorkingHours/>}/>
+                    <Route path='/locations' element={<ManageLocations/>}/>
                 </Route>
             </Routes>
         </Suspense>

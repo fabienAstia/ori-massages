@@ -1,0 +1,24 @@
+.manage-workingHours .section-header{
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.manage-workingHours h1 {
+    text-align: center;
+    margin: 0;
+}
+
+.manage-workingHours .add-type-btn{
+    border: none;
+    background: none;
+    height: 30px;
+    width: 30px;
+    margin-right: auto;
+    font-size: larger;
+    padding: 0;
+}
+
+.manage-workingHours img{
+    width: 100%;
+}

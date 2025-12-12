@@ -85,7 +85,7 @@ export default function Home(){
                     </div>
                 </div>
                 <div className='d-flex justify-content-center mt-5'>
-                        <NavLink to="/services" className="navButton btn btn-outline-primary ">Me contacter</NavLink>
+                        <NavLink to="/contact" className="navButton btn btn-outline-primary ">Me contacter</NavLink>
                 </div> 
             </section>
             <Footer></Footer>

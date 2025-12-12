@@ -2,7 +2,7 @@ import './ManageAppointment.css'
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import Table from 'react-bootstrap/Table';
-import AppointmentRow from '../../components/AppointmentRow';
+import AppointmentRow from '../../../components/AppointmentRow';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function ManageAppointment(){
@@ -11,7 +11,7 @@ export default function ManageAppointment(){
     useEffect(()=> {   
         async function getAppointment(){
             try {
-                const resp = await axios.get(`${apiUrl}/appointment`)
+                const resp = await axios.get(`${apiUrl}/appointments`)
                 setAppointments(resp.data)
             } catch(err){
                 if(err.response){

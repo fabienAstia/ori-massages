@@ -1,0 +1,9 @@
+.editButton, .deleteButton{
+    border: none;
+    background: none;
+}
+
+.editButton:hover, .deleteButton:hover{
+    border: none;
+    transform: scale(1.2);
+}

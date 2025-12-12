@@ -5,10 +5,8 @@ import com.fabien_astiasaran.ori_massages_api.entities.Address;
 import com.fabien_astiasaran.ori_massages_api.entities.Location;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static java.util.Objects.isNull;
-import static org.apache.logging.log4j.util.Strings.isBlank;
+import static com.fabien_astiasaran.ori_massages_api.utils.AddressUtils.formatAddress;
 
 public final class LocationMapper {
 
@@ -39,22 +37,6 @@ public final class LocationMapper {
                 location.isAtHome(),
                 formatAddress(address)
         );
-    }
-
-    public static String formatAddress(Address address){
-        return String.format("%s %s %s %s %s",
-                address.getStreetNumber(),
-                address.getStreet().getStreetName(),
-                address.getStreet().getCity().getZipCode(),
-                address.getStreet().getCity().getCityName(),
-                getComplement(address));
-    }
-
-    private static String getComplement(Address address) {
-        if(isNull(address.getComplement()) || isBlank(address.getComplement())){
-            return "";
-        }
-        return address.getComplement();
     }
 
 }

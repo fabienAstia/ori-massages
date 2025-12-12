@@ -31,7 +31,7 @@ CREATE TABLE t_treatment_types(
 CREATE TABLE t_durations(
 	id int GENERATED ALWAYS AS IDENTITY,
 	duration_value int NOT NULL,
-	label varchar(20) NOT NULL,
+	label varchar(20) not NULL,
 	break_time int,
 	CONSTRAINT t_durations_pk PRIMARY KEY (id),
 	CONSTRAINT t_durations_duration_value_uk UNIQUE (duration_value)

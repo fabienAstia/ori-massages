@@ -139,16 +139,19 @@ export default function BookModal(props) {
 
   async function submit(data){
       try {
-          const res = await axios.post(`${apiUrl}/appointment`, {
+          const res = await axios.post(`${apiUrl}/appointments`, {
               slot:activeSlot,  
               user:data,
-              address: location.id == 1 ? {
+              // address: location.id == 1 ? {
+              address: location.atHome ? 
+              {
                 streetNumber:data.street_number,
                 streetName:data.street_name,
                 complement:data.complement,
                 zipCode:data.zip_code,
                 cityName:data.city_name
-              } : null,
+              } 
+              : null,
               locationId:location.id,
               message: data.message
           });

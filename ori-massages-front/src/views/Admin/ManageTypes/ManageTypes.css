@@ -1,0 +1,24 @@
+.manage-types .section-header{
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.manage-types h1 {
+    text-align: center;
+    margin: 0;
+}
+
+.manage-types .add-type-btn{
+    border: none;
+    background: none;
+    height: 30px;
+    width: 30px;
+    margin-right: auto;
+    font-size: larger;
+    padding: 0;
+}
+
+.manage-types img{
+    width: 100%;
+}

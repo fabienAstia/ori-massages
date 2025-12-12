@@ -1,7 +1,7 @@
 package com.fabien_astiasaran.ori_massages_api.services;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.AppointmentCreate;
-import com.fabien_astiasaran.ori_massages_api.dtos.UserResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminUserResponse;
 import com.fabien_astiasaran.ori_massages_api.entities.Role;
 import com.fabien_astiasaran.ori_massages_api.entities.User;
 import com.fabien_astiasaran.ori_massages_api.mappers.UserMapper;
@@ -37,7 +37,7 @@ public class UserService {
         return user;
     }
 
-    public Set<UserResponse> getUsers(){
+    public Set<AdminUserResponse> getUsers(){
         List<User> allUsers = userRepository.findAll();
         return allUsers.stream().map(UserMapper::toResponse).collect(Collectors.toSet());
     }

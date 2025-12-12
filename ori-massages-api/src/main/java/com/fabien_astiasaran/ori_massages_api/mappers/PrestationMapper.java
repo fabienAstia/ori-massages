@@ -1,5 +1,6 @@
 package com.fabien_astiasaran.ori_massages_api.mappers;
 
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminPrestationResponse;
 import com.fabien_astiasaran.ori_massages_api.dtos.PrestationResponse;
 import com.fabien_astiasaran.ori_massages_api.entities.Prestation;
 
@@ -16,6 +17,19 @@ public final class PrestationMapper {
                 prestation.isActive(),
                 prestation.getImagePath(),
                 DurationMapper.toResponse(prestation.getDuration())
+        );
+    }
+
+    public static AdminPrestationResponse toAdminResponse(Prestation prestation) {
+        return new AdminPrestationResponse(
+                prestation.getId(),
+                TreatmentTypeMapper.toResponse(prestation.getTreatmentType()),
+                DurationMapper.toResponse(prestation.getDuration()),
+                prestation.getName(),
+                prestation.getDescription(),
+                prestation.getPrice(),
+                prestation.isActive(),
+                prestation.getImagePath()
         );
     }
 }

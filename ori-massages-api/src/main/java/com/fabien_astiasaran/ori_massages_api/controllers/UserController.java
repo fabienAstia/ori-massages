@@ -1,12 +1,11 @@
 package com.fabien_astiasaran.ori_massages_api.controllers;
 
-import com.fabien_astiasaran.ori_massages_api.dtos.UserResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminUserResponse;
 import com.fabien_astiasaran.ori_massages_api.services.UserService;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -20,7 +19,7 @@ public class UserController {
     }
 
     @GetMapping
-    public Set<UserResponse> getUsers(){
+    public Set<AdminUserResponse> getUsers(){
         return userService.getUsers();
     }
 }

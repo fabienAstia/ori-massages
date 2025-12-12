@@ -22,4 +22,6 @@ public class LocationController {
     public List<LocationResponse> getLocations(){
         return locationService.getLocations();
     }
+
+
 }

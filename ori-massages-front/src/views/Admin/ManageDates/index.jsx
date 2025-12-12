@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import {DayPicker} from 'react-day-picker';
 import { Row, Col } from 'react-bootstrap';
 import axios from 'axios';
-import {toLocalDate, getDateWithoutOffset, formatDate} from '../../utils/dateUtils'
+import {toLocalDate, getDateWithoutOffset, formatDate} from '../../../utils/dateUtils'
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function ManageDates(){
@@ -13,7 +13,6 @@ export default function ManageDates(){
     const [unavailableDays, setUnavailableDays] = useState(null)
     const [bookedDays, setBookedDays] = useState(null)
     const [availability, setAvailability] = useState(null);
-    console.log('selectedDate', selectedDate)
 
     async function persistDate(date){
         if(!date) return "there is no date"

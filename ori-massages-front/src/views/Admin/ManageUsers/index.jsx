@@ -1,13 +1,13 @@
-import { useEffect, useState } from 'react';
-import Row from '../../components/UserRow'
 import './ManageUsers.css'
+import { useEffect, useState } from 'react';
+import UserRow from '../../../components/UserRow'
 import Table from 'react-bootstrap/Table'
 import axios from 'axios';
 const apiUrl = import.meta.env.VITE_API_URL;
 
 export default function ManageUsers(){
-    const [users, setSelectedUsers] = useState(null)
-    const [rows, setSelectedRows] = useState(null)
+    const [users, setSelectedUsers] = useState([])
+    const [rows, setSelectedRows] = useState([])
 
     useEffect(()=>{
         async function getAllUsers(){
@@ -31,7 +31,11 @@ export default function ManageUsers(){
 
     useEffect(()=> {
         const rows = users?.map((user, i) => 
-            <Row key={user.id} user={user} position={i+1}/>
+            <UserRow 
+                key={user.id} 
+                index={i}
+                user={user} 
+            />
         )
         setSelectedRows(rows)   
     }, [users])

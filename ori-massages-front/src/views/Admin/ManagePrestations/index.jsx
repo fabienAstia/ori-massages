@@ -10,10 +10,12 @@ export default function ManagePrestations(){
             <thead className='text-center'>
                 <tr>
                 <th>#</th>
-                <th>Nom complet</th>
-                <th>Téléphone</th>
-                <th>Email</th>
-                <th>Rdv</th>
+                <th>Type</th>
+                <th>Durée</th>
+                <th>Nom </th>
+                <th>Description</th>
+                <th>Tarif</th>
+                <th>Activée ?</th>
                 </tr>
             </thead>
             <tbody className='text-center'>

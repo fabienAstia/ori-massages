@@ -13,10 +13,11 @@ import jakarta.persistence.EntityNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import static com.fabien_astiasaran.ori_massages_api.utils.TimeUtils.*;
 
 @Service
 public class SlotService {
@@ -116,22 +117,6 @@ public class SlotService {
             windows.add(new Window(cursor, endWorkingHour));
         }
         return windows;
-    }
-
-    private static int localTimeToInt(LocalTime localTime) {
-        return localTime.getHour() * 60 + localTime.getMinute();
-    }
-
-    private static LocalTime intToLocalTimeWithOffset(int startingTime, int offsetMinutes) {
-        return LocalTime.of(
-                (startingTime + offsetMinutes) / 60,
-                (startingTime + offsetMinutes) % 60);
-    }
-
-    public static String localTimeToString(LocalTime localTime){
-        String formatSlotPattern = "HH:mm";
-        DateTimeFormatter formatSlotFormatter = DateTimeFormatter.ofPattern(formatSlotPattern);
-        return formatSlotFormatter.format(LocalTime.of(localTime.getHour(), localTime.getMinute()));
     }
 
     public Slot createSlot(AppointmentCreate appointmentCreate, Date date, WorkingHours workingHours, Prestation prestation) {

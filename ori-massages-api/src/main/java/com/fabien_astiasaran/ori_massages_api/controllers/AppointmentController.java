@@ -1,7 +1,7 @@
 package com.fabien_astiasaran.ori_massages_api.controllers;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.AppointmentCreate;
-import com.fabien_astiasaran.ori_massages_api.dtos.AppointmentResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminAppointmentResponse;
 import com.fabien_astiasaran.ori_massages_api.entities.Appointment;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import com.fabien_astiasaran.ori_massages_api.services.AppointmentService;
 import java.util.Set;
 
 @RestController
-@RequestMapping ("/appointment")
+@RequestMapping ("/appointments")
 public class AppointmentController {
 
     private AppointmentService appointmentService;
@@ -27,7 +27,7 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public Set<AppointmentResponse> getAppointments(){
+    public Set<AdminAppointmentResponse> getAppointments(){
         return appointmentService.getAppointments();
     }
 }

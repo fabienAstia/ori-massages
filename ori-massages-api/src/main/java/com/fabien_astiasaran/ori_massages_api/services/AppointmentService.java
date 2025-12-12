@@ -1,6 +1,7 @@
 package com.fabien_astiasaran.ori_massages_api.services;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.*;
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminAppointmentResponse;
 import com.fabien_astiasaran.ori_massages_api.entities.*;
 import com.fabien_astiasaran.ori_massages_api.mappers.AddressMapper;
 import com.fabien_astiasaran.ori_massages_api.repositories.*;
@@ -11,7 +12,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.fabien_astiasaran.ori_massages_api.services.SlotService.localTimeToString;
+import static com.fabien_astiasaran.ori_massages_api.utils.TimeUtils.localTimeToString;
 
 @Service
 public class AppointmentService {
@@ -79,10 +80,10 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
-    public Set<AppointmentResponse> getAppointments(){
+    public Set<AdminAppointmentResponse> getAppointments(){
         List<Appointment> appointments = appointmentRepository.findAll();
         return appointments.stream().map(appointment ->
-                new AppointmentResponse(
+                new AdminAppointmentResponse(
                         appointment.getId(),
                         appointment.getUser().getFullname(),
                         appointment.getSlot().getPrestation().getName(),

@@ -6,16 +6,11 @@ import jakarta.validation.constraints.NotNull;
 
 public record PrestationResponse(
         @NotNull Long id,
-
         @NotBlank String name,
-
         String description,
         Double price,
         @NotNull boolean active,
         @NotBlank String imagePath,
-
-        @Valid
-        DurationResponse duration
-
+        @Valid DurationResponse duration
 ) {
 }

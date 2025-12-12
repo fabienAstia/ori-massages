@@ -19,7 +19,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 
-import static com.fabien_astiasaran.ori_massages_api.services.SlotService.localTimeToString;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
@@ -46,7 +45,7 @@ class SlotServiceTest {
     @Test
     void getAvailableSlots_throws_DateClosedException(){
         LocalDate date = LocalDate.of(2025, 12, 1);
-        DurationCreate duration = new DurationCreate(1L, 45, "45 min", 5);
+        DurationCreate duration = new DurationCreate(45, "45 min", 5);
         SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(date, duration);
         when(dateRepository.existsByDateAndDateStatus(date, DateStatus.CLOSED)).thenReturn(true);
         assertThrows(
@@ -58,7 +57,7 @@ class SlotServiceTest {
     @Test
     void getAvailableSlots_throws_EntityNotFoundException(){
         LocalDate date = LocalDate.of(2025, 12, 1);
-        DurationCreate duration = new DurationCreate(1L, 45, "45 min", 5);
+        DurationCreate duration = new DurationCreate(45, "45 min", 5);
         SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(date, duration);
         when(dateRepository.existsByDateAndDateStatus(date, DateStatus.CLOSED)).thenReturn(false);
         when(prestationRepository.findById(any())).thenReturn(Optional.empty());
@@ -71,7 +70,7 @@ class SlotServiceTest {
     @Test
     void createAvailableSlots_whenNoBookedSlots_returnsFullSlots(){
         LocalDate date = LocalDate.of(2025, 12, 1);
-        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        DurationCreate durationCreate = new DurationCreate(45, "45 min", 5);
         SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(date, durationCreate);
 
         WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
@@ -87,7 +86,7 @@ class SlotServiceTest {
     @Test
     void createAvailableSlots_withBookedSlots_inTheMiddle(){
         LocalDate localDate = LocalDate.of(2025, 12, 1);
-        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        DurationCreate durationCreate = new DurationCreate(45, "45 min", 5);
         SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
 
         WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
@@ -104,7 +103,7 @@ class SlotServiceTest {
     @Test
     void createAvailableSlots_withBookedSlots_inTheBeginning(){
         LocalDate localDate = LocalDate.of(2025, 12, 1);
-        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        DurationCreate durationCreate = new DurationCreate(45, "45 min", 5);
         SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
 
         WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
@@ -121,7 +120,7 @@ class SlotServiceTest {
     @Test
     void createAvailableSlots_withBookedSlots_inTheEnd(){
         LocalDate localDate = LocalDate.of(2025, 12, 1);
-        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        DurationCreate durationCreate = new DurationCreate( 45, "45 min", 5);
         SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
 
         WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(12, 00));
@@ -138,7 +137,7 @@ class SlotServiceTest {
     @Test
     void createAvailableSlots_withBookedSlots_spaceFor2Slots(){
         LocalDate localDate = LocalDate.of(2025, 12, 1);
-        DurationCreate durationCreate = new DurationCreate(1L, 45, "45 min", 5);
+        DurationCreate durationCreate = new DurationCreate( 45, "45 min", 5);
         SlotAvailableCreate slotAvailableCreate = getSlotAvailableCreate(localDate, durationCreate);
 
         WorkingHours morningWorkingHours = getWorkingHours(LocalTime.of(9, 00), LocalTime.of(13, 00));
