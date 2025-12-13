@@ -17,6 +17,6 @@ export function formatDate(date){
 }
 
 export function frenchDate(date){
-    const dateElements = date.split('-');
+    const dateElements = date?.split('-');
     return `${dateElements[2]}/${dateElements[1]}/${dateElements[0]}`
 }

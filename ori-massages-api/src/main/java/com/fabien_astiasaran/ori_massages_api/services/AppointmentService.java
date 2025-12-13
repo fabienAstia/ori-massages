@@ -80,21 +80,22 @@ public class AppointmentService {
         return appointmentRepository.save(appointment);
     }
 
-    public Set<AdminAppointmentResponse> getAppointments(){
+    public List<AdminAppointmentResponse> getAppointments(){
         List<Appointment> appointments = appointmentRepository.findAll();
         return appointments.stream().map(appointment ->
                 new AdminAppointmentResponse(
                         appointment.getId(),
                         appointment.getUser().getFullname(),
                         appointment.getSlot().getPrestation().getName(),
-                        appointment.getSlot().getDate().getDate(),
                         localTimeToString(appointment.getSlot().getBeginAt()),
                         localTimeToString(appointment.getSlot().getEndAt()),
+                        appointment.getSlot().getDate().getDate(),
+                        appointment.getCreatedAt().toLocalDate(),
                         appointment.getAddress().getLocation().isAtHome(),
                         appointment.getAddress().getLocation().getName(),
                         AddressMapper.getFullAddress(appointment.getAddress()),
                         appointment.getStatus()
                 )
-        ).collect(Collectors.toSet());
+        ).toList();
     }
 }

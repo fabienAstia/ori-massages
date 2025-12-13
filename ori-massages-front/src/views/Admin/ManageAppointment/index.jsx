@@ -38,13 +38,14 @@ export default function ManageAppointment(){
                 <h1>Rendez-vous</h1>
 
                 <Table striped bordered hover className='align-middle'>
-                    <thead>
+                    <thead className='align-middle'> 
                         <tr>
                         <th>#</th>
                         <th>Client</th>
                         <th>Prestation</th>
-                        <th>Date</th>
                         <th>Créneau</th>
+                        <th>Date du RDV</th>
+                        <th>Date de création</th>
                         <th>Adresse</th>
                         <th>Statut</th>
                         </tr>

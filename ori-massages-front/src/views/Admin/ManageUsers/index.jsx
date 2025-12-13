@@ -43,7 +43,7 @@ export default function ManageUsers(){
 
   return (
     <div className='manage-users'>
-        <h1>Gestion des Clients</h1>
+        <h1>Clients</h1>
 
         <Table striped bordered hover className='align-middle'>
             <thead className='text-center'>

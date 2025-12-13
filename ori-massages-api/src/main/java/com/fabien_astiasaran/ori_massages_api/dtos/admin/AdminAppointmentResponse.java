@@ -8,10 +8,11 @@ public record AdminAppointmentResponse(
         Long id,
         String userFullName,
         String prestationName,
-        LocalDate date,
         String beginAt,
         String endReal,
-        boolean isAtHome,
+        LocalDate dateMeeting,
+        LocalDate dateCreation,
+        boolean atHome,
         String locationName,
         String address,
         AppointmentStatus status

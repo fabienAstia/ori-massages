@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import com.fabien_astiasaran.ori_massages_api.services.AppointmentService;
 
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -27,7 +28,7 @@ public class AppointmentController {
     }
 
     @GetMapping
-    public Set<AdminAppointmentResponse> getAppointments(){
+    public List<AdminAppointmentResponse> getAppointments(){
         return appointmentService.getAppointments();
     }
 }

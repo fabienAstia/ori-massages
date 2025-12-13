@@ -51,13 +51,13 @@ export default function DurationEditModal(props){
                     <Form.Group className="mb-3" controlId="formBasicName">
                         <Form.Label>Valeur de la durée <span className='text-danger'>*</span></Form.Label>
                         <Form.Control 
-                            type="text" 
+                            type="number" 
                             required
                             value={value}
                             onChange={(e) => setValue(e.target.value)}
                         />
                         <Form.Text className="text-muted">
-                            Durée de la Prestation : 30, 34, 60, ... 
+                            Durée de la Prestation en minutes
                         </Form.Text>
                     </Form.Group>
 
@@ -69,16 +69,24 @@ export default function DurationEditModal(props){
                             value={label}
                             onChange={(e) => setLabel(e.target.value)}    
                         />
+                        <Form.Text className="text-muted">
+                            Ce qui s'affiche à l'écran de l'utilisateur
+                        </Form.Text>
                     </Form.Group>
 
                      <Form.Group className="mb-3" controlId="formBasicPassword">
                         <Form.Label>Temps de pause <span className='text-danger'>*</span></Form.Label>
                         <Form.Control 
-                            type="text" 
+                            type="number" 
                             required
                             value={breakTime}
                             onChange={(e) => setBreakTime(e.target.value)}    
                         />
+                        <Form.Text className="text-muted">
+                           ℹ️ Une pause est ajoutée après chaque prestation.
+                            Elle ajuste les créneaux proposés.
+                            Mettre 0 pour la désactiver.
+                        </Form.Text>
                     </Form.Group>
                 </Form>
 
