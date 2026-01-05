@@ -10,6 +10,6 @@ public record AddressCreate(
         String complement,
         @NotBlank @Pattern(regexp="^[0-9]{5}$", message = "Le code postal doit contenir exactement 5 chiffres")
         String zipCode,
-        @NotBlank String cityName
+        @NotBlank String city
 ) {
 }

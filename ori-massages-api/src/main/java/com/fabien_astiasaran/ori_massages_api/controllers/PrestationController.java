@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Set;
 
 @RestController
 @RequestMapping("/prestations")
@@ -31,7 +30,7 @@ public class PrestationController {
     }
 
     @GetMapping
-    public Set<AdminPrestationResponse> getAllPrestations(){
+    public List<AdminPrestationResponse> getAllPrestations(){
         return service.getAllPrestations();
     }
 }

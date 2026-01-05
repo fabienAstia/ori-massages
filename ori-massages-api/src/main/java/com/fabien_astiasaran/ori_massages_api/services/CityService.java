@@ -15,14 +15,14 @@ public class CityService {
     }
 
     public City findOrCreateCity(AddressCreate addressCreate){
-        return findOrCreateCity(addressCreate.zipCode(), addressCreate.cityName());
+        return findOrCreateCity(addressCreate.zipCode(), addressCreate.city());
     }
 
-    public City findOrCreateCity(String zipCode, String cityName){
-        if(zipCode.isBlank() || cityName.isBlank()){
+    public City findOrCreateCity(String zipCode, String city){
+        if(zipCode.isBlank() || city.isBlank()){
             throw new IllegalArgumentException(("Zip code and city name are required"));
         }
-        return cityRepository.findByZipCodeAndCityName(zipCode, cityName)
-                .orElseGet(()-> cityRepository.save(new City(zipCode, cityName)));
+        return cityRepository.findByZipCodeAndCityName(zipCode, city)
+                .orElseGet(()-> cityRepository.save(new City(zipCode, city.toUpperCase())));
     }
 }

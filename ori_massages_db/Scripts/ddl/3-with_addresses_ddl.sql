@@ -97,7 +97,7 @@ CREATE INDEX idx_slots_date_id ON t_slots(date_id);
 CREATE TABLE t_locations(
 	id int GENERATED ALWAYS AS IDENTITY, 
 	name varchar(50) NOT NULL,
-	image_path varchar(20) not null, 
+	image_path varchar(255) not null, 
 	is_at_home boolean not null,
 	CONSTRAINT t_locations_pk PRIMARY KEY (id), 
 	CONSTRAINT t_locations_location_name_uk UNIQUE (name)
@@ -134,7 +134,8 @@ CREATE TABLE t_addresses(
 	CONSTRAINT t_addresses_user_id_fk FOREIGN KEY (user_id)
 		REFERENCES t_users(id),
 	CONSTRAINT t_addresses_location_id_fk FOREIGN KEY (location_id)
-		REFERENCES t_locations (id),
+		REFERENCES t_locations (id)
+		 ON DELETE CASCADE,
 	CONSTRAINT t_addresses_number_street_complement_uk UNIQUE (street_number, complement, street_id)
 );
 

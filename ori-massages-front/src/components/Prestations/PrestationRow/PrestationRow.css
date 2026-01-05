@@ -7,10 +7,3 @@
     border: none;
     transform: scale(1.2);
 }
-
-.image-format{
-    display: flex;
-    height: 30px;
-    width: 50px;
-    margin: auto;
-}

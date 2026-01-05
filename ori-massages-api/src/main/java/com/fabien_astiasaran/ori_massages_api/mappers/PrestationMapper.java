@@ -23,8 +23,8 @@ public final class PrestationMapper {
     public static AdminPrestationResponse toAdminResponse(Prestation prestation) {
         return new AdminPrestationResponse(
                 prestation.getId(),
-                TreatmentTypeMapper.toResponse(prestation.getTreatmentType()),
-                DurationMapper.toResponse(prestation.getDuration()),
+                prestation.getTreatmentType().getName(),
+                prestation.getDuration().getLabel(),
                 prestation.getName(),
                 prestation.getDescription(),
                 prestation.getPrice(),

@@ -6,7 +6,7 @@ import com.fabien_astiasaran.ori_massages_api.entities.Location;
 
 import java.util.List;
 
-import static com.fabien_astiasaran.ori_massages_api.utils.AddressUtils.formatAddress;
+import static com.fabien_astiasaran.ori_massages_api.mappers.AddressMapper.toAddressResponse;
 
 public final class LocationMapper {
 
@@ -35,7 +35,7 @@ public final class LocationMapper {
                 location.getName(),
                 location.getImagePath(),
                 location.isAtHome(),
-                formatAddress(address)
+                toAddressResponse(address)
         );
     }
 

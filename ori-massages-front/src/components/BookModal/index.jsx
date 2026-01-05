@@ -10,6 +10,7 @@ import BookingCalendar from '../BookingCalendar';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
 import { getDateWithoutOffset } from '../../utils/dateUtils';
+import addressToString from '../../utils/addressUtils';
 
 export default function BookModal(props) {
   if(!props.prestation)return null;
@@ -45,7 +46,6 @@ export default function BookModal(props) {
           prestation: props.prestation
         })
         setSlots(response.data)
-        console.log('getSlots=', response.data)
         return response.data;
       }   
     } catch(error){
@@ -111,17 +111,15 @@ export default function BookModal(props) {
   const placeList = locations?.map(location_DB => {
     return <HomeCard
               key={location_DB.id}
-              image={`/photos/${location_DB.imagePath}`}
+              image={`${apiUrl}/uploads/locations/${location_DB.imagePath}`}
               title={location_DB.name}
-              address={location_DB.address}
+              address={addressToString(location_DB.address)}
               onClick={() => {
                 if(location == location_DB) {
                   setLocation(null)
                 } else {
                   setLocation(location_DB)
                 }
-                console.log('location_name= ', location_DB.name)
-                console.log('location_id= ', location_DB.id)
               }}
               className={location == location_DB ? 'selected' : '' }
             />
@@ -138,18 +136,18 @@ export default function BookModal(props) {
   }, [contactData])
 
   async function submit(data){
+    console.log('data', data)
       try {
           const res = await axios.post(`${apiUrl}/appointments`, {
               slot:activeSlot,  
               user:data,
-              // address: location.id == 1 ? {
               address: location.atHome ? 
               {
                 streetNumber:data.street_number,
                 streetName:data.street_name,
                 complement:data.complement,
                 zipCode:data.zip_code,
-                cityName:data.city_name
+                city:data.city
               } 
               : null,
               locationId:location.id,

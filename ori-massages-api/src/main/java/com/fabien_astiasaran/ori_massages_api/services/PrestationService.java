@@ -38,10 +38,8 @@ public class PrestationService {
         return facialCare;
     }
 
-    public Set<AdminPrestationResponse> getAllPrestations(){
-        Set<AdminPrestationResponse> allPrestations = new HashSet<>();
-        prestationRepository.findAll().forEach(prestation ->
-                allPrestations.add(PrestationMapper.toAdminResponse(prestation)));
-        return allPrestations;
+    public List<AdminPrestationResponse> getAllPrestations(){
+        return prestationRepository.findAll().stream().map(prestation ->
+                PrestationMapper.toAdminResponse(prestation)).toList();
     }
 }

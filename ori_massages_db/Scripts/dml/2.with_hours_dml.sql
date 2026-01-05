@@ -80,7 +80,7 @@ insert into t_streets(city_id, street_name) values
 ((select id from t_cities tc where tc.zip_code = '75020'),
 'rue de Belleville');
 
-insert into t_addresses(street_number, street_id, location_id) values
-('210',
+insert into t_addresses(street_number, complement, street_id, location_id) values
+('210', '',
 (select id from t_streets ts where ts.street_name = 'rue de Belleville'),
 (select id from t_locations tl where tl.is_at_home = false));

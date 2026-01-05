@@ -4,11 +4,19 @@ import axios from 'axios'
 import { useEffect, useState } from 'react'
 import LocationRow from '../../../components/Locations/LocationRow'
 import Table from 'react-bootstrap/Table'
+import LocationEditModal from '../../../components/Locations/LocationEditModal'
+import LocationDeleteModal from '../../../components/Locations/LocationDeleteModal'
 const apiUrl = import.meta.env.VITE_API_URL
 
 export default function ManageLocations(){
 
     const [locations, setLocations] = useState([])
+    const [location, setLocation] = useState(null)
+    const [displayEditModal, setDisplayEditModal] = useState(false)
+    const [modifiedLocation, setModifiedLocation] = useState(null)
+    const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
+    const [deleteLocation, setDeleteLocation] = useState(null)
+
 
     async function getLocations(){
         try {
@@ -25,12 +33,15 @@ export default function ManageLocations(){
             key={location.id}
             index={i}
             location={location}
+            setDisplayEditModal={setDisplayEditModal}
+            setDisplayDeleteModal={setDisplayDeleteModal}
+            setLocation={setLocation}
         />
     )
 
     useEffect(()=> {
         getLocations()
-    }, [])
+    }, [modifiedLocation, deleteLocation])
 
     return (
         <div className='manage-locations'>
@@ -41,10 +52,10 @@ export default function ManageLocations(){
                             className='add-type-btn'
                             onClick={() => {
                                 setDisplayEditModal(true)
-                                // setWorkingHour(null)
+                                setLocation(null)
                             }}
                         >
-                            <img src={add} alt="button to add a new Type" /> 
+                            <img src={add} alt="button to add a new Location" /> 
                         </button>
                     </div>
                 </div>
@@ -53,8 +64,8 @@ export default function ManageLocations(){
                 <thead className='text-center align-middle'>
                     <tr>
                     <th>#</th>
+                    <th>Image</th>
                     <th>Nom du lieu</th>
-                    <th>Chemin de l'image</th>
                     <th>À domicile ?</th>
                     <th>Adresse</th>
                     <th>Actions</th>
@@ -65,18 +76,19 @@ export default function ManageLocations(){
                 </tbody>
             </Table>
 
-            {/* <DurationEditModal 
-                show={displayEditModal}
+            <LocationEditModal 
+                show={displayEditModal}  
                 onHide={() => setDisplayEditModal(false)}
-                duration={duration}
-                setModifiedDuration={setModifiedDuration}
+                location={location}
+                setModifiedLocation={setModifiedLocation}   
             />
-            <DurationDeleteModal 
+            
+            <LocationDeleteModal 
                 show={displayDeleteModal}
-                onHide={() => setDiplayDeleteModal(false)}
-                duration={duration}
-                setDeleteDuration={setDeleteDuration}
-            /> */}
+                onHide={() => setDisplayDeleteModal(false)}
+                location={location}
+                setDeleteLocation={setDeleteLocation}
+            />
         </div>
     )
 }

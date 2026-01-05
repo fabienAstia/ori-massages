@@ -5,6 +5,6 @@ public record LocationResponse(
         String name,
         String imagePath,
         boolean atHome,
-        String address
+        AddressResponse address
 ) {
 }

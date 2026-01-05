@@ -179,13 +179,13 @@ export default function Contact({bookModalSubmit, isAtHome}){
                             </div>
                             <div className='col-12 col-sm-8'>
                                 <div className="mb-3">
-                                    <label htmlFor="city_name" className="form-label">Ville :<span className="red"> *</span></label>
+                                    <label htmlFor="city" className="form-label">Ville :<span className="red"> *</span></label>
                                     <input 
-                                        {...register("city_name")}
+                                        {...register("city")}
                                         type="text" 
                                         className="form-control" 
-                                        id="city_name"
-                                        aria-describedby="city_name"
+                                        id="city"
+                                        aria-describedby="city"
                                     />
                                 </div>
                             </div>
