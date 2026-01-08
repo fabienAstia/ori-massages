@@ -1,11 +1,14 @@
 import './Home.css'
 import logo from '../../assets/photos/logo-fond-blanc-espace.svg'
 import oriana_photo from '../../assets/photos/oriana-black-and-white-removebg.png'
-import {Link, NavLink} from 'react-router-dom';
-import Prestation from '../../components/Prestation';
+import { NavLink} from 'react-router-dom';
+import PrestationList from '../../components/PrestationList';
 import Footer from '../../components/Footer'
+import usePrestations from '../../hooks/usePrestations';
 
 export default function Home(){
+    const {massagesList, facialCaresList} = usePrestations();
+
     return (
         <>
         <section className='HomeView'>
@@ -40,18 +43,18 @@ export default function Home(){
                 </div>
             
                 <h2>Massages sur mesures</h2>
-                <Prestation 
+                <PrestationList 
                     showDescription={false}
-                    typeOfPrestation='massages'
+                    prestations={massagesList}
                 />
                 <div className='d-flex justify-content-center mt-5'>
                     <NavLink to="/services" className="navButton btn btn-outline-primary ">Voir plus</NavLink>
                 </div>
 
                 <h2>Soins visage</h2>
-                <Prestation 
+                <PrestationList 
                     showDescription={false}
-                    typeOfPrestation='facial-cares'
+                    prestations={facialCaresList}
                 />
                 <div className='d-flex justify-content-center mt-5'>
                     <NavLink to="/services" className="navButton btn btn-outline-primary ">Voir plus</NavLink>

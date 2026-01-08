@@ -8,34 +8,31 @@ import com.fabien_astiasaran.ori_massages_api.entities.Location;
 import com.fabien_astiasaran.ori_massages_api.mappers.AddressMapper;
 import com.fabien_astiasaran.ori_massages_api.repositories.AddressRepository;
 import com.fabien_astiasaran.ori_massages_api.repositories.LocationRepository;
+import com.fabien_astiasaran.ori_massages_api.utils.ImageCategory;
 import jakarta.persistence.EntityNotFoundException;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.File;
 import java.util.List;
-import java.util.UUID;
 
 import static com.fabien_astiasaran.ori_massages_api.mappers.LocationMapper.toResponse;
 
 @Service
 public class LocationService {
 
-    @Value("${uploads.storage.path}/locations")
-    private String upLoadsLoc;
-
     private final LocationRepository locationRepository;
     private final AddressService addressService;
     private final AddressRepository addressRepository;
     private final AddressMapper addressMapper;
+    private final ImageService imageService;
 
-    public LocationService(LocationRepository locationRepository, AddressService addressService, AddressRepository addressRepository, AddressMapper addressMapper) {
+    public LocationService(LocationRepository locationRepository, AddressService addressService, AddressRepository addressRepository, AddressMapper addressMapper, ImageService imageService) {
         this.locationRepository = locationRepository;
         this.addressService = addressService;
         this.addressRepository = addressRepository;
         this.addressMapper = addressMapper;
+        this.imageService = imageService;
     }
 
     public List<LocationResponse> getLocations(){
@@ -53,8 +50,8 @@ public class LocationService {
     @Transactional
     public LocationResponse createLocation(LocationCreate locationCreate){
         MultipartFile image = locationCreate.getImage();
-        String imageId = buildImageId(image);
-        storeImage(image, imageId);
+        String imageId = imageService.buildImageId(image);
+        imageService.storeImage(image, imageId, ImageCategory.LOCATION);
 
         Location newLocation = new Location();
         newLocation.setName(locationCreate.getName());
@@ -76,17 +73,7 @@ public class LocationService {
         location.setName(locationCreate.getName());
         MultipartFile image = locationCreate.getImage();
 
-        if(!image.isEmpty()){
-            String imageId;
-            try{
-                imageId = buildImageId(image);
-                storeImage(image, imageId);
-            }catch(Exception ex){
-                throw new RuntimeException(ex);
-            }
-            deletePreviousImage(location);
-            location.setImagePath(imageId);
-        }
+        handleImage(image, location);
         locationRepository.save(location);
 
         if(!locationCreate.isAtHome()){
@@ -99,28 +86,13 @@ public class LocationService {
         return toResponse(location);
     }
 
-    private String buildImageId(MultipartFile image) {
-        UUID uuid = UUID.randomUUID();
-        String name = image.getOriginalFilename();
-        int index = name.lastIndexOf('.');
-        String ext = name.substring(index, name.length());
-        return uuid + ext;
-    }
-
-    private void storeImage(MultipartFile image, String imageId){
-        try{
-            String dest = String.format("%s/%s", upLoadsLoc, imageId);
-            File file = new File(dest);
-            image.transferTo(file);
-        }catch(Exception ex){
-            throw new RuntimeException(ex);
+    private void handleImage(MultipartFile image, Location location) {
+        if(!image.isEmpty()){
+            String imageId = imageService.buildImageId(image);
+            imageService.storeImage(image, imageId, ImageCategory.LOCATION);
+            imageService.deletePreviousImage(location.getImagePath(), ImageCategory.LOCATION);
+            location.setImagePath(imageId);
         }
-    }
-
-    private boolean deletePreviousImage(Location location){
-        String oldImagePath = String.format("%s/%s", upLoadsLoc, location.getImagePath());
-        File fileToDelete = new File(oldImagePath);
-        return fileToDelete.delete();
     }
 
     public void deleteLocation(Long id){

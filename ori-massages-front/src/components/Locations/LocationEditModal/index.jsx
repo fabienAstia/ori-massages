@@ -57,7 +57,7 @@ export default function LocationEditModal(props){
 
     useEffect(()=> {
         if(!file){
-            setPreview(`${apiUrl}/uploads/${imagePath}`)
+            setPreview(`${apiUrl}/uploads/locations/${imagePath}`)
             return;
         }
         setPreview(URL.createObjectURL(file))
@@ -69,14 +69,15 @@ export default function LocationEditModal(props){
             ? await axios.postForm(`${apiUrl}/locations/${props.location.id}`, 
                 {name:name, atHome:props.location.atHome , address: JSON.stringify(address), image:file})
             : await axios.postForm(`${apiUrl}/locations`, 
-                {name:name, atHome:props.location.atHome, address: JSON.stringify(address), image:file})
+                {name:name, atHome:false, address: JSON.stringify(address), image:file})
             
             alert('new location !')
-            props.setModifiedLocation(resp.data)
+            props.setHasBeenModified(true)
             props.onHide()
         }catch(err){
-            if(err.response)console.log(err.response)
-            if(err.request)console.log(err.request)
+            if(err.response) return console.log(err.response.data)
+            if(err.request) return console.log(err.request)
+            return console.log(err.message)
         }
     }
 

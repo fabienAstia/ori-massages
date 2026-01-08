@@ -1,6 +1,7 @@
 import {  useNavigate } from 'react-router-dom';
 import './PrestationCard.css'
 import Button from 'react-bootstrap/Button';
+const apiUrl = import.meta.env.VITE_API_URL
 
 export default function PrestationCard({variant='home', setModalShow, prestation, setSelectedPrestation}){
     
@@ -22,17 +23,17 @@ export default function PrestationCard({variant='home', setModalShow, prestation
 
             {variant==='services' &&
             <h5 className="card-title text-center">{prestation.name}</h5>}
-            <img src={`/photos/${prestation.imagePath}`} className={`card-img-top custom-img--${variant}`} alt={prestation.name}/>
+            <img src={`${apiUrl}/uploads/prestations/${prestation.imagePath}`} className={`card-img-top custom-img--${variant}`} alt={prestation.name}/>
             <div className='card-body d-flex flex-column gap-1'>
 
                 {variant==='home' &&
-                <p className="card-title text-center">{prestation.label}</p>}
+                <p className="card-title text-center">{prestation.typeName}</p>}
                 
                 {prestation.description && 
                 <>
                 <div className='row cols-row-2 text-center fs-3 fw-bold '>
                     <div className='col text-center'>
-                        {prestation.duration.label}
+                        {prestation.durationLabel}
                     </div>
                     <div className='col'>
                         {prestation.price + '€'}

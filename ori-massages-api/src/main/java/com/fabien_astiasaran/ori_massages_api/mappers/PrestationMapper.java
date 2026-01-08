@@ -11,12 +11,14 @@ public final class PrestationMapper {
     public static PrestationResponse toResponse(Prestation prestation) {
         return new PrestationResponse(
                 prestation.getId(),
+                prestation.getTreatmentType().getName(),
+                prestation.getDuration().getId(),
+                prestation.getDuration().getLabel(),
                 prestation.getName(),
                 prestation.getDescription(),
                 prestation.getPrice(),
                 prestation.isActive(),
-                prestation.getImagePath(),
-                DurationMapper.toResponse(prestation.getDuration())
+                prestation.getImagePath()
         );
     }
 

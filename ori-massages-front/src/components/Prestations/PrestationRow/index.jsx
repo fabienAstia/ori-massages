@@ -1,12 +1,21 @@
 import './PrestationRow.css'
 import Pencil from '../../../assets/pictos/pencil.svg'
 import Trash from '../../../assets/pictos/trash.svg'
+import { useEffect } from 'react'
+const apiUrl = import.meta.env.VITE_API_URL
 
 export default function PrestationRow({prestation, index, setPrestation, setDisplayEditModal}){
+
     return(
         <tr>
             <td>{index+1}</td>
-            <td>{prestation.imagePath}</td>
+            <td>
+                <img 
+                    src={`${apiUrl}/uploads/prestations/${prestation.imagePath}`} 
+                    id='image-row'
+                    alt="prestation image" 
+                />
+            </td>
             <td>{prestation.name}</td>
             <td>{prestation.typeName}</td>
             <td>{prestation.durationLabel}</td>

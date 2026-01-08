@@ -25,6 +25,17 @@ export default function BookModal(props) {
   const [location, setLocation] = useState(null);
   const [contactData, setContactData] = useState()
 
+  // useEffect(()=> {
+  //   const prestation = props.prestation
+  //   if(prestation){
+  //     setSlotsForm({...slotsForm, 
+  //       date:'',
+  //       prestationId: prestation.id,
+  //       durationId: prestation.durationId
+  //     })
+  //   }
+  // }, [])
+
   function setSlotsAndUnlockLocations(slot){
     if(activeSlot == slot){
       setActiveSlot(null)
@@ -40,11 +51,11 @@ export default function BookModal(props) {
   async function getSlots(date) {
     try {
       console.log('DATE= ', date)
+
       if(date){
-          const response = await axios.post(`${apiUrl}/slots/availables`,{
-          date: date,
-          prestation: props.prestation
-        })
+          const response = await axios.post(`${apiUrl}/slots/availables`,
+            {date:date, prestationId: props.prestation.id, durationId: props.prestation.durationId}
+          )
         setSlots(response.data)
         return response.data;
       }   
@@ -172,7 +183,7 @@ export default function BookModal(props) {
       aria-labelledby="contained-modal-title-vcenter"
       size='lg'
       onExit={()=>{
-        setDate(null);
+        setDate('');
         setShowHours(false); 
         setActiveSlot(null); 
         setShowLocations(false); 
@@ -190,11 +201,11 @@ export default function BookModal(props) {
           <Row className='d-flex justify-content-center '>
             <Col xs={12} lg={6} className='text-center'>
               <div className='d-flex justify-content-center '>
-                <img src={`/photos/${props.prestation.imagePath}`} id='imageModal'/>
+                <img src={`${apiUrl}/uploads/prestations/${props.prestation.imagePath}`} id='imageModal'/>
               </div>
                <p className='my-2'>{props.prestation.description}</p>
                <div className='d-flex justify-content-evenly fs-5 fw-bold'>
-                      {props.prestation.duration.label} - {props.prestation.price + '€'}
+                      {props.prestation.durationLabel} - {props.prestation.price + '€'}
                </div>
             </Col>
             <Col xs={12} lg={6} className='d-flex justify-content-center align-items-center'>
@@ -205,9 +216,9 @@ export default function BookModal(props) {
             </Col>
           </Row>
 
-          {date &&
+          {date != '' &&
             <>
-              <Row className='my-2 d-flex'>
+            <Row className='my-2 d-flex'>
               <Col xl={12} className='d-flex justify-content-center w-100'>
                 <Button onClick={() => {setShowHours(!showHours)}} className={`w-100 ${showHours ? 'bg-custom' : 'bg-none'}`}>{showHours ? 'Masquer les horaires' : 'Afficher les horaires'}</Button>
               </Col>
@@ -223,7 +234,7 @@ export default function BookModal(props) {
                 <Button onClick={() => {setShowLocations(activeSlot != null)}} className={`w-100 ${showLocations ? 'bg-custom' : 'bg-none'}`}>Choisissez un lieu</Button>
               </Col>
             </Row>
-            <Row className={`row row-cols-2 justify-content-center my-3 ${showLocations ? 'd-locations' : 'd-none'}`}>
+            <Row className={`row row-cols-2 row-cols-md-2 row-cols-lg-3 justify-content-around my-3 ${showLocations ? 'd-locations' : 'd-none'}`}>
               {placeList}
             </Row>
                   
@@ -237,7 +248,7 @@ export default function BookModal(props) {
                 <Row className='my-1 mx-1'>
                   <Contact
                     bookModalSubmit={(data) => handleContactChange(data)}
-                    isAtHome={location.id == 1}
+                    isAtHome={location.atHome}
                   />
                 </Row>
               </div>

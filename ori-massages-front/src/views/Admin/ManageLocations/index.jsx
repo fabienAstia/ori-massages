@@ -13,7 +13,7 @@ export default function ManageLocations(){
     const [locations, setLocations] = useState([])
     const [location, setLocation] = useState(null)
     const [displayEditModal, setDisplayEditModal] = useState(false)
-    const [modifiedLocation, setModifiedLocation] = useState(null)
+    const [hasBeenModified, setHasBeenModified] = useState(false)
     const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
     const [deleteLocation, setDeleteLocation] = useState(null)
 
@@ -41,7 +41,7 @@ export default function ManageLocations(){
 
     useEffect(()=> {
         getLocations()
-    }, [modifiedLocation, deleteLocation])
+    }, [hasBeenModified, deleteLocation])
 
     return (
         <div className='manage-locations'>
@@ -80,7 +80,7 @@ export default function ManageLocations(){
                 show={displayEditModal}  
                 onHide={() => setDisplayEditModal(false)}
                 location={location}
-                setModifiedLocation={setModifiedLocation}   
+                setHasBeenModified={setHasBeenModified}   
             />
             
             <LocationDeleteModal 

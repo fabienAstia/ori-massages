@@ -7,3 +7,8 @@
     border: none;
     transform: scale(1.2);
 }
+
+#image-row{
+    width: 70px;
+    height: 60px;
+}

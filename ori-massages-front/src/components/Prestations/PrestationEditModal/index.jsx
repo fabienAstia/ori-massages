@@ -11,17 +11,28 @@ export default function PrestationEditModal(props){
     const [types, setTypes] = useState([])
     const [durations, setDurations] = useState([])
     const [form, setForm] = useState({
-        id:0,
+        id:-1,
         typeName:'',
         durationLabel:'',
         name:'',
         description:'',
-        price:0,
-        active:false,
-        imagePath:''
+        price:-1,
+        active:false
     })
+    const [imagePath, setImagePath] = useState('')
     const [charCount, setCharCount] = useState(0);
     const MAX_CHARS = 300;
+    const [file, setFile] = useState(null)
+    const [preview, setPreview ] = useState(null)
+
+    function validFields(){
+        return form.id >= 0 &&
+            form.typeName != '' && 
+            form.durationLabel != '' &&
+            form.name != '' &&
+            form.description != ''  &&
+            form.price >= 0 
+    }
 
     async function getDurations() {
         try {
@@ -58,9 +69,11 @@ export default function PrestationEditModal(props){
                 name: props.prestation.name,
                 description: props.prestation.description,
                 price: props.prestation.price,
-                active: props.prestation.active,
-                imagePath: props.prestation.imagePath
+                active: props.prestation.active
             })
+            setImagePath(props.prestation.imagePath)
+            setFile(null)
+            setCharCount(props.prestation.description.length)
         }
     }, [props.prestation])
 
@@ -76,6 +89,41 @@ export default function PrestationEditModal(props){
         </option>
     )
 
+    useEffect(()=> {
+        if(!file){
+            return setPreview(`${apiUrl}/uploads/prestations/${imagePath}`)
+        }
+        setPreview(URL.createObjectURL(file))
+    }, [imagePath, file])
+
+    async function submit(){
+        if (!file && !imagePath) {
+            alert("Une image est obligatoire")
+            return
+        }
+        try {
+            const formData = new FormData()
+            Object.entries(form).forEach(([key, value])=> {
+                formData.append(key, value)
+            }) 
+            if(file){
+                formData.append('image', file)
+            }
+
+            const resp = props.prestation 
+            ? await axios.post(`${apiUrl}/prestations/${props.prestation.id}`, formData)
+            : await axios.post(`${apiUrl}/prestations`, formData)
+            
+            alert('Prestation enregistrée !')
+            props.setHasBeenModified(true)
+            props.onHide()
+        }catch(err){
+            if(err.response) return console.log(err.response.data)
+            if(err.request) return console.log(err.request)
+            return console.log(err.message)
+        }
+    }
+
     return (
          <Modal show={props.show} onHide={props.onHide} size='lg'>
             <Modal.Header closeButton>
@@ -88,13 +136,15 @@ export default function PrestationEditModal(props){
             <Modal.Body>
                 
                 <Form>
+
                     <Form.Group className="mb-3" controlId='name'>
                         <Form.Label>Nom
                             <span className='text-danger'>*</span>
                         </Form.Label>
                         <Form.Control 
                             type='text'
-                            aria-label='prestation name' 
+                            required
+                            aria-label='name' 
                             value={form.name} 
                             onChange={(e)=> setForm({...form, name:e.target.value})}
                         />
@@ -106,6 +156,8 @@ export default function PrestationEditModal(props){
                         </Form.Label>
                         <Form.Select 
                             name='type'
+                            required
+                            aria-label='type' 
                             value={typesNames ? form.typeName : ''}
                             onChange={(e)=> setForm({...form, typeName:e.target.value})}
                         >
@@ -122,6 +174,8 @@ export default function PrestationEditModal(props){
                         </Form.Label>
                         <Form.Select 
                             name='duration'
+                            required
+                            aria-label='duration' 
                             value={durationsLabel ? form.durationLabel : ''}
                             onChange={(e)=> setForm({...form, durationLabel: e.target.value})}
                         >
@@ -137,6 +191,8 @@ export default function PrestationEditModal(props){
                             <Form.Control 
                                 type='number'
                                 name='price'
+                                required
+                                aria-label='price'
                                 value={form.price}
                                 onChange={(e)=> setForm({...form, price: e.target.value})}
                             />
@@ -150,10 +206,11 @@ export default function PrestationEditModal(props){
                         </Form.Label>
                         <Form.Control 
                             as='textarea'
-                            rows={2}
+                            rows={3}
                             required
                             maxLength={MAX_CHARS}
                             name='description'
+                            aria-label='description'
                             value={form.description}
                             onChange={(e)=> {
                                 setForm({...form, description: e.target.value}),
@@ -170,12 +227,38 @@ export default function PrestationEditModal(props){
                         <Form.Check 
                             type='switch'
                             name='active'
-                            value={form.active}
-                            onChange={(e)=>setForm({...form, description: e.target.value})
+                            required
+                            aria-label='is active ?'
+                            checked={form.active}
+                            onChange={(e)=>setForm({...form, active: e.target.checked})
                             }
                         />
                         <Form.Text className='text-muted'>
-                            Si elle n'est pas activée, la prestation ne sera pas proposée aux Utilisateurs
+                            ℹ️ Si elle n'est pas activée, la prestation ne sera pas proposée aux Utilisateurs
+                        </Form.Text>
+                    </Form.Group>
+
+              
+                    <Form.Group className="mb-3" controlId='image'>
+                        <Form.Label>Image
+                            <span className='text-danger'>*</span>
+                        </Form.Label>
+                        {preview &&
+                            <img 
+                                className='format-image'
+                                alt='preview'
+                                src={preview}
+                            />
+                        }
+                        <Form.Control 
+                            type='file'
+                            accept=".png, .jpeg, .jpg" 
+                            required={!imagePath}
+                            aria-label='new image' 
+                            onChange={(e) => setFile(e.target.files[0])}    
+                        />
+                        <Form.Text className="text-muted">
+                           ℹ️ Fichiers <span className='text-danger'>.jpeg, .jpg ou .png</span> acceptés.
                         </Form.Text>
                     </Form.Group>
               
@@ -185,8 +268,8 @@ export default function PrestationEditModal(props){
             <Modal.Footer>
                 <Button 
                     variant="primary" 
-                    // disabled={name == '' || description == ''}
-                    // onClick={submit}
+                    // disabled={validFields()}
+                    onClick={submit}
                 >
                     Save Changes
                 </Button>

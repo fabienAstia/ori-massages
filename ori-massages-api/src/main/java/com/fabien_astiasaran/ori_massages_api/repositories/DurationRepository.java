@@ -6,4 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface DurationRepository extends JpaRepository<Duration, Long> {
+
+    Duration findByLabel(String label);
 }

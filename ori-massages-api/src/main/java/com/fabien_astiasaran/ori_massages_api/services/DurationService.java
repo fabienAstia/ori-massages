@@ -24,6 +24,10 @@ public class DurationService {
         return DurationMapper.toAdminResponse(durations);
     }
 
+    public Duration getDuration(String label){
+        return durationRepository.findByLabel(label);
+    }
+
     public AdminDurationResponse createDuration(DurationCreate durationCreate){
         Duration duration = new Duration();
         duration.setValue(durationCreate.value());

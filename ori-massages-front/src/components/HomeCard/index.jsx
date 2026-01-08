@@ -3,7 +3,7 @@ import './HomeCard.css'
 export default function HomeCard({title, image, address, onClick, className=''}){
     return (
     <>
-    <section className={`homeCard `} onClick={onClick}>
+    <section className={`homeCard mb-4`} onClick={onClick}>
         <div className={`card h-100 custom-style--home ${className}`}>
 
             <img src={image} className={`card-img-top custom-img`} alt={title}/>

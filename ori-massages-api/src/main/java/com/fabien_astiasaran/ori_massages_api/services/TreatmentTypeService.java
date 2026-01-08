@@ -25,6 +25,10 @@ public class TreatmentTypeService {
         return TreatmentTypeMapper.toResponse(types);
     }
 
+    public TreatmentType getTreatmentType(String name){
+        return treatmentTypeRepository.findByName(name);
+    }
+
     public AdminTreatmentTypeResponse editTreatmentType(Long id, TreatmentTypeCreate treatmentTypeCreate){
         TreatmentType modifiedType = treatmentTypeRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("Type not found"));
         modifiedType.setName(treatmentTypeCreate.name());

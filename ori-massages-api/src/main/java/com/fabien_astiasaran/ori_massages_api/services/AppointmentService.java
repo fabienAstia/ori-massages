@@ -6,6 +6,8 @@ import com.fabien_astiasaran.ori_massages_api.entities.*;
 import com.fabien_astiasaran.ori_massages_api.mappers.AddressMapper;
 import com.fabien_astiasaran.ori_massages_api.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -28,6 +30,8 @@ public class AppointmentService {
     private AddressService addressService;
     private AddressRepository addressRepository;
 
+    private static final Logger log = LoggerFactory.getLogger(AppointmentService.class);
+
     public AppointmentService(AppointmentRepository appointmentRepository, PrestationRepository prestationRepository, LocationRepository locationRepository, DateService dateService, SlotService slotService, WorkingHoursRepository workingHoursRepository, UserService userService, MessageService messageService, AddressService addressService, AddressRepository addressRepository) {
         this.appointmentRepository = appointmentRepository;
         this.prestationRepository = prestationRepository;
@@ -42,7 +46,7 @@ public class AppointmentService {
     }
 
     public Appointment createAppointment(AppointmentCreate appointmentCreate){
-        System.out.println("appointmentCreate = " + appointmentCreate);
+        log.info("appointmentCreate = {}", appointmentCreate);
         Prestation prestation = prestationRepository.findById(appointmentCreate.slot().prestation().id())
                 .orElseThrow(()-> new EntityNotFoundException("Prestation not found"));
         Date date = dateService.findOrCreateDate(appointmentCreate.slot());

@@ -4,12 +4,16 @@ import { Table } from 'react-bootstrap'
 import axios from 'axios'
 import PrestationRow from '../../../components/Prestations/PrestationRow'
 import PrestationEditModal from '../../../components/Prestations/PrestationEditModal'
+import PrestationDeleteModal from '../../../components/Prestations/PrestationDeleteModal'
 const apiUrl = import.meta.env.VITE_API_URL
 
 export default function ManagePrestations(){
     const [prestations, setPrestations] = useState([])
     const [prestation, setPrestation] = useState(null)
     const [displayEditModal, setDisplayEditModal] = useState(false)
+    const [hasBeenModified, setHasBeenModified] = useState(false)
+    const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
+    const [deletePrestation, setDeletePrestation] = useState(null)
 
     async function getPrestations(){
         try{
@@ -23,7 +27,7 @@ export default function ManagePrestations(){
 
     useEffect(()=>{
         getPrestations()
-    }, [])
+    }, [hasBeenModified])
 
 
     const prestationsRows= prestations?.map((prestation, i) =>
@@ -63,6 +67,10 @@ export default function ManagePrestations(){
                 show={displayEditModal}
                 onHide={()=> setDisplayEditModal(false)}
                 prestation={prestation}
+                setHasBeenModified={setHasBeenModified}
+            />
+            <PrestationDeleteModal
+            
             />
         </div>
     )

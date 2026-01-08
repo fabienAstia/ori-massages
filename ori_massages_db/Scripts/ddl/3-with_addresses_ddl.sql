@@ -43,7 +43,7 @@ CREATE TABLE t_prestations(
 	description varchar(300) NOT NULL,
 	price numeric(6,2) NOT NULL,
 	is_active boolean DEFAULT TRUE,
-	image_path varchar(20) not null ,
+	image_path varchar(255) not null ,
 	duration_id int NOT NULL,
 	type_id int NOT NULL,
 	CONSTRAINT t_prestations_pk PRIMARY KEY (id),

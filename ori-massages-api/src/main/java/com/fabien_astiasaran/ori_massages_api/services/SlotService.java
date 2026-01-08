@@ -39,7 +39,7 @@ public class SlotService {
     public List<SlotResponse> getAvailableSlots(SlotAvailableCreate slotAvailableCreate){
         boolean isClosed = dateRepository.existsByDateAndDateStatus(slotAvailableCreate.date(), DateStatus.CLOSED);
         if(isClosed){ throw new DateClosedException(slotAvailableCreate.date());}
-        Prestation prestation = prestationRepository.findById(slotAvailableCreate.prestation().id())
+        Prestation prestation = prestationRepository.findById(slotAvailableCreate.prestationId())
                 .orElseThrow(() -> new EntityNotFoundException("Prestation Not Found"));
         List<WorkingHours> workingHours = workingHoursRepository.findAll();
         return createAvailableSlots(slotAvailableCreate, workingHours, prestation);
@@ -55,11 +55,11 @@ public class SlotService {
             LocalTime startWorkingHour = w.getStartTime();
             LocalTime endWorkingHour = w.getEndTime();
 
-            Integer visibleDuration = slotAvailableCreate.prestation().duration().value();
-            Integer realDuration = visibleDuration + slotAvailableCreate.prestation().duration().breakTime();
+            Integer visibleDuration = prestation.getDuration().getValue();
+            Integer realDuration = visibleDuration + prestation.getDuration().getBreakTime();
 
             LinkedHashSet<Slot> bookedSlotsOfTheWorkingHour = getBookedSlotsForWorkingHour(bookedSlots, startWorkingHour, endWorkingHour);
-            List<Window> windows = computeWindows(startWorkingHour, endWorkingHour, realDuration, bookedSlotsOfTheWorkingHour);
+            List<Window> windows = computeWindows(startWorkingHour, endWorkingHour, visibleDuration, bookedSlotsOfTheWorkingHour);
             generateSlotsFromWindow(slotAvailableCreate, prestation, w, windows, realDuration, visibleDuration, slots);
         });
         return slots;
@@ -68,20 +68,32 @@ public class SlotService {
     private static void generateSlotsFromWindow(SlotAvailableCreate slotAvailableCreate, Prestation prestation, WorkingHours w, List<Window> windows, Integer realDuration, Integer visibleDuration, List<SlotResponse> slots) {
         for(Window window : windows){
             int startSlot = localTimeToInt(window.start);
-            while(localTimeToInt(window.end) - startSlot >= realDuration){
-                SlotResponse slotResp =  new SlotResponse(
-                        null,
-                        localTimeToString(intToLocalTimeWithOffset(startSlot, 0)),
-                        localTimeToString(intToLocalTimeWithOffset(startSlot, visibleDuration)),
-                        localTimeToString(intToLocalTimeWithOffset(startSlot, realDuration)),
-                        slotAvailableCreate.date(),
-                        WorkingHoursMapper.toResponse(w),
-                        PrestationMapper.toResponse(prestation)
-                );
-                slots.add(slotResp);
-                startSlot += realDuration;
+            while(true){
+                int remaining = localTimeToInt(window.end) - startSlot;
+                if(remaining >= realDuration){
+                    addSlot(slotAvailableCreate, prestation, w, realDuration, visibleDuration, slots, startSlot);
+                    startSlot += realDuration;
+                    continue;
+                }
+                if(remaining >= visibleDuration){
+                    addSlot(slotAvailableCreate, prestation, w, realDuration, visibleDuration, slots, startSlot);
+                }
+                break;
             }
         }
+    }
+
+    private static void addSlot(SlotAvailableCreate slotAvailableCreate, Prestation prestation, WorkingHours w, Integer realDuration, Integer visibleDuration, List<SlotResponse> slots, int startSlot) {
+        SlotResponse slotResp =  new SlotResponse(
+                null,
+                localTimeToString(intToLocalTimeWithOffset(startSlot, 0)),
+                localTimeToString(intToLocalTimeWithOffset(startSlot, visibleDuration)),
+                localTimeToString(intToLocalTimeWithOffset(startSlot, realDuration)),
+                slotAvailableCreate.date(),
+                WorkingHoursMapper.toResponse(w),
+                PrestationMapper.toResponse(prestation)
+        );
+        slots.add(slotResp);
     }
 
     private static LinkedHashSet<Slot> getBookedSlotsForWorkingHour(Set<Slot> bookedSlots, LocalTime startWorkingHour, LocalTime endWorkingHour) {
@@ -94,7 +106,7 @@ public class SlotService {
 
     private record Window(LocalTime start, LocalTime end){}
 
-    private List<Window> computeWindows(LocalTime startWorkingHour, LocalTime endWorkingHour, int realDuration, LinkedHashSet<Slot> bookedSlots){
+    private List<Window> computeWindows(LocalTime startWorkingHour, LocalTime endWorkingHour, int visibleDuration, LinkedHashSet<Slot> bookedSlots){
         LocalTime cursor = startWorkingHour;
         List<Window> windows = new ArrayList<>();
 
@@ -103,7 +115,7 @@ public class SlotService {
                 LocalTime windowStart = cursor;
                 LocalTime windowEnd = bookedSlot.getBeginAt();
 
-                if(localTimeToInt(windowEnd) - localTimeToInt(windowStart) >= realDuration) {
+                if(localTimeToInt(windowEnd) - localTimeToInt(windowStart) >= visibleDuration) {
                     windows.add(new Window(windowStart, windowEnd));
                 }
                 cursor = bookedSlot.getEndAt();
@@ -113,7 +125,7 @@ public class SlotService {
             }
         }
         if(cursor.isBefore(endWorkingHour)
-                && (localTimeToInt(endWorkingHour) - localTimeToInt(cursor)) >= realDuration) {
+                && (localTimeToInt(endWorkingHour) - localTimeToInt(cursor)) >= visibleDuration) {
             windows.add(new Window(cursor, endWorkingHour));
         }
         return windows;

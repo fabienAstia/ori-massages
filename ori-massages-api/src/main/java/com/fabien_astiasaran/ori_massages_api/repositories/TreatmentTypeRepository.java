@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface TreatmentTypeRepository extends JpaRepository<TreatmentType, Long> {
+    TreatmentType findByName(String name);
 }
