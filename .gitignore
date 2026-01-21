@@ -22,3 +22,7 @@ npm-debug.log*
 .idea/
 .vscode/
 *.swp
+
+#Logs(tous projets)
+logs/
+*.log

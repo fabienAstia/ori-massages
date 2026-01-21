@@ -2,6 +2,7 @@ package com.fabien_astiasaran.ori_massages_api.dtos.admin;
 
 import com.fabien_astiasaran.ori_massages_api.validators.FileSize;
 import com.fabien_astiasaran.ori_massages_api.validators.FileType;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -10,10 +11,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 public class AdminPrestationCreate {
     @NotBlank private String name;
-    @NotBlank private String typeName;
-    @NotBlank private String durationLabel;
+    @NotNull private Long typeId;
+    @NotNull private Long durationId;
     @Positive private Integer price;
     @NotBlank private String description;
+    @NotNull @Min(value = 1) private Integer displayOrder;
     @NotNull private Boolean active;
     @FileType(types = {
             MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE, MediaType.IMAGE_GIF_VALUE
@@ -32,20 +34,28 @@ public class AdminPrestationCreate {
         this.name = name;
     }
 
-    public @NotBlank String getTypeName() {
-        return typeName;
+    public @NotNull Long getTypeId() {
+        return typeId;
     }
 
-    public void setTypeName(@NotBlank String typeName) {
-        this.typeName = typeName;
+    public void setTypeId(@NotNull Long typeId) {
+        this.typeId = typeId;
     }
 
-    public @NotBlank String getDurationLabel() {
-        return durationLabel;
+    public @NotNull Long getDurationId() {
+        return durationId;
     }
 
-    public void setDurationLabel(@NotBlank String durationLabel) {
-        this.durationLabel = durationLabel;
+    public void setDurationId(@NotNull Long durationId) {
+        this.durationId = durationId;
+    }
+
+    public @NotNull @Min(value = 1) Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(@NotNull @Min(value = 1) Integer displayOrder) {
+        this.displayOrder = displayOrder;
     }
 
     public @Positive Integer getPrice() {

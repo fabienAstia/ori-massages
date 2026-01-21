@@ -1,9 +1,9 @@
-.modal-header{
+.book-modal .modal-header{
     text-align: center;
     display: flex;
 }
 
-.modal-title {
+.book-modal .modal-title {
     text-align: center;
     flex: auto;
     position: relative;
@@ -18,12 +18,12 @@
 }
 
 
-.d-none{
+.book-modal .d-none{
     height: 0;
     opacity: 0;
     transform: translateY(-10px);
 }
- .d-hours{
+.book-modal .d-hours{
     height: auto;
     background-color: #f1fbfb  ;
     opacity: 1;
@@ -32,7 +32,7 @@
     border-radius: 12px;
 }
 
- .section-locations .d-locations{
+.book-modal .section-locations .d-locations{
     height: auto;
     background-color: #fff  ;
     width: 100% !important;
@@ -56,21 +56,21 @@
     background: #1d8c87;
 }
 
-.modal-body .btn.w-100 {
+.book-modal .modal-body .btn.w-100 {
   display: block;
   width: 100% !important;
   max-width: none;
 }
 
 
-.bg-custom{
+.book-modal .bg-custom{
     background-color: #009688 !important; 
     color: white !important;
     border: 2px solid #00796b;
     box-shadow: 0 2px 6px rgba(0, 150, 136, 0.3);
 }
 
-.btn-toggle.active {
+.book-modal .btn-toggle.active {
   background-color: #009688;
   color: white !important;
   border-color: #00796b;
@@ -78,14 +78,14 @@
   transform: scale(1.03);
 }
 
-.card.selected {
+.book-modal .card.selected {
   transform: scale(1.02);
-    box-shadow: 0 0 0 8px #b3ebe9, 0 0 12px 12px #b3ebe9;
+  box-shadow: 0 0 0 8px #b3ebe9, 0 0 12px 12px #b3ebe9;
   background-color: #f1fbfb;
   transition: all 0.3s ease;
 }
-.card:not(.selected):hover{
+.book-modal .card:not(.selected):hover{
  transform: scale(1.02);
  transition: 0.5s ease all;
-    cursor: pointer;
+ cursor: pointer;
 }

@@ -1,4 +1,37 @@
-.manage-prestations h1 {
+
+.manage-prestations .section-header{
+    display: flex;
+    align-items: center;
     margin-bottom: 2rem;
+}
+
+.manage-prestations h1 {
     text-align: center;
+    margin: 0;
+}
+
+.manage-prestations .add-type-btn{
+    border: none;
+    background: none;
+    height: 30px;
+    width: 30px;
+    margin-right: auto;
+    font-size: larger;
+    padding: 0;
+}
+
+.manage-prestations img{
+    width: 100%;
+}
+
+.manage-prestations .toSort{
+    background: none;
+    border: none;
+}
+
+.manage-prestations .picto{
+    height: 15px;
+    width: auto;
+    margin-left: 1px;
+    margin-right: 0;
 }

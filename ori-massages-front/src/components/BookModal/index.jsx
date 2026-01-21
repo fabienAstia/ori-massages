@@ -25,17 +25,6 @@ export default function BookModal(props) {
   const [location, setLocation] = useState(null);
   const [contactData, setContactData] = useState()
 
-  // useEffect(()=> {
-  //   const prestation = props.prestation
-  //   if(prestation){
-  //     setSlotsForm({...slotsForm, 
-  //       date:'',
-  //       prestationId: prestation.id,
-  //       durationId: prestation.durationId
-  //     })
-  //   }
-  // }, [])
-
   function setSlotsAndUnlockLocations(slot){
     if(activeSlot == slot){
       setActiveSlot(null)
@@ -180,6 +169,7 @@ export default function BookModal(props) {
 
   return (
     <Modal {...props} 
+      className='book-modal'
       aria-labelledby="contained-modal-title-vcenter"
       size='lg'
       onExit={()=>{

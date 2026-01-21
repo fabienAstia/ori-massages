@@ -6,25 +6,23 @@ import { Button } from 'react-bootstrap'
 import Address from '../../AddressForm'
 import axios from 'axios'
 const apiUrl = import.meta.env.VITE_API_URL
+const EMPTY_ADDRESS = {
+    streetNumber:'',
+    streetName:'',
+    complement:'',
+    zipCode:'',
+    city:''
+}
 
 export default function LocationEditModal(props){
-    function emptyAddress() {
-        return {
-            streetNumber:'',
-            streetName:'',
-            complement:'',
-            zipCode:'',
-            city:''
-        }
-    }
     const [name, setName] = useState('')
-    const [address, setAddress] = useState(emptyAddress())
+    const [address, setAddress] = useState(EMPTY_ADDRESS)
     const [imagePath, setImagePath] = useState('')
     const [file, setFile] = useState(null)
     const [preview, setPreview] = useState(null)
 
     function normalizeAddress(addr){
-        if(!addr) return emptyAddress()
+        if(!addr) return EMPTY_ADDRESS
         return {
             streetNumber: addr.streetNumber,
             streetName: addr.streetName,
@@ -43,7 +41,7 @@ export default function LocationEditModal(props){
         if(!location){
             setName('')
             setImagePath('')
-            setAddress(emptyAddress())
+            setAddress(EMPTY_ADDRESS)
             return;
         }
 
@@ -56,11 +54,13 @@ export default function LocationEditModal(props){
     }, [props.location])
 
     useEffect(()=> {
-        if(!file){
+        if(file){
+            setPreview(URL.createObjectURL(file))
+        } else if(imagePath){
             setPreview(`${apiUrl}/uploads/locations/${imagePath}`)
-            return;
+        } else {
+            setPreview(null)
         }
-        setPreview(URL.createObjectURL(file))
     }, [imagePath, file])
 
     async function submit(){
@@ -72,7 +72,7 @@ export default function LocationEditModal(props){
                 {name:name, atHome:false, address: JSON.stringify(address), image:file})
             
             alert('new location !')
-            props.setHasBeenModified(true)
+            props.setHasBeenModified(!props.hasBeenModified)
             props.onHide()
         }catch(err){
             if(err.response) return console.log(err.response.data)
@@ -82,7 +82,18 @@ export default function LocationEditModal(props){
     }
 
     return (
-       <Modal show={props.show} onHide={props.onHide} size='lg'>
+        <Modal 
+            show={props.show} 
+            onHide={props.onHide} 
+            onExit={()=>{
+                setFile(null)
+                setPreview(null)
+                setName('')
+                setImagePath('')
+                setAddress(EMPTY_ADDRESS)
+            }}
+            size='lg'
+        >
             <Modal.Header closeButton>
             <Modal.Title>
                 {props.location? 'Modifier un Lieu' : 'Ajouter un Lieu'}
@@ -98,7 +109,7 @@ export default function LocationEditModal(props){
                             required
                             value={name}
                             name='name'
-                            onChange={(e) =>  setName(e.target.value)}
+                            onChange={(e) => setName(e.target.value)}
                         />
                     </Form.Group>
 
@@ -118,6 +129,7 @@ export default function LocationEditModal(props){
                         {preview &&
                             <img 
                                 className='format-image'
+                                alt='preview'
                                 src={preview}
                             />
                         }

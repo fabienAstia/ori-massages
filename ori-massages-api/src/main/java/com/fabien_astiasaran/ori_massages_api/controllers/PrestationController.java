@@ -1,10 +1,12 @@
 package com.fabien_astiasaran.ori_massages_api.controllers;
 
-import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminPrestationEdit;
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminPrestationCreate;
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminPrestationUpdate;
 import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminPrestationResponse;
 import com.fabien_astiasaran.ori_massages_api.dtos.PrestationResponse;
 import com.fabien_astiasaran.ori_massages_api.services.PrestationService;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,23 +21,29 @@ public class PrestationController {
         this.service = service;
     }
 
-    @GetMapping("/active")
-    public List<PrestationResponse> getAllActivePrestations(){
-        return service.getAllActivePrestations();
-    }
-
     @GetMapping
     public List<AdminPrestationResponse> getAllPrestations(){
         return service.getAllPrestations();
     }
 
-    @PostMapping("/{id}")
-    public void editPrestation(@PathVariable Long id, @Valid @ModelAttribute AdminPrestationEdit adminPrestationEdit){
-        service.editPrestation(id, adminPrestationEdit);
+    @GetMapping("/active")
+    public List<PrestationResponse> getAllActivePrestations(){
+        return service.getAllActivePrestations();
     }
 
     @PostMapping()
-    public void createPrestation(@Valid @ModelAttribute AdminPrestationEdit adminPrestationEdit){
-        service.createPrestation(adminPrestationEdit);
+    @ResponseStatus(HttpStatus.CREATED)
+    public void createPrestation(@Valid @ModelAttribute AdminPrestationCreate adminPrestationCreate){
+        service.createPrestation(adminPrestationCreate);
+    }
+
+    @PostMapping("/{id}")
+    public void updatePrestation(@PathVariable Long id, @Valid @ModelAttribute AdminPrestationUpdate adminPrestationUpdate){
+        service.updatePrestation(id, adminPrestationUpdate);
+    }
+
+    @DeleteMapping("/{id}")
+    public void deletePrestation(@PathVariable Long id){
+        service.deletePrestation(id);
     }
 }

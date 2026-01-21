@@ -24,6 +24,9 @@ public class Prestation {
     @Column(name = "price")
     private Double price;
 
+    @Column(name = "display_order")
+    private Integer displayOrder;
+
     @Column(name = "is_active")
     private boolean active;
 
@@ -43,13 +46,13 @@ public class Prestation {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Prestation prestation = (Prestation) o;
-        return Objects.equals(duration, prestation.duration)
+        return Objects.equals(name, prestation.name)
                 && Objects.equals(treatmentType, prestation.treatmentType);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(duration, treatmentType);
+        return Objects.hash(name, treatmentType);
     }
 
     @Override
@@ -58,8 +61,10 @@ public class Prestation {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", price=" + price +
+                ", displayOrder=" + displayOrder +
                 ", active=" + active +
-                ", imagePath=" + imagePath +
+                ", imagePath='" + imagePath + '\'' +
                 ", duration=" + duration +
                 ", treatmentType=" + treatmentType +
                 '}';
@@ -123,5 +128,13 @@ public class Prestation {
 
     public void setPrice(Double price) {
         this.price = price;
+    }
+
+    public Integer getDisplayOrder() {
+        return displayOrder;
+    }
+
+    public void setDisplayOrder(Integer displayOrder) {
+        this.displayOrder = displayOrder;
     }
 }
