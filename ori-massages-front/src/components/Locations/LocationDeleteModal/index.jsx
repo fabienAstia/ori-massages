@@ -9,7 +9,7 @@ export default function LocationDeleteModal(props){
     async function handleDelete() {
         try{
             await axios.delete(`${apiUrl}/locations/${props.location.id}`)
-            props.setDeleteLocation(props.location)
+            props.setHasBeenModified(!props.hasBeenModified)
             props.onHide()
         }catch (err){
             if (err.response) console.log(err.response)

@@ -8,6 +8,7 @@ public record PrestationResponse(
         String name,
         String description,
         Double price,
+        Integer displayOrder,
         boolean active,
         String imagePath
 ) {

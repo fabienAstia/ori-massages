@@ -9,12 +9,10 @@ import add from '../../../assets/pictos/add.svg'
 const apiUrl = import.meta.env.VITE_API_URL
 
 export default function ManageDurations(){
-
     const [durations, setDurations] = useState([])
     const [duration, setDuration] = useState(null)
     const [displayEditModal, setDisplayEditModal] = useState(false)
     const [displayDeleteModal, setDiplayDeleteModal] = useState(false)
-
     const [modifiedDuration, setModifiedDuration] = useState(null)
     const [deleteDuration, setDeleteDuration] = useState(null)
 
@@ -23,8 +21,9 @@ export default function ManageDurations(){
             const resp = await axios.get(`${apiUrl}/durations`)
             setDurations(resp.data)
         }catch(err){
-            if(err.response) console.log(err.response)
-            if(err.request) console.log(err.request)
+            if(err.response) return console.log(err.response.data)
+            if(err.request) return console.log(err.request)
+            return console.log(err.message)
         }
     }
 

@@ -17,6 +17,7 @@ public final class PrestationMapper {
                 prestation.getName(),
                 prestation.getDescription(),
                 prestation.getPrice(),
+                prestation.getDisplayOrder(),
                 prestation.isActive(),
                 prestation.getImagePath()
         );
@@ -25,11 +26,14 @@ public final class PrestationMapper {
     public static AdminPrestationResponse toAdminResponse(Prestation prestation) {
         return new AdminPrestationResponse(
                 prestation.getId(),
+                prestation.getTreatmentType().getId(),
                 prestation.getTreatmentType().getName(),
+                prestation.getDuration().getId(),
                 prestation.getDuration().getLabel(),
                 prestation.getName(),
                 prestation.getDescription(),
                 prestation.getPrice(),
+                prestation.getDisplayOrder(),
                 prestation.isActive(),
                 prestation.getImagePath()
         );

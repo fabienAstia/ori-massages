@@ -9,14 +9,11 @@ import LocationDeleteModal from '../../../components/Locations/LocationDeleteMod
 const apiUrl = import.meta.env.VITE_API_URL
 
 export default function ManageLocations(){
-
     const [locations, setLocations] = useState([])
     const [location, setLocation] = useState(null)
     const [displayEditModal, setDisplayEditModal] = useState(false)
     const [hasBeenModified, setHasBeenModified] = useState(false)
     const [displayDeleteModal, setDisplayDeleteModal] = useState(false)
-    const [deleteLocation, setDeleteLocation] = useState(null)
-
 
     async function getLocations(){
         try {
@@ -41,24 +38,24 @@ export default function ManageLocations(){
 
     useEffect(()=> {
         getLocations()
-    }, [hasBeenModified, deleteLocation])
+    }, [hasBeenModified])
 
     return (
         <div className='manage-locations'>
             <div className='section-header'>
-                    <h1 className='mx-auto'>Gérer les Lieux</h1>
-                    <div className='add-type'>
-                        <button 
-                            className='add-type-btn'
-                            onClick={() => {
-                                setDisplayEditModal(true)
-                                setLocation(null)
-                            }}
-                        >
-                            <img src={add} alt="button to add a new Location" /> 
-                        </button>
-                    </div>
+                <h1 className='mx-auto'>Gérer les Lieux</h1>
+                <div className='add-type'>
+                    <button 
+                        className='add-type-btn'
+                        onClick={() => {
+                            setDisplayEditModal(true)
+                            setLocation(null)
+                        }}
+                    >
+                        <img src={add} alt="button to add a new Location" /> 
+                    </button>
                 </div>
+            </div>
 
             <Table striped bordered hover>
                 <thead className='text-center align-middle'>
@@ -80,6 +77,7 @@ export default function ManageLocations(){
                 show={displayEditModal}  
                 onHide={() => setDisplayEditModal(false)}
                 location={location}
+                hasBeenModified={hasBeenModified}
                 setHasBeenModified={setHasBeenModified}   
             />
             
@@ -87,7 +85,8 @@ export default function ManageLocations(){
                 show={displayDeleteModal}
                 onHide={() => setDisplayDeleteModal(false)}
                 location={location}
-                setDeleteLocation={setDeleteLocation}
+                hasBeenModified={hasBeenModified}
+                setHasBeenModified={setHasBeenModified}   
             />
         </div>
     )

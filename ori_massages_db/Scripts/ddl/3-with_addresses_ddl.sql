@@ -42,6 +42,7 @@ CREATE TABLE t_prestations(
 	name varchar(50) NOT NULL,
 	description varchar(300) NOT NULL,
 	price numeric(6,2) NOT NULL,
+	display_order int not null check (display_order > 0),
 	is_active boolean DEFAULT TRUE,
 	image_path varchar(255) not null ,
 	duration_id int NOT NULL,
@@ -51,8 +52,10 @@ CREATE TABLE t_prestations(
 		REFERENCES t_durations(id),
 	CONSTRAINT t_prestations_type_id_fk FOREIGN key(type_id)
 		REFERENCES t_treatment_types(id),
-	CONSTRAINT t_prestations_duration_id_type_id_uk UNIQUE (duration_id, type_id),
-	CONSTRAINT t_prestations_description_uk UNIQUE (description)
+	CONSTRAINT t_prestations_duration_id_type_id_uk UNIQUE (name, type_id),
+	CONSTRAINT t_prestations_description_uk UNIQUE (description),
+	CONSTRAINT t_prestations_type_display_order_uk UNIQUE (type_id, display_order) 
+		DEFERRABLE INITIALLY DEFERRED
 );
 CREATE INDEX idx_prestations_type_id ON t_prestations(type_id);
 

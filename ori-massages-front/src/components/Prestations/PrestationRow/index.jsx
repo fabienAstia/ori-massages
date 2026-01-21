@@ -1,10 +1,9 @@
 import './PrestationRow.css'
 import Pencil from '../../../assets/pictos/pencil.svg'
 import Trash from '../../../assets/pictos/trash.svg'
-import { useEffect } from 'react'
 const apiUrl = import.meta.env.VITE_API_URL
 
-export default function PrestationRow({prestation, index, setPrestation, setDisplayEditModal}){
+export default function PrestationRow({prestation, index, setPrestation, setDisplayEditModal, setDisplayDeleteModal}){
 
     return(
         <tr>
@@ -18,6 +17,7 @@ export default function PrestationRow({prestation, index, setPrestation, setDisp
             </td>
             <td>{prestation.name}</td>
             <td>{prestation.typeName}</td>
+            <td>{prestation.displayOrder}</td>
             <td>{prestation.durationLabel}</td>
             <td>{prestation.price}€</td>
             <td>{prestation.description}</td>

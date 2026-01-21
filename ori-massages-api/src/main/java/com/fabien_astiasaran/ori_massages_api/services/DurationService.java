@@ -24,8 +24,9 @@ public class DurationService {
         return DurationMapper.toAdminResponse(durations);
     }
 
-    public Duration getDuration(String label){
-        return durationRepository.findByLabel(label);
+    public Duration getDurationById(Long id){
+        return durationRepository.findById(id).orElseThrow(()->
+                new EntityNotFoundException(String.format("Duration not found with ID : %d", id)));
     }
 
     public AdminDurationResponse createDuration(DurationCreate durationCreate){

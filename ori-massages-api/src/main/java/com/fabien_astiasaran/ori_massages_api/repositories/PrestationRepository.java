@@ -9,5 +9,8 @@ import java.util.List;
 @Repository
 public interface PrestationRepository extends JpaRepository<Prestation, Long> {
 
-    List<Prestation> findAllByActiveTrue();
+    List<Prestation> findAllByActiveTrueOrderByDisplayOrder();
+
+    List<Prestation> findByTreatmentTypeId(Long typeId);
+
 }

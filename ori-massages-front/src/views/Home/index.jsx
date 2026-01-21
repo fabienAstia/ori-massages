@@ -60,6 +60,7 @@ export default function Home(){
                     <NavLink to="/services" className="navButton btn btn-outline-primary ">Voir plus</NavLink>
                 </div>              
             </section>
+            
             <section className='about-me-preview'>
                 <h2>À propos</h2>
                 <div className='d-flex'>

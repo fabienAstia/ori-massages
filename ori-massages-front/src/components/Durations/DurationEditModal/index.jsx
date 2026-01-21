@@ -42,7 +42,7 @@ export default function DurationEditModal(props){
          <Modal show={props.show} onHide={props.onHide} size='lg'>
             <Modal.Header closeButton>
             <Modal.Title>
-                {props.duration? 'Modifier la Durée de prestation' : 'Ajouter une Durée'}
+                {props.duration? 'Modifier la Durée' : 'Ajouter une Durée'}
             </Modal.Title>
             </Modal.Header>
             <Modal.Body>
@@ -94,7 +94,11 @@ export default function DurationEditModal(props){
             <Modal.Footer>
                 <Button 
                     variant="primary" 
-                    disabled={value == '' || label == '' || breakTime == ''}
+                    disabled={
+                        value === '' || 
+                        label === '' || 
+                        breakTime === '' 
+                    }
                     onClick={submit}
                 >
                     Save Changes
