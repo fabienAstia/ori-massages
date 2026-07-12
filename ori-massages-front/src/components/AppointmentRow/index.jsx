@@ -1,8 +1,9 @@
 import './AppointmentRow.css'
 import { frenchDate } from '../../utils/dateUtils'
 import {Link} from 'react-router-dom'
+import PossibleStatuses from '../PossibleStatuses'
 
-export default function AppointmentRow({appointment, index}){
+export default function AppointmentRow({appointment, index, onChangeStatus}){
 
     const addressOrLocationName = (appointment)=>{
         if(appointment.atHome){
@@ -11,6 +12,12 @@ export default function AppointmentRow({appointment, index}){
             return appointment.locationName
         }
     }
+
+    function handleChangeStatus(targetStatus){
+        onChangeStatus(targetStatus, appointment.id)
+    }
+
+    const disabled = appointment.possibleStatuses.length === 0
 
     return (
         <tr>
@@ -21,8 +28,20 @@ export default function AppointmentRow({appointment, index}){
             <td>{frenchDate(appointment.dateMeeting)}</td>
             <td>{frenchDate(appointment.dateCreation)}</td>
             <td>{addressOrLocationName(appointment)}</td> 
-            <td>{appointment.status}</td>
-            
+            <td>
+                <span style={{color: appointment.status.color}}>
+                    <b>
+                        {appointment.status.label.toUpperCase()}
+                    </b>
+                </span>
+            </td>
+            <td>
+                <PossibleStatuses
+                    possibleStatuses = {appointment.possibleStatuses}
+                    onChangeStatus = {handleChangeStatus}
+                    disabled = {disabled}
+                />
+            </td>
         </tr>
     )
 }

@@ -11,7 +11,7 @@ export default function Contact({bookModalSubmit, isAtHome}){
     const [phoneNumber, setPhoneNumber] = useState('')
     const {register, handleSubmit, setValue, formState:{errors}} = useForm();
     
-    const  onChangePhoneNumber = (e) => {
+    const onChangePhoneNumber = (e) => {
         let formatted = (e.target.value).replace(/[^\d]/g, "")
         setPhoneNumber(formatted);
         return phoneNumber;
@@ -41,6 +41,7 @@ export default function Contact({bookModalSubmit, isAtHome}){
             }catch(err){
                 if(err.response){
                     console.error('POST FAILED with status= ' + err.response.status)
+                    alert('youhou')
                 } else {
                     console.error(err)
                     alert(err)

@@ -157,6 +157,7 @@ export default function BookModal(props) {
           props.onHide();
       }catch(err){
           if(err.response){
+            alert(`${err.response.status} \r${err.response.data.fieldsErrors.user.phoneNumber[0]}`)
               console.error('POST FAILED with status= ' + err.response.status)
               console.error('POST FAILED with data= ' + err.response.data)
               console.error('POST FAILED with field= ' + err.response.data.fieldsErrors)
