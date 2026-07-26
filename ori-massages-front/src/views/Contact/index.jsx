@@ -12,7 +12,7 @@ export default function Contact({bookModalSubmit, isAtHome}){
     const {register, handleSubmit, setValue, formState:{errors}} = useForm();
     
     const onChangePhoneNumber = (e) => {
-        let formatted = (e.target.value).replace(/[^\d]/g, "")
+        let formatted = (e.target.value).replace(/[^\d+]/g, "")
         setPhoneNumber(formatted);
         return phoneNumber;
     }
@@ -30,7 +30,10 @@ export default function Contact({bookModalSubmit, isAtHome}){
         }
     }
     
+console.log(errors, 'errors')
+
     const onSubmit = async(data) => {
+        console.log('dataInput= ', data)
         if(bookModalSubmit){
             bookModalSubmit(data)
         }else{
@@ -67,10 +70,10 @@ export default function Contact({bookModalSubmit, isAtHome}){
                         Merci de renseigner vos informations pour confirmer votre réservation.
                     </p>
                 }
-               
             </div>
           
             <div className='d-flex mt-1 justify-content-center'>
+
                 <form onSubmit={handleSubmit(onSubmit)}>
 
                     <div className={'row row-cols-2'}>
@@ -80,7 +83,18 @@ export default function Contact({bookModalSubmit, isAtHome}){
                                 <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
                                 <input 
                                     {...register("phoneNumber", {
-                                        required:true, 
+                                        required:"Phone number is required", 
+                                        pattern: {
+                                            value: /^\+?[\d\s()-]+$/,
+                                            message: "⚠ Seuls les chiffres, (), -, +, sont acceptés comme caractère"
+                                        },
+                                        validate: (value) => {
+                                            const digits = value.replace(/\D/g, "");
+                                            if (digits.length < 10 || digits.length > 15) {
+                                                return "Le numéro de téléphone doit avoir entre 10 et 15 chiffres";
+                                            }
+                                            return true;
+                                        },
                                         onChange: (e) => { onChangePhoneNumber(e)},
                                         onBlur: (e) => {e.target.value = onBlurPhoneNumber(e.target.value)}
                                     })}
@@ -89,9 +103,8 @@ export default function Contact({bookModalSubmit, isAtHome}){
                                     id="phoneNumber"
                                     maxLength={14}
                                     aria-describedby="phone_number"
-                                    required
                                 />
-                                {errors.phoneNumber && <span className='text-danger fw-bold'>This field is required</span>}
+                                {errors.phoneNumber && <span className='text-danger fw-bold'>{errors.phoneNumber.message}</span>}
                             </div>
                             }
                         </div>
@@ -208,6 +221,7 @@ export default function Contact({bookModalSubmit, isAtHome}){
                     <div className='justify-content-center d-flex'>
                         <button type="submit" className="btn btn-primary custom-btn">Submit</button>
                     </div>
+                    
                 </form>
             </div>
             
