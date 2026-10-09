@@ -1,8 +1,7 @@
 package com.fabien_astiasaran.ori_massages_api.dtos.admin;
 
-import com.fabien_astiasaran.ori_massages_api.entities.AppointmentStatus;
-
 import java.time.LocalDate;
+import java.util.List;
 
 public record AdminAppointmentResponse(
         Long id,
@@ -15,6 +14,7 @@ public record AdminAppointmentResponse(
         boolean atHome,
         String locationName,
         String address,
-        AppointmentStatus status
+        AdminAppointmentStatusRequest status,
+        List<AdminPossibleStatus> possibleStatuses
 ) {
 }

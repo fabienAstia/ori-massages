@@ -1,5 +1,6 @@
 package com.fabien_astiasaran.ori_massages_api.controllers.errors;
 
+import com.fabien_astiasaran.ori_massages_api.exceptions.AppointmentNotFoundException;
 import com.fabien_astiasaran.ori_massages_api.exceptions.DateClosedException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpHeaders;
@@ -42,6 +43,16 @@ public class ControllerAdvice extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(DateClosedException.class)
     protected ResponseEntity<Object> handleDateClosedException(DateClosedException e) {
-        return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        CustomErrors customErrors = new CustomErrors();
+        customErrors.addGlobalError(e.getMessage());
+        return new ResponseEntity<>(customErrors, HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(AppointmentNotFoundException.class)
+    protected ResponseEntity<Object> handleAppointmentNotFoundException(AppointmentNotFoundException e) {
+        CustomErrors customErrors = new CustomErrors();
+        customErrors.addGlobalError(e.getMessage());
+        return new ResponseEntity<>(customErrors, HttpStatus.NOT_FOUND);
+    }
+
 }
