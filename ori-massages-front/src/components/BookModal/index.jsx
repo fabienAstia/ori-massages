@@ -23,7 +23,17 @@ export default function BookModal(props) {
   const [activeSlot, setActiveSlot] = useState(null);
   const [locations, setLocations] = useState(null);
   const [location, setLocation] = useState(null);
-  const [contactData, setContactData] = useState()
+  const [contactData, setContactData] = useState(null);
+
+  function resetSelection(){
+    setDate(null);
+    setShowHours(false);
+    setSlots(null);
+    setShowLocations(false);
+    setActiveSlot(null);
+    setLocation(null);
+    setContactData(null);
+  }
 
   function setSlotsAndUnlockLocations(slot){
     if(activeSlot == slot){
@@ -58,9 +68,14 @@ export default function BookModal(props) {
   }
 
   function handleDateChange(data){
+    resetSelection();
+    if(data === undefined){
+      return;
+    }
     const withoutOffset = getDateWithoutOffset(data);
     setDate(withoutOffset);
     getSlots(withoutOffset);
+    setShowHours(true);
   }
 
   const slotList = slots?.map((slot, id) => {
@@ -174,12 +189,7 @@ export default function BookModal(props) {
       aria-labelledby="contained-modal-title-vcenter"
       size='lg'
       onExit={()=>{
-        setDate('');
-        setShowHours(false); 
-        setActiveSlot(null); 
-        setShowLocations(false); 
-        setLocation(null);
-        setContactData(null);
+        resetSelection();
       }}>
       <Modal.Header closeButton>
         <Modal.Title id="contained-modal-title-vcenter">
@@ -207,11 +217,13 @@ export default function BookModal(props) {
             </Col>
           </Row>
 
-          {date != '' &&
+          {date != null &&
             <>
             <Row className='my-2 d-flex'>
               <Col xl={12} className='d-flex justify-content-center w-100'>
-                <Button onClick={() => {setShowHours(!showHours)}} className={`w-100 ${showHours ? 'bg-custom' : 'bg-none'}`}>{showHours ? 'Masquer les horaires' : 'Afficher les horaires'}</Button>
+                <div className='my-2 d-flex justify-content-center align-items-center w-100 bg-custom'>
+                  <span className='fw-bold'>Choisissez un créneau horaire</span>
+                </div>
               </Col>
             </Row>
             <Row className={`section-hours ${showHours ? 'd-hours' : 'd-none'}`} >
@@ -222,7 +234,9 @@ export default function BookModal(props) {
 
             <Row className={`section-locations ${showLocations ? 'd-locations' : 'd-none'}`} >
               <Col xl={12} >
-                <Button onClick={() => {setShowLocations(activeSlot != null)}} className={`w-100 ${showLocations ? 'bg-custom' : 'bg-none'}`}>Choisissez un lieu</Button>
+                <Button onClick={() => {setShowLocations(activeSlot != null)}} className={`w-100 ${showLocations ? 'bg-custom' : 'bg-none'}`}>
+                  Choisissez un lieu
+                </Button>
               </Col>
             </Row>
             <Row className={`row row-cols-2 row-cols-md-2 row-cols-lg-3 justify-content-around my-3 ${showLocations ? 'd-locations' : 'd-none'}`}>

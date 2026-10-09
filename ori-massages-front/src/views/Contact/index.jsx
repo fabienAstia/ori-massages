@@ -83,7 +83,7 @@ console.log(errors, 'errors')
                                 <label htmlFor="phoneNumber" className="form-label">Téléphone : <span className="red"> *</span></label>
                                 <input 
                                     {...register("phoneNumber", {
-                                        required:"Phone number is required", 
+                                        required:"Le numéro de téléphone est requis", 
                                         pattern: {
                                             value: /^\+?[\d\s()-]+$/,
                                             message: "⚠ Seuls les chiffres, (), -, +, sont acceptés comme caractère"
