@@ -1,0 +1,10 @@
+.eye-button{
+    background: none;
+    border: none;
+}
+
+.eye-button:hover{
+    background: none;
+    border: none;
+    transform: scale(1.3);
+}

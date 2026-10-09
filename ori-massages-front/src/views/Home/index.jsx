@@ -20,7 +20,7 @@ export default function Home(){
                     </h1>
                     <nav className='row justify-content-evenly g-3 g-md-5 mt-sm-1 mt-md-2'>
                         <div className='col-12 col-sm-6 col-md-3 d-flex  justify-content-center'>
-                            <NavLink to="/services" className="navButton btn btn-outline-light w-100">Prestations</NavLink>
+                            <NavLink to="/services" className="navButton btn btn-outline-light w-100">Réservation</NavLink>
                         </div>
                         <div className='col-12 col-sm-6 col-md-3 d-flex  justify-content-center'>
                             <NavLink to="/about-me" className='navButton btn btn-outline-light w-100'>À propos</NavLink>

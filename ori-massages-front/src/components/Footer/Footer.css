@@ -27,12 +27,12 @@
 
 .footerWrapper .footerElement{
     color:#f9f6dc;
-    font-family: 'Quicksand' sans-serif;
+    font-family: 'Quicksand', sans-serif;
     font-size: 1.2rem;
 }
 
 .footerWrapper .footerElement:hover{
     color:#f9f6dc;
-    font-family: 'Quicksand' sans-serif;
+    font-family: 'Quicksand', sans-serif;
     font-size: 1.2rem;
 }

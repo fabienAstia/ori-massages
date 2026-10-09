@@ -1,0 +1,8 @@
+#status-filter{
+    padding: 2px;
+    padding-right: 0;
+}
+
+#status-filter:hover{
+    background-color: aquamarine;
+}

@@ -66,7 +66,7 @@ class AppointmentServiceTest {
         saved.setSlot(slot);
         saved.setUser(user);
         saved.setAddress(address);
-        saved.setStatus(AppointmentStatus.REGISTERED);
+        saved.setStatus(AppointmentStatus.CONFIRMED);
 
         when(prestationRepository.findById(any())).thenReturn(Optional.of(new Prestation()));
         when(dateService.findOrCreateDate(any())).thenReturn(new Date());
@@ -85,7 +85,7 @@ class AppointmentServiceTest {
         assertEquals(slot, result.getSlot());
         assertEquals(user, result.getUser());
         assertEquals(address, result.getAddress());
-        assertEquals(AppointmentStatus.REGISTERED, result.getStatus());
+        assertEquals(AppointmentStatus.CONFIRMED, result.getStatus());
     }
 
     private static SlotCreate getSlotCreate() {
@@ -99,17 +99,17 @@ class AppointmentServiceTest {
                         LocalTime.of(13, 00),
                         "Morning WorkingHours"
                 ),
-                new PrestationResponse(1L,
-                        "45min massage",
-                        "description",
-                        60.0,
+                new PrestationResponse(
+                        1L,
+                        "Massages",
+                        2L,
+                        "60 min",
+                         "Avec huiles",
+                        "Massages du corps entier relaxant avec des huiles essentielles",
+                        99.0,
+                        1,
                         true,
-                        "imagePath",
-                        new DurationResponse(1L,
-                                45,
-                                "little massage",
-                                5
-                        )
+                        "imagePath"
                 )
         );
     }

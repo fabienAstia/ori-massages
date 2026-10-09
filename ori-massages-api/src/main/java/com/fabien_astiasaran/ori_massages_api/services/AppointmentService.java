@@ -2,18 +2,24 @@ package com.fabien_astiasaran.ori_massages_api.services;
 
 import com.fabien_astiasaran.ori_massages_api.dtos.*;
 import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminAppointmentResponse;
+import com.fabien_astiasaran.ori_massages_api.dtos.admin.AdminUpdateAppointmentStatus;
 import com.fabien_astiasaran.ori_massages_api.entities.*;
+import com.fabien_astiasaran.ori_massages_api.exceptions.AppointmentNotFoundException;
+import com.fabien_astiasaran.ori_massages_api.exceptions.PrestationNotFoundException;
 import com.fabien_astiasaran.ori_massages_api.mappers.AddressMapper;
 import com.fabien_astiasaran.ori_massages_api.repositories.*;
 import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Comparator;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
+import static com.fabien_astiasaran.ori_massages_api.mappers.AppointmentMapper.toAdminResponse;
+import static com.fabien_astiasaran.ori_massages_api.mappers.AppointmentStatusMapper.toAdminRequest;
+import static com.fabien_astiasaran.ori_massages_api.services.AppointmentStatusService.getPossibleStatuses;
 import static com.fabien_astiasaran.ori_massages_api.utils.TimeUtils.localTimeToString;
 
 @Service
@@ -45,23 +51,43 @@ public class AppointmentService {
         this.addressRepository = addressRepository;
     }
 
+    public List<AdminAppointmentResponse> getAppointments(){
+        List<Appointment> appointments = appointmentRepository.findAll();
+        appointments.sort(Comparator.comparing(a -> a.getStatus().getOrder()));
+        return toAdminResponse(appointments);
+    }
+
+    @Transactional
     public Appointment createAppointment(AppointmentCreate appointmentCreate){
         log.info("appointmentCreate = {}", appointmentCreate);
-        Prestation prestation = prestationRepository.findById(appointmentCreate.slot().prestation().id())
-                .orElseThrow(()-> new EntityNotFoundException("Prestation not found"));
+
+        Long prestationId = appointmentCreate.slot().prestation().id();
+        Prestation prestation = prestationRepository.findById(prestationId).orElseThrow(()->
+                new PrestationNotFoundException(String.format("Prestation not found with ID: %d", prestationId)));
         Date date = dateService.findOrCreateDate(appointmentCreate.slot());
-        WorkingHours workingHours = workingHoursRepository.findById(appointmentCreate.slot().workingHours().id())
-                .orElseThrow(()-> new EntityNotFoundException("WorkingHours not found"));
+
+        Long workingHoursId = appointmentCreate.slot().workingHours().id();
+        WorkingHours workingHours = workingHoursRepository.findById(workingHoursId).orElseThrow(()->
+                new EntityNotFoundException(String.format("WorkingHours not found with ID: %d", workingHoursId)));
+
         Slot slot = slotService.createSlot(appointmentCreate, date, workingHours, prestation);
         User user = userService.findOrCreateUser(appointmentCreate);
 
-        Location location = locationRepository.findById(appointmentCreate.locationId())
-                .orElseThrow(()-> new EntityNotFoundException("Location not found"));
+        Location location = locationRepository.findById(appointmentCreate.locationId()).orElseThrow(()->
+                new EntityNotFoundException(String.format("Location not found with this ID : %d", appointmentCreate.locationId())));
         Address address = resolveAddress(appointmentCreate, user, location);
 
         Appointment appointment = buildAndSaveAppointment(slot, user, address);
         messageService.createMessageIfPresent(appointmentCreate, user, appointment);
         return appointment;
+    }
+
+    @Transactional
+    public AdminAppointmentResponse updateAppointment(Long id, AdminUpdateAppointmentStatus request) {
+        Appointment toUpdate = appointmentRepository.findById(id).orElseThrow(() ->
+                new AppointmentNotFoundException(String.format("No Appointment found with this ID: %s", id)));
+        toUpdate.setStatus(request.targetStatus());
+        return toAdminResponse(appointmentRepository.save(toUpdate));
     }
 
     public Address resolveAddress(AppointmentCreate appointmentCreate, User user, Location location) {
@@ -80,26 +106,8 @@ public class AppointmentService {
         appointment.setSlot(slot);
         appointment.setUser(user);
         appointment.setAddress(address);
-        appointment.setStatus(AppointmentStatus.REGISTERED);
+        appointment.setStatus(AppointmentStatus.CONFIRMED);
         return appointmentRepository.save(appointment);
     }
 
-    public List<AdminAppointmentResponse> getAppointments(){
-        List<Appointment> appointments = appointmentRepository.findAll();
-        return appointments.stream().map(appointment ->
-                new AdminAppointmentResponse(
-                        appointment.getId(),
-                        appointment.getUser().getFullname(),
-                        appointment.getSlot().getPrestation().getName(),
-                        localTimeToString(appointment.getSlot().getBeginAt()),
-                        localTimeToString(appointment.getSlot().getEndAt()),
-                        appointment.getSlot().getDate().getDate(),
-                        appointment.getCreatedAt().toLocalDate(),
-                        appointment.getAddress().getLocation().isAtHome(),
-                        appointment.getAddress().getLocation().getName(),
-                        AddressMapper.getFullAddress(appointment.getAddress()),
-                        appointment.getStatus()
-                )
-        ).toList();
-    }
 }

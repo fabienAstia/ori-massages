@@ -145,7 +145,7 @@ CREATE TABLE t_addresses(
 CREATE TABLE t_appointments(
 	id int GENERATED ALWAYS AS IDENTITY,
 	created_at timestamp NOT NULL DEFAULT now(),
-	appointment_status varchar(20) CHECK (appointment_status IN ('REGISTERED', 'CONFIRMED', 'COMPLETED', 'CANCELLED', 'EXPIRED')),
+	appointment_status varchar(20) CHECK (appointment_status IN ('CONFIRMED', 'COMPLETED', 'CANCELLED', 'NO_SHOW')),
 	slot_id int not null,
 	user_id int not null,
 	address_id int not null,
